@@ -1,0 +1,18 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+                   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+                   xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
+    <changeSet id="2" author="Alexandra">
+        <sql>
+            create table t_option (
+            option_id integer not null auto_increment,
+            option_name varchar(255) not null,
+            option_price integer not null,
+            connect_price integer not null,
+            primary key (option_id)
+            )
+        </sql>
+        <rollback>
+            <dropTable tableName="t_option"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

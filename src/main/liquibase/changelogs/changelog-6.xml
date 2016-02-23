@@ -1,0 +1,19 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+                   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+                   xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
+    <changeSet id="6" author="Alexandra">
+
+        <sql>
+            create table tariff_option (
+            tariff_id integer not null,
+            option_id integer not null,
+            primary key (tariff_id, option_id),
+            foreign key (tariff_id) references tariff(tariff_id) on delete cascade on update cascade,
+            foreign key (option_id) references t_option(option_id) on delete cascade on update cascade
+            )
+        </sql>
+        <rollback>
+            <dropTable tableName="tariff_option"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

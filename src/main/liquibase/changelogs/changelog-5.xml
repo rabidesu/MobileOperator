@@ -1,0 +1,19 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+                   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+                   xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
+    <changeSet id="5" author="Alexandra">
+
+        <sql>
+            create table contract_option (
+            contract_id integer not null,
+            option_id integer not null,
+            primary key (contract_id, option_id),
+            foreign key (contract_id) references contract(contract_id) on delete cascade on update cascade,
+            foreign key (option_id) references t_option(option_id) on delete cascade on update cascade
+            )
+        </sql>
+        <rollback>
+            <dropTable tableName="contract_option"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

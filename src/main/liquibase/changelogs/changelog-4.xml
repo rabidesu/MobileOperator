@@ -1,0 +1,22 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+                   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+                   xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
+    <changeSet id="4" author="Alexandra">
+        <sql>
+            create table contract (
+            contract_id integer not null auto_increment,
+            number varchar(255) not null unique,
+            user_id integer not null,
+            is_blocked_by_client boolean,
+            is_blocked_by_admin boolean,
+            tariff_id integer not null,
+            primary key (contract_id),
+            foreign key (user_id) references user(user_id) on delete cascade on update cascade,
+            foreign key (tariff_id) references tariff(tariff_id)
+            )
+        </sql>
+        <rollback>
+            <dropTable tableName="contract"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

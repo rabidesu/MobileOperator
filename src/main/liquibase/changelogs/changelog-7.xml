@@ -1,0 +1,19 @@
+<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
+                   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+                   xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
+    <changeSet id="7" author="Alexandra">
+
+        <sql>
+            create table option_required (
+            option_current_id integer not null,
+            option_required_id integer not null,
+            primary key (option_current_id, option_required_id),
+            foreign key (option_current_id) references t_option(option_id) on delete cascade on update cascade,
+            foreign key (option_required_id) references t_option(option_id) on delete cascade on update cascade
+            )
+        </sql>
+        <rollback>
+            <dropTable tableName="option_required"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
