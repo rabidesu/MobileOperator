@@ -17,13 +17,21 @@ public class FindClientAction extends Action {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        String phone_number = request.getParameter("phone_number");
-        List<User> users = userService.getUserByNumber(phone_number);
-        if (!users.isEmpty()) {
-            User user = userService.getUserByNumber(phone_number).get(0);
-            request.setAttribute("user", user);
-            System.out.println(user.getName());
+        String searchText = request.getParameter("search_text");
+        String searchField = request.getParameter("search_field");
+        List<User> users = null;
+        if (searchText != null){
+            users = userService.getUserByField(searchText, searchField);
+        } else {
+            users = userService.getAllUsers();
         }
-        return "/pages/admin/findClient.jsp";
+        request.setAttribute("listUsers", users);
+        System.out.println(users.isEmpty());
+        if (users.isEmpty()) {
+            request.setAttribute("message", "Нет ни одного клиента, удовлетворяющего условиям поиска");
+        } else {
+            request.setAttribute("message", null);
+        }
+        return "/pages/admin/searchClient.jsp";
     }
 }

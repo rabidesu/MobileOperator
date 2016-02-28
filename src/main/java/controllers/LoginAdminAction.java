@@ -7,6 +7,8 @@ import services.API.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * Created by Alexandra on 18.02.2016.
@@ -28,8 +30,8 @@ public class LoginAdminAction extends Action{
             session.setAttribute("role", "admin");
             return "/admin/index.jsp";
         } else {
+            request.setAttribute("errorMassage", "Неверные логин или пароль");
             return "/adminLogin.jsp";
         }
-
     }
 }

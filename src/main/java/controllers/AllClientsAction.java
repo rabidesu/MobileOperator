@@ -21,6 +21,6 @@ public class AllClientsAction extends Action {
         List<User> users = userService.getAllUsers();
         request.setAttribute("listUsers", users);
         System.out.println(request.getSession(false).getAttribute("email"));
-        return "/pages/admin/allClient.jsp";
+        return "/pages/admin/searchClient.jsp";
     }
 }

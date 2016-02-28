@@ -11,14 +11,22 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 @NamedQueries({
-        @NamedQuery(name = QueryNames.USER_GET_BY_EMAIL_PASSWD, query = "SELECT x FROM User x WHERE x.email = ?1 AND x.password = ?2"),
-@NamedQuery(name = QueryNames.USER_GET_BY_PHONE_NUMBER, query = "SELECT x FROM User x LEFT JOIN x.contracts c WHERE c.number = ?1")
+        @NamedQuery(name = User.GET_BY_EMAIL_PASSWD, query = "SELECT x FROM User x WHERE x.email = ?1 AND x.password = ?2"),
+@NamedQuery(name = User.GET_BY_PHONE_NUMBER, query = "SELECT x FROM User x LEFT JOIN x.contracts c WHERE c.number LIKE ?1"),
+        @NamedQuery(name = User.GET_BY_EMAIL, query = "SELECT x FROM User x WHERE x.email LIKE ?1"),
+        @NamedQuery(name = User.GET_BY_SURNAME, query = "SELECT x FROM User x WHERE x.surname LIKE ?1")
 })
 
 
 public class User implements Serializable {
 
+    public static final String GET_BY_EMAIL_PASSWD= "userGetByEmailAndPassword";
+    public static final String GET_BY_PHONE_NUMBER= "userGetByPhoneNumber";
+    public static final String GET_BY_EMAIL= "userGetByEmail";
+    public static final String GET_BY_SURNAME= "userGetBySurname";
+
     @Id
+    @GeneratedValue
     @Column(name = "user_id")
     private int id;
 
@@ -38,7 +46,7 @@ public class User implements Serializable {
     @Column(name = "address", nullable = false)
     private String address;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Contract> contracts;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -47,7 +55,7 @@ public class User implements Serializable {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private List<Role> role = new ArrayList<Role>();
 
 
@@ -131,5 +139,13 @@ public class User implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List<Contract> getContracts() {
+        return contracts;
+    }
+
+    public void setContracts(List<Contract> contracts) {
+        this.contracts = contracts;
     }
 }

@@ -1,0 +1,17 @@
+
+.container {
+    height:500px;
+}
+.top-buffer { margin-top: 20px; }
+
+.contract-active {
+    color: limegreen;
+}
+
+.contract-inactive {
+    color: gray;
+}
+
+.contract-blocked {
+    color: red;
+}

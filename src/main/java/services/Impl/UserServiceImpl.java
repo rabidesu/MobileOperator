@@ -3,7 +3,6 @@ package services.Impl;
 import dao.Impl.UserDAOImpl;
 import dao.API.UserDAO;
 import dao.JpaUtil;
-import entities.QueryNames;
 import entities.Role;
 import entities.User;
 import services.API.UserService;
@@ -13,7 +12,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -90,32 +89,43 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    public List<User> getUserByField(String searchText, String searchField) {
 
-    public List<User> getUserByNumber(String number) {
+        List<User> users = null;
         EntityManager em = JpaUtil.getEntityManager();
         userDAO = new UserDAOImpl(em);
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
-        List<User> users = userDAO.getUserByPhoneNumber(number);
+
+        if (searchField.equals("phone")){
+            users = userDAO.getUserByPhoneNumber("%" + searchText + "%");
+        } else if (searchField.equals("surname")) {
+            users = userDAO.getUserBySurname("%" + searchText + "%");
+        } else if (searchField.equals("email")) {
+            users = userDAO.getUserByEmail("%" + searchText + "%");
+        } else if (searchField.equals("user_id")) {
+            users = new ArrayList<User>();
+            try {
+                users.add(userDAO.findById(User.class, Integer.valueOf(searchText)));
+            } catch (NumberFormatException e){
+
+            }
+        }
+
         transaction.commit();
         em.close();
         return users;
+
     }
 
-
-    //    public boolean userIsAdmin(int id){
-//
-//    }
-//
-//    public boolean userIsClient(int id){
-//
-//    }
-//
-//    public User findUserById(int id){
-//
-//    }
-//
-//    public User findUserByEmail(String email){
-//
-//    }
+    public User getUserById(String id){
+        EntityManager em = JpaUtil.getEntityManager();
+        userDAO = new UserDAOImpl(em);
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+        User user = userDAO.findById(User.class, Integer.valueOf(id));
+        transaction.commit();
+        em.close();
+        return user;
+    }
 }

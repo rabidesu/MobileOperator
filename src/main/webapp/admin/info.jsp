@@ -1,4 +1,4 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,6 +13,7 @@
 
     <title>Панель администратора</title>
 
+    <link href="/css/ecare-style.css" rel="stylesheet">
     <!-- Bootstrap Core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
 
@@ -43,42 +44,22 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">
-                        Список клиентов
+                        Информация
                     </h1>
                 </div>
             </div>
             <!-- /.row -->
 
             <!-- Main -->
-            <div class="row">
-                <div class="col-lg-9">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Телефон</th>
-                            <th>Тариф</th>
-                            <th>Опции</th>
-                            <th>Дата рождения</th>
-                            <th>Паспортные данные</th>
-                            <th>Адрес</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach items="${requestScope.listContracts}" var="contract">
-                            <tr>
-                                <td><c:out value="${contract.id}"/></td>
-                                <td><c:out value="${contract.number}"/></td>
-                                <td><c:out value="${contract.tariff}"/></td>
-                                <td><c:out value="${contract.id}"/></td>
-                                <td><c:out value="${contract.id}"/></td>
-                                <td><c:out value="${contract.id}"/></td>
-                                <td><c:out value="${contract.id}"/></td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="container">
+                <div class="row">
+                        <c:if test="${not empty requestScope.massage}">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">Информация</div>
+                                <div class="panel-body"><c:out value="${requestScope.massage}" /></div>
+                            </div>
+                        </c:if>
+                 </div>
             </div>
             <!-- /Main -->
 

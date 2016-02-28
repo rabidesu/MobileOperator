@@ -13,7 +13,7 @@ import java.util.List;
  */
 public  class GenericDAOImpl<T, ID extends Serializable> implements GenericDAO<T, ID> {
 
-    private EntityManager entityManager;
+    protected EntityManager entityManager;
 
     public GenericDAOImpl(EntityManager entityManager){
         this.entityManager = entityManager;

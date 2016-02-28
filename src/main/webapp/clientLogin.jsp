@@ -17,7 +17,7 @@
 <body>
 <div class="col-sm-4"></div>
 <div class="col-sm-4">
-<form role="form" action="pages/client/LoginClient" >
+<form role="form" action="pages/client/LoginClient" method="post" >
     <div class="form-group">
         <label for="email">Email</label>
         <input type="email" class="form-control" id="email" name="email" placeholder="Введите email">

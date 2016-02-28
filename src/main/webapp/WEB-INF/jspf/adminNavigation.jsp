@@ -43,13 +43,7 @@
                 <a href="javascript:;" data-toggle="collapse" data-target="#clients">Управление клиентами <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="clients" class="collapse">
                     <li>
-                        <a href="/pages/admin/addClient.jsp">Новый клиент</a>
-                    </li>
-                    <li>
-                        <a href="/pages/admin/AllClients">Список клиентов</a>
-                    </li>
-                    <li>
-                        <a href="/pages/admin/findClient.jsp">Поиск клиентов</a>
+                        <a href="/pages/admin/FindClient">Поиск клиентов</a>
                     </li>
                 </ul>
             </li>
@@ -57,10 +51,10 @@
                 <a href="javascript:;" data-toggle="collapse" data-target="#contracts">Управление контрактами <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="contracts" class="collapse">
                     <li>
-                        <a href="#">Список контрактов</a>
+                        <a href="/pages/admin/NewContract">Новый контракт</a>
                     </li>
                     <li>
-                        <a href="#">Поиск клиентов</a>
+                        <a href="/pages/admin/FindContract">Просмотр контрактов</a>
                     </li>
                 </ul>
             </li>
@@ -68,10 +62,10 @@
                 <a href="javascript:;" data-toggle="collapse" data-target="#tariffs">Управление тарифами <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="tariffs" class="collapse">
                     <li>
-                        <a href="#">Dropdown Item</a>
+                        <a href="/pages/admin/NewTariff">Новый тариф</a>
                     </li>
                     <li>
-                        <a href="#">Dropdown Item</a>
+                        <a href="/pages/admin/FindTariff">Просмотр тарифов</a>
                     </li>
                 </ul>
             </li>
@@ -79,10 +73,10 @@
                 <a href="javascript:;" data-toggle="collapse" data-target="#options">Управление опциями <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="options" class="collapse">
                     <li>
-                        <a href="#">Dropdown Item</a>
+                        <a href="/pages/admin/NewOption">Добавить опцию</a>
                     </li>
                     <li>
-                        <a href="#">Dropdown Item</a>
+                        <a href="/pages/admin/FindOption">Просмотр опций</a>
                     </li>
                 </ul>
             </li>

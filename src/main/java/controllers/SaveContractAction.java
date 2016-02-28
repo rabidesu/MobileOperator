@@ -1,6 +1,12 @@
 package controllers;
 
+import services.API.ContractService;
+import services.API.OptionService;
+import services.API.TariffService;
 import services.API.UserService;
+import services.Impl.ContractServiceImpl;
+import services.Impl.OptionServiceImpl;
+import services.Impl.TariffServiceImpl;
 import services.Impl.UserServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,9 +16,9 @@ import java.util.Calendar;
 /**
  * Created by Alexandra on 22.02.2016.
  */
-public class AddClientAction extends Action {
+public class SaveContractAction extends Action {
 
-    private UserService userService = new UserServiceImpl();
+    private ContractService contractService = new ContractServiceImpl();
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
@@ -25,7 +31,11 @@ public class AddClientAction extends Action {
         String address = request.getParameter("address");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        userService.addUser(name, surname, date, passport, address, email, password);
-        return "/admin/addClient.jsp";
+        String phone_number = request.getParameter("phone_number");
+        String tariffId = request.getParameter("tariff_id");
+        String[] options = request.getParameterValues("options");
+        contractService.addContract(name, surname, date, passport, address, email, password, phone_number, tariffId, options);
+        request.setAttribute("massage", "Контракт успешно добавлен!");
+        return "/admin/info.jsp";
     }
 }

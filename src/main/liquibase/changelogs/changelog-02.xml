@@ -4,15 +4,22 @@
     <changeSet id="2" author="Alexandra">
         <sql>
             create table t_option (
-            option_id integer not null auto_increment,
+            option_id integer not null,
             option_name varchar(255) not null,
             option_price integer not null,
             connect_price integer not null,
             primary key (option_id)
             )
         </sql>
+        <sql>
+            create table hibernate_sequence(next_val bigint)
+        </sql>
+        <sql>
+            insert into hibernate_sequence values(1)
+        </sql>
         <rollback>
             <dropTable tableName="t_option"/>
+            <dropTable tableName="hibernate_sequence"/>
         </rollback>
     </changeSet>
 </databaseChangeLog>

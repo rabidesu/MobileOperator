@@ -18,10 +18,12 @@ public interface UserService {
 
     public List<User> getAllUsers();
 
-    public List<User> getUserByNumber(String number);
+    public List<User> getUserByField(String searchText, String searchField);
 
 
     public String addUser(String name, String surname, String date, String passport, String address, String email, String password);
+
+    public User getUserById(String id);
 
 //    public boolean userIsAdmin(int id);
 //

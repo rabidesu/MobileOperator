@@ -14,6 +14,10 @@ public interface UserDAO extends GenericDAO<User, Integer> {
 
     public List<User> getUserByPhoneNumber(String number);
 
+    public List<User> getUserByEmail(String email);
+
+    public List<User> getUserBySurname(String surname);
+
 //    public List<Role> getUserRoles ();
 //
 //    public User getUserById (int id);

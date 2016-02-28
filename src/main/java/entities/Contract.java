@@ -10,9 +10,15 @@ import java.util.List;
 
 @Entity
 @Table(name = "contract")
+@NamedQueries({
+        @NamedQuery(name = Contract.GET_BY_NUMBER, query = "SELECT x FROM Contract x WHERE x.number LIKE ?1")
+})
 public class Contract implements Serializable {
 
+    public static final String GET_BY_NUMBER = "contractGetByNumber";
+
     @Id
+    @GeneratedValue
     @Column(name = "contract_id")
     private int id;
 
@@ -27,16 +33,16 @@ public class Contract implements Serializable {
     @JoinColumn(name = "tariff_id", nullable = false)
     private Tariff tariff;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "contract_option", joinColumns = {@JoinColumn(name = "contract_id")},
             inverseJoinColumns = {@JoinColumn(name = "option_id")})
     private List<Option> options;
 
     @Column(name = "is_blocked_by_client")
-    private boolean isBlockedByClient;
+    private boolean blockedByClient;
 
     @Column(name = "is_blocked_by_admin")
-    private boolean isBlockedByAdmin;
+    private boolean blockedByAdmin;
 
     public int getId() {
         return id;
@@ -75,18 +81,18 @@ public class Contract implements Serializable {
     }
 
     public boolean isBlockedByClient() {
-        return isBlockedByClient;
+        return blockedByClient;
     }
 
     public void setBlockedByClient(boolean blockedByClient) {
-        isBlockedByClient = blockedByClient;
+        this.blockedByClient = blockedByClient;
     }
 
     public boolean isBlockedByAdmin() {
-        return isBlockedByAdmin;
+        return blockedByAdmin;
     }
 
     public void setBlockedByAdmin(boolean blockedByAdmin) {
-        isBlockedByAdmin = blockedByAdmin;
+        this.blockedByAdmin = blockedByAdmin;
     }
 }

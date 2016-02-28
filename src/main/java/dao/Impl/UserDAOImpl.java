@@ -4,8 +4,6 @@ import dao.API.UserDAO;
 import dao.JpaUtil;
 import entities.User;
 
-import entities.QueryNames;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -20,17 +18,31 @@ public class UserDAOImpl extends GenericDAOImpl<User, Integer> implements UserDA
 
     public List<User> getUserByEmailPassword(String email, String password) {
 
-        Query query = JpaUtil.getEntityManager().createNamedQuery(QueryNames.USER_GET_BY_EMAIL_PASSWD);
+        Query query = entityManager.createNamedQuery(User.GET_BY_EMAIL_PASSWD);
         query.setParameter(1, email);
         query.setParameter(2, password);
         return findMany(query);
     }
 
     public List<User> getUserByPhoneNumber(String number) {
-        Query query = JpaUtil.getEntityManager().createNamedQuery(QueryNames.USER_GET_BY_PHONE_NUMBER);
+        Query query = entityManager.createNamedQuery(User.GET_BY_PHONE_NUMBER);
         query.setParameter(1, number);
         return findMany(query);
     }
+
+    public List<User> getUserByEmail(String email) {
+        Query query = entityManager.createNamedQuery(User.GET_BY_EMAIL);
+        query.setParameter(1, email);
+        return findMany(query);
+    }
+
+    public List<User> getUserBySurname(String surname) {
+        Query query = entityManager.createNamedQuery(User.GET_BY_SURNAME);
+        query.setParameter(1, surname);
+        return findMany(query);
+    }
+
+
 
     //    public List<Role> getUserRoles (){
 //

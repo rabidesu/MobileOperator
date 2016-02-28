@@ -29,7 +29,6 @@ public class FrontController extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        System.out.println("CONTROLLER");
         RequestDispatcher dispatcher;
         String uri = request.getPathInfo();
 
@@ -39,11 +38,8 @@ public class FrontController extends HttpServlet {
             Action action = ActionFactory.getAction(request);
             nextPage = action.execute(request, response);
             dispatcher = getServletContext().getRequestDispatcher("/" + nextPage.replace(CONTROLLER_PREFIX, ""));
-        System.out.println(nextPage.replace(CONTROLLER_PREFIX, ""));
-        System.out.println("END CONTROLLER");
             dispatcher.forward(request, response);
         } else {
-            System.out.println("GO: " + nextPage);
             dispatcher = getServletContext().getRequestDispatcher("/" + nextPage);
             dispatcher.forward(request, response);
         }

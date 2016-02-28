@@ -18,6 +18,7 @@ public class Role implements Serializable {
     private int id;
 
     @Column(name = "role_name", nullable = false, columnDefinition="enum('client','admin')")
+    //@Enumerated(EnumType.STRING)
     private String roleName;
 
     @ManyToMany(cascade = CascadeType.ALL)

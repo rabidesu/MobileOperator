@@ -12,6 +12,7 @@
 
     <title>Панель администратора</title>
 
+    <link href="/css/ecare-style.css" rel="stylesheet">
     <!-- Bootstrap Core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
 
@@ -54,7 +55,7 @@
             <!-- /.row -->
 
             <!-- Main -->
-            <div class="row">
+            <div class="container">
 
             </div>
             <!-- /Main -->
