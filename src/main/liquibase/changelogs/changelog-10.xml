@@ -3,17 +3,11 @@
                    xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
     <changeSet id="10" author="Alexandra">
         <sql>
-            insert into user (email, user_name, surname, birthday, passport, address, password) values ('sss@mail.ru', 'max', 'maxov', '1993-02-19', 'UFPS 119', 'komsomolskaya 21', 'pass')
-        </sql>
-        <sql>
-            insert into user_role values (1, 1)
-        </sql>
-        <sql>
-            insert into user_role values (1, 2)
+            insert into user (email, user_name, surname, birthday, passport, role_id, address, password) values ('sss@mail.ru', 'max', 'maxov', '1993-02-19', 'UFPS 119', 2, 'komsomolskaya 21', 'pass')
         </sql>
         <rollback>
             <sql>
-                delete from role
+                delete from user
             </sql>
         </rollback>
     </changeSet>

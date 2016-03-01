@@ -2,9 +2,9 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel='stylesheet' href='css/bootstrap.min.css' type='text/css' media='all'>
-    <script src="js/jquery-2.2.0.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <link rel='stylesheet' href='/css/bootstrap.min.css' type='text/css' media='all'>
+    <script src="/js/jquery-2.2.0.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 </head>
 <body>
 <nav role="navigation" class="navbar navbar-default">
@@ -16,7 +16,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a href="#" class="navbar-brand"><img src="images/cellphone.png"></a>
+        <a href="#" class="navbar-brand"></a>
     </div>
     <!-- Collection of nav links, forms, and other content for toggling -->
     <div id="navbarCollapse" class="collapse navbar-collapse">
@@ -40,8 +40,8 @@
             </div>
         </form>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="/admin/index.jsp">Управление</a></li>
-            <li><a href="/client/userAccount.jsp">Личный кабинет</a></li>
+            <li><a href="/pages/admin/index.jsp">Управление</a></li>
+            <li><a href="/pages/client/index.jsp">Личный кабинет</a></li>
         </ul>
     </div>
 </nav>

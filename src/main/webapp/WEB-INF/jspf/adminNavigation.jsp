@@ -9,7 +9,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/pages/admin/index.jsp">SB Admin</a>
+        <a class="navbar-brand" href="/pages/admin/index.jsp">Панель управления</a>
     </div>
     <!-- Top Menu Items -->
     <ul class="nav navbar-right top-nav">
@@ -34,7 +34,7 @@
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav side-nav">
             <li class="active">
-                <a href="/pages/admin/index.jsp"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                <a href="/pages/admin/index.jsp"><i class="fa fa-fw fa-dashboard"></i> Быстрые действия</a>
             </li>
             <li>
                 <a href="/pages/admin/test.jsp"><i class="fa fa-fw fa-bar-chart-o"></i> Тест</a>
@@ -43,7 +43,7 @@
                 <a href="javascript:;" data-toggle="collapse" data-target="#clients">Управление клиентами <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="clients" class="collapse">
                     <li>
-                        <a href="/pages/admin/FindClient">Поиск клиентов</a>
+                        <a href="/pages/admin/client/FindClient">Поиск клиентов</a>
                     </li>
                 </ul>
             </li>
@@ -51,10 +51,10 @@
                 <a href="javascript:;" data-toggle="collapse" data-target="#contracts">Управление контрактами <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="contracts" class="collapse">
                     <li>
-                        <a href="/pages/admin/NewContract">Новый контракт</a>
+                        <a href="/pages/admin/contract/NewContract">Новый контракт</a>
                     </li>
                     <li>
-                        <a href="/pages/admin/FindContract">Просмотр контрактов</a>
+                        <a href="/pages/admin/contract/FindContract">Просмотр контрактов</a>
                     </li>
                 </ul>
             </li>
@@ -62,10 +62,10 @@
                 <a href="javascript:;" data-toggle="collapse" data-target="#tariffs">Управление тарифами <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="tariffs" class="collapse">
                     <li>
-                        <a href="/pages/admin/NewTariff">Новый тариф</a>
+                        <a href="/pages/admin/tariff/NewTariff">Новый тариф</a>
                     </li>
                     <li>
-                        <a href="/pages/admin/FindTariff">Просмотр тарифов</a>
+                        <a href="/pages/admin/tariff/FindTariff">Просмотр тарифов</a>
                     </li>
                 </ul>
             </li>
@@ -73,10 +73,10 @@
                 <a href="javascript:;" data-toggle="collapse" data-target="#options">Управление опциями <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="options" class="collapse">
                     <li>
-                        <a href="/pages/admin/NewOption">Добавить опцию</a>
+                        <a href="/pages/admin/option/NewOption">Добавить опцию</a>
                     </li>
                     <li>
-                        <a href="/pages/admin/FindOption">Просмотр опций</a>
+                        <a href="/pages/admin/option/FindOption">Просмотр опций</a>
                     </li>
                 </ul>
             </li>

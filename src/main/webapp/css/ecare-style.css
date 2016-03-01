@@ -1,7 +1,7 @@
-
-.container {
-    height:500px;
+.login-panel {
+    margin-top: 25%;
 }
+
 .top-buffer { margin-top: 20px; }
 
 .contract-active {
@@ -14,4 +14,8 @@
 
 .contract-blocked {
     color: red;
+}
+
+.click-row {
+    cursor: pointer;
 }

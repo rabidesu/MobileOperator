@@ -4,19 +4,33 @@
 
 
     <appender name="LOG-FILE-APPENDER" class="org.apache.log4j.FileAppender">
-        <param name="file" value="/logs/all.log"/>
+        <param name="file" value="D:/IdeaProjects/logs/all.log"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{ISO8601} [%5p] %c %m at %l%n"/>
         </layout>
     </appender>
 
-    <category name="ru.tsystems.tsproject.ecare">
+    <appender name="LOG-ERR-FILE-APPENDER" class="org.apache.log4j.FileAppender">
+        <param name="file" value="D:/IdeaProjects/logs/err.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} [%5p] %c %m at %l%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="ERROR"/>
+            <param name="LevelMax" value="ERROR"/>
+        </filter>
+    </appender>
+
+
+    <category name="com.tsystems.jschool.mobile">
         <appender-ref ref="LOG-FILE-APPENDER"/>
+        <appender-ref ref="LOG-ERR-FILE-APPENDER"/>
     </category>
 
     <root>
         <priority value="All"/>
         <appender-ref ref="LOG-FILE-APPENDER"/>
+        <appender-ref ref="LOG-ERR-FILE-APPENDER"/>
     </root>
 
 </log4j:configuration>

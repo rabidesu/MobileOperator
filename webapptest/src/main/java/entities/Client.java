@@ -1,4 +1,4 @@
-package entities;
+package com.tsystems.jschool.mobile.entities;
 
 import java.util.Date;
 

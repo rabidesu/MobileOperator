@@ -3,10 +3,10 @@
                    xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
     <changeSet id="9" author="Alexandra">
         <sql>
-            insert into role(role_name) values ('client')
+            insert into role(role_name) values ('CLIENT')
         </sql>
         <sql>
-            insert into role(role_name) values ('admin')
+            insert into role(role_name) values ('ADMIN')
         </sql>
         <rollback>
             <sql>
