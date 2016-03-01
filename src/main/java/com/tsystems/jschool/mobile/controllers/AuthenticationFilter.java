@@ -45,25 +45,6 @@ public class AuthenticationFilter implements Filter {
             chain.doFilter(req, resp);
         }
 
-//        if ((session == null || user == null) && (uri.contains("client/") || uri.contains("admin/"))) {
-//            if (uri.contains("client/")){
-//
-//                RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/clientLogin.jsp");
-//                dispatcher.forward(req, resp);
-////                response.sendRedirect("/clientLogin.jsp");
-//
-//            }
-//            if (uri.contains("admin/")){
-//
-//                RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/adminLogin.jsp");
-//                dispatcher.forward(req, resp);
-////                response.sendRedirect("/adminLogin.jsp");
-//
-//            }
-//        } else {
-//            chain.doFilter(req, resp);
-//        }
-
     }
 
     public void init(FilterConfig config) throws ServletException {
