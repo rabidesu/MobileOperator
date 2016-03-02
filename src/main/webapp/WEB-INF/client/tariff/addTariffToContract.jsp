@@ -70,14 +70,22 @@
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="options">
                             <div class="form-group">
-                                <c:if test="${not empty requestScope.tariff.options}">
                                     <label>Выберите опции:</label>
-                                    <c:forEach var="option" items="${requestScope.tariff.options}">
-                                        <div class="checkbox">
-                                            <label><input type="checkbox" name="options" value="${option.id}">${option.name}</label>
+                                        <div class="option_chb">
+                                            <c:forEach var="option" items="${requestScope.tariff.options}">
+                                                <div class="checkbox">
+                                                    <label><input type="checkbox" name="options"
+                                                        <c:set var="req_options" value="" scope="page"/>
+
+                                                    <c:forEach var="req_option" items="${option.optionsRequired}">
+                                                        <c:set var="req_options" value="${req_options} ${req_option.id}"/>
+                                                    </c:forEach>
+                                                                  data-req="${req_options}" value="${option.id}">${option.name}
+                                                        <input name="options" type="hidden"  disabled id="hidden_${option.id}" value="${option.id}"/>
+                                                    </label>
+                                                </div>
+                                            </c:forEach>
                                         </div>
-                                    </c:forEach>
-                                </c:if>
                                 <c:if test="${empty requestScope.tariff.options}">
                                     <div class="panel panel-warning">
                                         <div class="panel-heading">Информация</div>
@@ -116,31 +124,36 @@
 <!-- jQuery -->
 <script src="/js/jquery-2.2.0.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $("#btn-save-contract").click(function() {
-            $("#form-save-contract").submit();
-        });
+    $(document).ready(function () {
+        $('.option_chb input:checkbox').change(function () {
+            var $req_options = $(this).data("req");
+            var $options_arr = $req_options.split(' ');
+            if (this.checked){
+                $current_id = $(this).val();
+                $('.option_chb input:checkbox').each(function(){
+                    if ($.inArray($(this).val(), $options_arr) !== -1){
+                        $(this).prop("checked", true);
+                        $(this).prop("disabled", true);
+                        $(this).addClass("by_"+$current_id);
+                        $('#hidden_'+$(this).val()).prop("disabled", false);
+                    }
+                })
+            } else {
+                $current_id = $(this).val();
+                $('.option_chb input:checkbox').each(function(){
+                    if ($.inArray($(this).val(), $options_arr) !== -1){
+                        $(this).removeClass("by_"+$current_id);
+                        $className = $(this).attr('class').split(' ');
+                        if ($className.length == 1) {
+                            $(this).prop("disabled", false);
+                            $('#hidden_'+$(this).val()).prop("disabled", true);
+                        }
+                    }
+                })
+            }
     });
-
-    $(document).ready(function() {
-        $("#btn-block").click(function() {
-            $("#form-block-contract").submit();
-        });
-    });
-
-    $(document).ready(function() {
-        $("#btn-unblock").click(function() {
-            $("#form-unblock-contract").submit();
-        });
-    });
-
-    $(document).ready(function() {
-        $("#btn-client-profile").click(function() {
-            $("#form-client-profile").submit();
-        });
     });
 </script>
-
 
 <!-- Bootstrap Core JavaScript -->
 <script src="/js/bootstrap.min.js"></script>

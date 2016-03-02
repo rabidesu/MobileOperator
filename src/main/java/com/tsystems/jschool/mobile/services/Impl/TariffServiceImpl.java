@@ -9,6 +9,7 @@ import com.tsystems.jschool.mobile.entities.Option;
 import com.tsystems.jschool.mobile.entities.Tariff;
 import org.apache.log4j.Logger;
 import com.tsystems.jschool.mobile.services.API.TariffService;
+import org.hibernate.Hibernate;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;

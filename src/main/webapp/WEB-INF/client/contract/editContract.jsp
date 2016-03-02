@@ -69,12 +69,12 @@
                     <li class=""><a href="#tariff" data-toggle="tab">Тариф</a></li>
                     <li class=""><a href="#options_tab" data-toggle="tab">Опции</a></li>
                     <li class="pull-right">
-                        <button type="submit" class="btn btn-success" id="btn-save-contract">Сохранить</button>
+                        <button type="submit" class="btn btn-success" form="form-save-contract" id="btn-save-contract">Сохранить</button>
                         <c:if test="${!requestScope.contract.blockedByAdmin && !requestScope.contract.blockedByClient}">
-                            <button type="submit" class="btn btn-danger" id="btn-block">Заблокировать</button>
+                            <button type="submit" class="btn btn-danger" form="form-block-contract" id="btn-block">Заблокировать</button>
                         </c:if>
                         <c:if test="${!requestScope.contract.blockedByAdmin && requestScope.contract.blockedByClient}">
-                            <button type="submit" class="btn btn-warning" id="btn-unblock">Активировать</button>
+                            <button type="submit" class="btn btn-warning" form="form-unblock-contract" id="btn-unblock">Активировать</button>
                         </c:if>
                     </li>
                 </ul>
@@ -82,7 +82,7 @@
 
             <div class="row">
                 <div class="col-lg-4 top-buffer">
-                <form role="form" action="/pages/admin/contract/ChangeContract" id="form-save-contract" method="post">
+                <form role="form" action="/pages/client/contract/ChangeContractByCLient" id="form-save-contract" method="post">
 
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="general">
@@ -119,61 +119,21 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="tariff">
-                            <div class="form-group">
-                                <label for="tariff_select">Выберите тариф:</label>
-                                <select class="form-control"  id="tariff_select"
-                                        <c:if test="${requestScope.contract.blockedByAdmin ||
-                                                          requestScope.contract.blockedByClient}">disabled</c:if>
-                                        name="tariff_id">
-                                    <c:forEach items="${requestScope.tariffs}" var="tariff">
-                                        <option value="${tariff.id}"
-                                                <c:if test="${tariff.id eq requestScope.contract.tariff.id}">
-                                                    selected
-                                                </c:if>
-                                        >
-                                            <c:out value="${tariff.name}"/></option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                        </div>
 
-                        <div class="tab-pane fade" id="options_tab">
-                            <div class="form-group">
-                                <c:if test="${not empty requestScope.options}">
-                                    <label>Выберите опции:</label>
-                                    <c:forEach var="option" items="${requestScope.options}">
-                                        <div class="checkbox">
-                                            <label><input type="checkbox"
-                                                          <c:if test="${requestScope.contract.blockedByAdmin ||
-                                                          requestScope.contract.blockedByClient}">disabled</c:if>
-                                            <c:forEach var="selected_option" items="${requestScope.contract.options}">
-                                                          <c:if test="${option.id eq selected_option.id}">checked</c:if>
-                                            </c:forEach>
-                                                          name="options" value="${option.id}">${option.name}</label>
-                                        </div>
-                                    </c:forEach>
-                                </c:if>
-                                <c:if test="${empty requestScope.options}">
-                                    <div class="panel panel-warning">
-                                        <div class="panel-heading">Информация</div>
-                                        <div class="panel-body"><c:out value="Нет опций, доступных для данного тарифа"/></div>
-                                    </div>
-                                </c:if>
-                            </div>
-                        </div>
+
+                        <jsp:include page="/WEB-INF/jspf/tariffOptionForContract.jsp" />
                         <input type="hidden" name="contract_id" value="${requestScope.contract.id}">
                         </div>
 
                 </form>
                 </div>
-                <form action="/pages/admin/contract/ChangeContract" id="form-block-contract" method="post">
+                <form action="/pages/client/contract/ChangeContractByClient" id="form-block-contract" method="post">
                     <input type="hidden" name="contract_id" value="${requestScope.contract.id}">
-                    <input type="hidden" name="block" value="block">
+                    <input type="hidden" name="block" value="blockByClient">
                 </form>
-                <form action="/pages/admin/contract/ChangeContract" id="form-unblock-contract" method="post">
+                <form action="/pages/client/contract/ChangeContractByClient" id="form-unblock-contract" method="post">
                     <input type="hidden" name="contract_id" value="${requestScope.contract.id}">
-                    <input type="hidden" name="block" value="unblock">
+                    <input type="hidden" name="block" value="unblockByClient">
                 </form>
             </div>
             <!-- /Main -->
@@ -189,31 +149,7 @@
 
 <!-- jQuery -->
 <script src="/js/jquery-2.2.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $("#btn-save-contract").click(function() {
-            $("#form-save-contract").submit();
-        });
-    });
-
-    $(document).ready(function() {
-        $("#btn-block").click(function() {
-            $("#form-block-contract").submit();
-        });
-    });
-
-    $(document).ready(function() {
-        $("#btn-unblock").click(function() {
-            $("#form-unblock-contract").submit();
-        });
-    });
-
-    $(document).ready(function() {
-        $("#btn-client-profile").click(function() {
-            $("#form-client-profile").submit();
-        });
-    });
-</script>
+<script src="/js/edit-contract.js"></script>
 
 
 <!-- Bootstrap Core JavaScript -->

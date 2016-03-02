@@ -120,59 +120,7 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="tariff">
-                            <div class="form-group">
-                                <label for="tariff_select">Выберите тариф:</label>
-                                <select class="form-control"  id="tariff_select"
-                                        <c:if test="${requestScope.contract.blockedByAdmin ||
-                                                          requestScope.contract.blockedByClient}">disabled</c:if>
-                                        name="tariff_id">
-                                    <c:forEach items="${requestScope.tariffs}" var="tariff">
-                                        <option value="${tariff.id}" class="tariff_select_opt"
-                                                <c:set var="pos_options" value="" scope="page"/>
-                                        <c:forEach items="${tariff.options}" var="possible_option">
-                                            <c:set var="pos_options" value="${pos_options} ${possible_option.id}"/>
-                                        </c:forEach>
-                                                data-options="${pos_options}"
-                                                <c:if test="${tariff.id eq requestScope.contract.tariff.id}">
-                                                    selected
-                                                </c:if>
-                                        >
-                                            <c:out value="${tariff.name}"/></option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane fade" id="options_tab">
-                            <div class="form-group">
-                                <c:if test="${not empty requestScope.options}">
-                                    <label>Выберите опции:</label>
-                                    <div id="text-empty-option" class="hidden">
-                                        Для данного тарифа нет доступных опций
-                                    </div>
-                                    <div class="option_chb">
-                                    <c:forEach var="option" items="${requestScope.options}">
-                                        <div class="checkbox">
-                                            <label><input type="checkbox" class="checkbox"
-                                            <c:forEach var="selected_option" items="${requestScope.contract.options}">
-                                                          <c:if test="${option.id eq selected_option.id}">checked</c:if>
-                                                          <c:if test="${requestScope.contract.blockedByAdmin ||
-                                                          requestScope.contract.blockedByClient}">disabled</c:if>
-                                            </c:forEach>
-                                                          name="options" value="${option.id}">${option.name}</label>
-                                        </div>
-                                    </c:forEach>
-                                    </div>
-                                </c:if>
-                                <c:if test="${empty requestScope.options}">
-                                    <div class="panel panel-warning">
-                                        <div class="panel-heading">Информация</div>
-                                        <div class="panel-body"><c:out value="Нет опций, доступных для данного тарифа"/></div>
-                                    </div>
-                                </c:if>
-                            </div>
-                        </div>
+                        <jsp:include page="/WEB-INF/jspf/tariffOptionForContract.jsp" />
                         <input type="hidden" name="contract_id" value="${requestScope.contract.id}">
                         </div>
 
@@ -203,27 +151,7 @@
 
 <!-- jQuery -->
 <script src="/js/jquery-2.2.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#tariff_select').change(function () {
-            $('.checkbox').prop('checked', false);
-            var $pos_options = $("#tariff_select option:selected").data("options");
-            var $options_arr = $pos_options.split(' ');
-            if ($options_arr.length == 1){
-                $('#text-empty-option').removeClass("hidden");
-            } else {
-                $('#text-empty-option').addClass("hidden");
-            }
-            $('.option_chb input:checkbox').each(function(i){
-                if ($.inArray($(this).val(), $options_arr) !== -1){
-                    $(this).parent().removeClass("hidden");
-                } else {
-                    $(this).parent().addClass("hidden");
-                }
-            })
-        });
-    });
-</script>
+<script src="/js/edit-contract.js"></script>
 
 
 <!-- Bootstrap Core JavaScript -->

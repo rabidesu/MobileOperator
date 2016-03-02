@@ -35,6 +35,20 @@ public class EditContractAction extends Action {
         request.setAttribute("options", options);
         request.setAttribute("tariffs", tariffs);
         request.setAttribute("contract", contract);
+        for (Tariff tariff : tariffs){
+            System.out.println("Тариф: " + tariff.getName());
+            for (Option option : tariff.getOptions()){
+                System.out.println("  Опция: " + option.getName());{
+                    for (Option reqO : option.getOptionsRequired()){
+                        System.out.println("        Требуемые: " + reqO.getName());
+                    }
+                    for (Option incO : option.getOptionsIncompatible()){
+                        System.out.println("            Несовместимые: " + incO.getName());
+                    }
+
+                }
+            }
+        }
 
         return "/client/contract/editContract.jsp";
     }

@@ -46,6 +46,11 @@
                     <h1 class="page-header">
                         Тариф: <c:out value="${requestScope.tariff.name}"/>
                     </h1>
+                    <ol class="breadcrumb">
+                        <li class="active">
+                            <i class="fa fa-dashboard"></i> При выборе зависимой опции необходимые опции будут добавлены автоматически
+                        </li>
+                    </ol>
                 </div>
             </div>
             <!-- /.row -->
@@ -88,6 +93,7 @@
                                             <c:forEach var="req_option" items="${option.optionsRequired}">
                                                 <c:set var="req_options" value="${req_options} ${req_option.id}"/>
                                             </c:forEach>
+
                                             <c:forEach var="possible_option" items="${requestScope.tariff.options}">
                                                           <c:if test="${option.id eq possible_option.id}">checked</c:if>
                                             </c:forEach>
