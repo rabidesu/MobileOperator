@@ -127,7 +127,7 @@
                                 </div>
                             </div>
                         </c:if>
-                    <form role="form" id="send" action="/pages/admin/contract/EditContract" method="post">
+                    <form role="form" id="send" action="/pages/admin/contract/EditContractByAdmin" method="post">
                     <input type="text" id="entity_id" name="entity_id" hidden>
                     </form>
                 </div>

@@ -8,8 +8,10 @@ import com.tsystems.jschool.mobile.actions.admin.client.FindClientProfileAction;
 import com.tsystems.jschool.mobile.actions.admin.contract.*;
 import com.tsystems.jschool.mobile.actions.admin.option.*;
 import com.tsystems.jschool.mobile.actions.admin.tariff.*;
+import com.tsystems.jschool.mobile.actions.ajax.GetOptionsForTariffAction;
 import com.tsystems.jschool.mobile.actions.client.LoginClientAction;
 import com.tsystems.jschool.mobile.actions.client.contract.EditContractAction;
+import com.tsystems.jschool.mobile.actions.client.tariff.AddTariffToContractAction;
 import com.tsystems.jschool.mobile.actions.client.tariff.ViewTariffAction;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +30,7 @@ public class ActionFactory {
         actions.put("admin/client/FindClient", new FindClientAction());
         actions.put("admin/client/FindClientProfile", new FindClientProfileAction());
         actions.put("admin/contract/ChangeContract", new ChangeContractAction());
-        actions.put("admin/contract/EditContract", new EditContractAction());
+        actions.put("admin/contract/EditContractByAdmin", new EditContractByAdminAction());
         actions.put("admin/contract/FindContract", new FindContractAction());
         actions.put("admin/contract/NewContract", new NewContractAction());
         actions.put("admin/contract/SaveContract", new SaveContractAction());
@@ -38,6 +40,7 @@ public class ActionFactory {
         actions.put("admin/option/NewOption", new NewOptionAction());
         actions.put("admin/option/RemoveOption", new RemoveOptionAction());
         actions.put("admin/option/SaveOption", new SaveOptionAction());
+        actions.put("admin/option/FindOption", new FindOptionAction());
         actions.put("admin/tariff/ChangeTariff", new ChangeTariffAction());
         actions.put("admin/tariff/EditTariff", new EditTariffAction());
         actions.put("admin/tariff/FindTariff", new FindTariffAction());
@@ -49,6 +52,8 @@ public class ActionFactory {
         actions.put("client/LoginClient", new LoginClientAction());
         actions.put("client/contract/EditContract", new EditContractAction());
         actions.put("client/tariff/ViewTariff", new ViewTariffAction());
+        actions.put("client/tariff/AddTariffToContract", new AddTariffToContractAction());
+        actions.put("ajax/GetOptionsForTariff", new GetOptionsForTariffAction());
     }
 
     public static Action getAction(HttpServletRequest request){

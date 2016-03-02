@@ -78,15 +78,26 @@
                             <div class="form-group">
                                 <label>Список доступных опций:</label>
                                 <c:if test="${not empty requestScope.options}">
+
+                                <div class="option_chb">
                                     <c:forEach var="option" items="${requestScope.options}">
                                         <div class="checkbox">
-                                            <label><input type="checkbox"
-                                                <c:forEach var="possible_option" items="${requestScope.tariff.options}">
+                                            <label><input type="checkbox" name="options"
+                                                <c:set var="req_options" value="" scope="page"/>
+
+                                            <c:forEach var="req_option" items="${option.optionsRequired}">
+                                                <c:set var="req_options" value="${req_options} ${req_option.id}"/>
+                                            </c:forEach>
+                                            <c:forEach var="possible_option" items="${requestScope.tariff.options}">
                                                           <c:if test="${option.id eq possible_option.id}">checked</c:if>
-                                                </c:forEach>
-                                                          name="options" value="${option.id}">${option.name}</label>
+                                            </c:forEach>
+                                                          data-req="${req_options}"
+                                                          class="depended_option" value="${option.id}">${option.name}
+                                                <input name="options" type="hidden"  disabled id="hidden_${option.id}" value="${option.id}"/>
+                                            </label>
                                         </div>
                                     </c:forEach>
+                                    </div>
                                 </c:if>
                                 <c:if test="${empty requestScope.options}">
                                     <div class="panel panel-warning">
@@ -125,6 +136,63 @@
 
 <!-- jQuery -->
 <script src="/js/jquery-2.2.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+    $('.option_chb input:checkbox').each(function(){
+        var $cur_req_options = $(this).data("req");
+        var $cur_options_arr = $cur_req_options.split(' ');
+        if (this.checked){
+            $current_id = $(this).val();
+            $('.option_chb input:checkbox').each(function(){
+                if ($.inArray($(this).val(), $cur_options_arr) !== -1){
+                    $(this).prop("checked", true);
+                    $(this).prop("disabled", true);
+                    $(this).addClass("by_"+$current_id);
+                    $('#hidden_'+$(this).val()).prop("disabled", false);
+                }
+            })
+        } else {
+            $current_id = $(this).val();
+            $('.option_chb input:checkbox').each(function(){
+                if ($.inArray($(this).val(), $cur_options_arr) !== -1){
+                    $(this).removeClass("by_"+$current_id);
+                    $className = $(this).attr('class').split(' ');
+                    if ($className.length == 1) {
+                        $(this).prop("disabled", false);
+                        $('#hidden_'+$(this).val()).prop("disabled", true);
+                    }
+                }
+            })
+        }
+    }).change(function () {
+        var $req_options = $(this).data("req");
+        var $options_arr = $req_options.split(' ');
+        if (this.checked){
+            $current_id = $(this).val();
+            $('.option_chb input:checkbox').each(function(){
+                if ($.inArray($(this).val(), $options_arr) !== -1){
+                    $(this).prop("checked", true);
+                    $(this).prop("disabled", true);
+                    $(this).addClass("by_"+$current_id);
+                    $('#hidden_'+$(this).val()).prop("disabled", false);
+                }
+            })
+        } else {
+            $current_id = $(this).val();
+            $('.option_chb input:checkbox').each(function(){
+                if ($.inArray($(this).val(), $options_arr) !== -1){
+                    $(this).removeClass("by_"+$current_id);
+                    $className = $(this).attr('class').split(' ');
+                    if ($className.length == 1) {
+                        $(this).prop("disabled", false);
+                        $('#hidden_'+$(this).val()).prop("disabled", true);
+                    }
+                }
+            })
+        }
+    });
+    });
+</script>
 
 <!-- Bootstrap Core JavaScript -->
 <script src="/js/bootstrap.min.js"></script>

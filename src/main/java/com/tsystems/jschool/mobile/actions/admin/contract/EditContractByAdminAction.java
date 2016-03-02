@@ -17,7 +17,7 @@ import com.tsystems.jschool.mobile.controllers.Action;
 /**
  * Created by Alexandra on 25.02.2016.
  */
-public class EditContractAction extends Action {
+public class EditContractByAdminAction extends Action {
 
     ContractService contractService = new ContractServiceImpl();
     TariffService tariffService = new TariffServiceImpl();

@@ -69,7 +69,7 @@
                     <li class=""><a href="#tariff" data-toggle="tab">Тариф</a></li>
                     <li class=""><a href="#options_tab" data-toggle="tab">Опции</a></li>
                     <li class="pull-right">
-                        <button type="submit"  class="btn btn-success" id="btn-save-contract">Сохранить</button>
+                        <button type="submit" class="btn btn-success" id="btn-save-contract">Сохранить</button>
                         <c:if test="${!requestScope.contract.blockedByAdmin && !requestScope.contract.blockedByClient}">
                             <button type="submit" class="btn btn-danger" id="btn-block">Заблокировать</button>
                         </c:if>
@@ -145,10 +145,10 @@
                                     <c:forEach var="option" items="${requestScope.options}">
                                         <div class="checkbox">
                                             <label><input type="checkbox"
-                                            <c:forEach var="selected_option" items="${requestScope.contract.options}">
-                                                          <c:if test="${option.id eq selected_option.id}">checked</c:if>
                                                           <c:if test="${requestScope.contract.blockedByAdmin ||
                                                           requestScope.contract.blockedByClient}">disabled</c:if>
+                                            <c:forEach var="selected_option" items="${requestScope.contract.options}">
+                                                          <c:if test="${option.id eq selected_option.id}">checked</c:if>
                                             </c:forEach>
                                                           name="options" value="${option.id}">${option.name}</label>
                                         </div>

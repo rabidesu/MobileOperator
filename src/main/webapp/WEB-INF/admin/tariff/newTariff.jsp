@@ -46,6 +46,11 @@
                     <h1 class="page-header">
                         Новый тариф
                     </h1>
+                    <ol class="breadcrumb">
+                        <li class="active">
+                            <i class="fa fa-dashboard"></i> При выборе зависимой опции необходимые опции будут добавлены автоматически
+                        </li>
+                    </ol>
                 </div>
             </div>
             <!-- /.row -->
@@ -78,19 +83,22 @@
                             <div class="form-group">
                                 <label>Список доступных опций:</label>
                                 <c:if test="${not empty requestScope.options}">
+                                <div class="option_chb">
                                     <c:forEach var="option" items="${requestScope.options}">
                                         <div class="checkbox">
                                             <label><input type="checkbox" name="options"
-                                                <c:if test="${not empty option.optionsRequired}">
                                                 <c:set var="req_options" value="" scope="page"/>
+
                                             <c:forEach var="req_option" items="${option.optionsRequired}">
                                                     <c:set var="req_options" value="${req_options} ${req_option.id}"/>
-                                                           data-req="${req_options}"
                                             </c:forEach>
-                                            </c:if>
-                                                          class="depended_option" value="${option.id}">${option.name}</label>
+                                                          data-req="${req_options}"
+                                                          class="depended_option" value="${option.id}">${option.name}
+                                                <input name="options" type="hidden"  disabled id="hidden_${option.id}" value="${option.id}"/>
+                                            </label>
                                         </div>
                                     </c:forEach>
+                                    </div>
                                 </c:if>
                                 <c:if test="${empty requestScope.options}">
                                     <div class="panel panel-warning">
@@ -124,19 +132,35 @@
 <script src="/js/jquery-2.2.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('input[name="depended_option"]:checkbox').each(function (i) {
-            $(this).click(function() {
-                var value = $(this).attr("data-req");
-                alert($(value));
-            });
 
-//            if (this.disable()) {
-//                var value = $(this).attr("data-req");
-//                alert($(value));
-//                value = value.split(" ");
-//            }
-
+        $('.option_chb input:checkbox').change(function () {
+            var $req_options = $(this).data("req");
+            var $options_arr = $req_options.split(' ');
+            if (this.checked){
+                $current_id = $(this).val();
+                $('.option_chb input:checkbox').each(function(){
+                    if ($.inArray($(this).val(), $options_arr) !== -1){
+                        $(this).prop("checked", true);
+                        $(this).prop("disabled", true);
+                        $(this).addClass("by_"+$current_id);
+                        $('#hidden_'+$(this).val()).prop("disabled", false);
+                    }
+                })
+            } else {
+                $current_id = $(this).val();
+                $('.option_chb input:checkbox').each(function(){
+                    if ($.inArray($(this).val(), $options_arr) !== -1){
+                        $(this).removeClass("by_"+$current_id);
+                        $className = $(this).attr('class').split(' ');
+                        if ($className.length == 1) {
+                            $(this).prop("disabled", false);
+                            $('#hidden_'+$(this).val()).prop("disabled", true);
+                        }
+                    }
+                })
+            }
         });
+
     });
 </script>
 

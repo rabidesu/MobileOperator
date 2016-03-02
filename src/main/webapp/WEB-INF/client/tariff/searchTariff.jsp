@@ -47,11 +47,6 @@
                     <h1 class="page-header">
                         Список тарифов
                     </h1>
-                    <ol class="breadcrumb">
-                        <li class="active">
-                            <i class="fa fa-dashboard"></i> Нажмите на тариф для его редактирования или удаления
-                        </li>
-                    </ol>
                 </div>
             </div>
             <!-- /.row -->
@@ -91,41 +86,21 @@
                                     <span class="pull-right">${tariff.price}</span>
                                     <div class="clearfix"></div>
                                 </div>
-                                <a href="/pages/admin/option/NewOption">
+                                <form action="/pages/client/tariff/AddTariffToContract" id="tariff-${tariff.id}">
                                     <div class="panel-footer">
+                                        <a>
                                         <span class="pull-left">Перейти на тариф</span>
+                                        <button class="pull-right" type="submit" name="tariff_id" value="${tariff.id}">
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                        </button>
                                         <div class="clearfix"></div>
+                                        </a>
                                     </div>
-                                </a>
+                                </form>
                             </div>
                         </div>
                         <c:if test="${count.index % 3 == 2}"></div></c:if>
                         </c:forEach>
-                    <%--<table class="table table-bordered table-hover table-striped">--%>
-                        <%--<thead>--%>
-                        <%--<tr>--%>
-                            <%--<th>ID</th>--%>
-                            <%--<th>Название</th>--%>
-                            <%--<th>Стоимость</th>--%>
-                            <%--<th>Возможные опции</th>--%>
-                        <%--</tr>--%>
-                        <%--</thead>--%>
-                        <%--<tbody>--%>
-                        <%--<c:forEach items="${requestScope.listTariffs}" var="tariff">--%>
-                            <%--<tr class="click-row" data-value="${tariff.id}">--%>
-                                <%--<td><c:out value="${tariff.id}"/></td>--%>
-                                <%--<td><c:out value="${tariff.name}"/></td>--%>
-                                <%--<td><c:out value="${tariff.price}"/></td>--%>
-                                <%--<td>--%>
-                                <%--<c:forEach items="${tariff.options}" var="option">--%>
-                                    <%--<c:out value="${option.name}"/>,--%>
-                                <%--</c:forEach>--%>
-                                <%--</td>--%>
-                            <%--</tr>--%>
-                        <%--</c:forEach>--%>
-                        <%--</tbody>--%>
-                    <%--</table>--%>
                         </c:if>
                         <c:if test="${not empty requestScope.message}">
                             <div class="col-lg-9">
@@ -135,9 +110,6 @@
                                 </div>
                             </div>
                         </c:if>
-                    <form role="form" id="send" action="/pages/admin/tariff/EditTariff" method="post">
-                    <input type="text" id="entity_id" name="entity_id" hidden>
-                    </form>
                 </div>
             </div>
             <!-- /Main -->
