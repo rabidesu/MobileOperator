@@ -28,10 +28,6 @@ public class Role implements Serializable {
     @Enumerated(EnumType.STRING)
     private RoleName roleName;
 
-//    @ManyToMany(cascade = CascadeType.ALL)
-//    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-//    private List<User> users = new ArrayList<User>();
-
     public int getId() {
         return id;
     }
@@ -44,11 +40,4 @@ public class Role implements Serializable {
         this.roleName = roleName;
     }
 
-//    public List<User> getUsers() {
-//        return users;
-//    }
-//
-//    public void setUsers(List<User> users) {
-//        this.users = users;
-//    }
 }

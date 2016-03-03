@@ -1,7 +1,7 @@
 package com.tsystems.jschool.mobile.services.API;
 
 import com.tsystems.jschool.mobile.entities.Option;
-import com.tsystems.jschool.mobile.entities.User;
+import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
 
 import java.util.List;
 
@@ -10,17 +10,19 @@ import java.util.List;
  */
 public interface OptionService {
 
-    List<Option> getAllOptions();
+    List<Option> getAllOptions() throws MobileServiceException;
 
-    List<Option> getAllAnotherOptions(String id);
+    List<Option> getAllAnotherOptions(String id) throws MobileServiceException;
 
-    void addOption(String name, String price, String connectPrice, String[] requiredOption, String[] incompatibleOption);
+    void addOption(String name, String price, String connectPrice, String[] requiredOption,
+                   String[] incompatibleOption) throws MobileServiceException;
 
-    void changeOption(String id, String name, String price, String connectPrice, String[] requiredOption, String[] incompatibleOption);
+    void changeOption(String id, String name, String price, String connectPrice, String[] requiredOption,
+                      String[] incompatibleOption) throws MobileServiceException;
 
-    Option getOptionById(String id);
+    Option getOptionById(String id) throws MobileServiceException;
 
-    void removeOptionById(String id);
+    void removeOptionById(String id) throws MobileServiceException;
 
-    List<Option> getOptionsByName(String name);
+    List<Option> getOptionsByName(String name) throws MobileServiceException;
 }

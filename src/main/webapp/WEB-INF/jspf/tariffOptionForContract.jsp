@@ -32,7 +32,13 @@
                 Для данного тарифа нет доступных опций
             </div>
             <div class="option_chb">
-                <c:forEach var="option" items="${requestScope.options}">
+                <c:if test="${requestScope.contract.blockedByAdmin || requestScope.contract.blockedByClient}">
+                    <c:set value="${requestScope.contract.tariff.options}" var="show_opt"/>
+                </c:if>
+                <c:if test="${!requestScope.contract.blockedByAdmin && !requestScope.contract.blockedByClient}">
+                    <c:set value="${requestScope.options}" var="show_opt"/>
+                </c:if>
+                <c:forEach var="option" items="${show_opt}">
                     <div class="checkbox">
                         <label><input type="checkbox"
                             <c:set var="req_options" value="" scope="page"/>

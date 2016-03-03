@@ -102,11 +102,11 @@
                         <c:if test="${count.index % 3 == 2}"></div></c:if>
                         </c:forEach>
                         </c:if>
-                        <c:if test="${not empty requestScope.message}">
+                        <c:if test="${empty requestScope.listTariffs}">
                             <div class="col-lg-9">
                                 <div class="panel panel-warning">
                                     <div class="panel-heading">Ошибка!</div>
-                                    <div class="panel-body"><c:out value="${requestScope.message}"/></div>
+                                    <div class="panel-body">Не найдено ни одного тарифа/></div>
                                 </div>
                             </div>
                         </c:if>

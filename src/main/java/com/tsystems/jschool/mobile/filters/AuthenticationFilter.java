@@ -1,4 +1,4 @@
-package com.tsystems.jschool.mobile.controllers;
+package com.tsystems.jschool.mobile.filters;
 
 import com.tsystems.jschool.mobile.entities.User;
 import com.tsystems.jschool.mobile.enumerates.RoleName;
@@ -13,8 +13,6 @@ import java.io.IOException;
  * Created by Alexandra on 12.02.2016.
  */
 public class AuthenticationFilter implements Filter {
-
-    public static final String CONTROLLER_PREFIX = "/pages";
 
     public void destroy() {
     }

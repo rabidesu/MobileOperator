@@ -1,9 +1,10 @@
 package com.tsystems.jschool.mobile.actions.client.contract;
 
-import com.tsystems.jschool.mobile.controllers.Action;
+import com.tsystems.jschool.mobile.actions.Action;
 import com.tsystems.jschool.mobile.entities.Contract;
 import com.tsystems.jschool.mobile.entities.Option;
 import com.tsystems.jschool.mobile.entities.Tariff;
+import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
 import com.tsystems.jschool.mobile.services.API.ContractService;
 import com.tsystems.jschool.mobile.services.API.OptionService;
 import com.tsystems.jschool.mobile.services.API.TariffService;
@@ -20,36 +21,21 @@ import java.util.List;
  */
 public class EditContractAction extends Action {
 
-    ContractService contractService = new ContractServiceImpl();
-    TariffService tariffService = new TariffServiceImpl();
-    OptionService optionService = new OptionServiceImpl();
-
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
 
-
         String contractId = request.getParameter("entity_id");
-        Contract contract = contractService.getContractById(contractId);
-        List<Tariff> tariffs = tariffService.getAllTariffs();
-        List<Option> options = optionService.getAllOptions();
-        request.setAttribute("options", options);
-        request.setAttribute("tariffs", tariffs);
-        request.setAttribute("contract", contract);
-        for (Tariff tariff : tariffs){
-            System.out.println("Тариф: " + tariff.getName());
-            for (Option option : tariff.getOptions()){
-                System.out.println("  Опция: " + option.getName());{
-                    for (Option reqO : option.getOptionsRequired()){
-                        System.out.println("        Требуемые: " + reqO.getName());
-                    }
-                    for (Option incO : option.getOptionsIncompatible()){
-                        System.out.println("            Несовместимые: " + incO.getName());
-                    }
-
-                }
-            }
+        try {
+            Contract contract = app.contractService.getContractById(contractId);
+            List<Tariff> tariffs = app.tariffService.getAllTariffs();
+            List<Option> options = app.optionService.getAllOptions();
+            request.setAttribute("options", options);
+            request.setAttribute("tariffs", tariffs);
+            request.setAttribute("contract", contract);
+            return "/client/contract/editContract.jsp";
+        } catch (MobileServiceException e){
+            request.setAttribute("massage", "Редактирование контракта невозможно! (" + e.getCause().getMessage() + ")");
+            return "/client/info.jsp";
         }
-
-        return "/client/contract/editContract.jsp";
     }
 }

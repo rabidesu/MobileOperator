@@ -60,7 +60,7 @@
                     <li class=""><a href="#user_contracts" data-toggle="tab">Контракты</a></li>
                     <c:if test="${requestScope.user.role.roleName == 'CLIENT'}">
                     <li class="pull-right">
-                        <button type="submit"  class="btn btn-success" id="btn-new-contract-for-user">Новый контракт</button>
+                        <button type="submit" form="form-new-contract-for-user" class="btn btn-success" id="btn-new-contract-for-user">Новый контракт</button>
                     </li>
                     </c:if>
                     <c:if test="${requestScope.user.role.roleName == 'ADMIN'}">
@@ -157,7 +157,7 @@
                                     </div>
                                 </div>
                             </c:if>
-                        <form role="form" id="send" action="/pages/admin/contract/EditContract" method="post">
+                        <form role="form" id="send" action="/pages/admin/contract/EditContractByAdmin" method="post">
                             <input type="text" id="entity_id" name="entity_id" hidden>
                         </form>
                         </div>
@@ -186,12 +186,6 @@
             var $entity_id = $(this).attr("data-value");
             $("#entity_id").val($entity_id);
             $("#send").submit();
-        });
-    });
-
-    $(document).ready(function() {
-        $("#btn-new-contract-for-user").click(function() {
-            $("#form-new-contract-for-user").submit();
         });
     });
 </script>

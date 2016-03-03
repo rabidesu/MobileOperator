@@ -105,11 +105,11 @@
                         </tbody>
                     </table>
                         </c:if>
-                        <c:if test="${not empty requestScope.message}">
+                        <c:if test="${empty requestScope.listOptions}">
                             <div class="col-lg-9">
                                 <div class="panel panel-warning">
                                     <div class="panel-heading">Ошибка!</div>
-                                    <div class="panel-body"><c:out value="${requestScope.message}"/></div>
+                                    <div class="panel-body">Нет ни одной опции, удовлетворяющей условиям поиска</div>
                                 </div>
                             </div>
                         </c:if>

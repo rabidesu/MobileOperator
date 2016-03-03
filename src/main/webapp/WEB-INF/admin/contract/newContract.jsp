@@ -59,12 +59,15 @@
                     <li class=""><a href="#phone" data-toggle="tab">Номер</a></li>
                     <li class=""><a href="#tariff" data-toggle="tab">Тариф</a></li>
                     <li class=""><a href="#options_tab" data-toggle="tab">Опции</a></li>
+                    <li class="pull-right">
+                        <button type="submit" form="form-new-contract" class="btn btn-success">Добавить</button>
+                    </li>
                 </ul>
             </div>
 
             <div class="row">
                 <div class="col-lg-4 top-buffer">
-                <form role="form" action="/pages/admin/contract/SaveContract">
+                <form role="form" id="form-new-contract" action="/pages/admin/contract/SaveContract">
 
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="general">
@@ -137,7 +140,6 @@
 
                         </div>
 
-                    <button type="submit" class="btn btn-success">Добавить</button>
                 </form>
                 </div>
             </div>

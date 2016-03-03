@@ -50,13 +50,13 @@
                         <div class="col-lg-6">
                             <form role="form" action="/pages/admin/client/FindClient" >
                                 <div class="form-group input-group">
-                                    <input type="text" class="form-control" placeholder="Поиск..." name="search_text">
                                     <select class="form-control" name="search_field">
                                         <option selected="selected" value="phone">Телефон</option>
                                         <option value="surname">Фамилия</option>
                                         <option value="email">E-mail</option>
                                         <option value="user_id">ID</option>
                                     </select>
+                                    <input type="text" class="form-control" placeholder="Поиск..." name="search_text">
                                     <span class="input-group-btn"><button class="btn btn-default" type="submit" id="search"><i class="fa fa-search"></i></button></span>
                                 </div>
                             </form>
@@ -100,11 +100,11 @@
                             </tbody>
                         </table>
                     </c:if>
-                    <c:if test="${not empty requestScope.message}">
+                    <c:if test="${empty requestScope.listUsers}">
                         <div class="col-lg-9">
                             <div class="panel panel-warning">
                                 <div class="panel-heading">Ошибка!</div>
-                                <div class="panel-body"><c:out value="${requestScope.message}"/></div>
+                                <div class="panel-body">Нет ни одного клиента, удовлетворяющего условиям поиска"</div>
                             </div>
                         </div>
                     </c:if>

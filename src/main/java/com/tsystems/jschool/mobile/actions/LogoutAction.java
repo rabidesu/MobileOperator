@@ -1,7 +1,5 @@
 package com.tsystems.jschool.mobile.actions;
 
-import com.tsystems.jschool.mobile.controllers.Action;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 

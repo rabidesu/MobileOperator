@@ -61,12 +61,16 @@
                 <ul id="myTab" class="nav nav-tabs">
                     <li class="active"><a href="#general" data-toggle="tab">Основные</a></li>
                     <li class=""><a href="#possible" data-toggle="tab">Доступные опции</a></li>
+                    <li class="pull-right">
+                        <button type="submit" form="form-change-tariff" class="btn btn-success">Изменить</button>
+                        <button type="submit" form="form-remove-tariff" class="btn btn-danger">Удалить</button>
+                    </li>
                 </ul>
 
             </div>
 
             <div class="col-lg-4 top-buffer" >
-                <form role="form" action="/pages/admin/tariff/ChangeTariff" method="post">
+                <form role="form" id="form-change-tariff" action="/pages/admin/tariff/ChangeTariff" method="post">
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="general">
                             <div class="form-group">
@@ -114,16 +118,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="top-buffer">
-                            <button type="submit" class="btn btn-success" name="tariff_id" value="${requestScope.tariff.id}">Изменить</button>
-                        </div>
-                    </div>
                 </form>
-                <form action="/pages/admin/tariff/RemoveTariff">
+                <form id="form-remove-tariff" action="/pages/admin/tariff/RemoveTariff">
                     <div class="form-group">
                         <div class="top-buffer">
-                            <button type="submit" class="btn btn-danger" name="tariff_id" value="${requestScope.tariff.id}">Удалить</button>
+                            <input type="hidden" name="tariff_id" value="${requestScope.tariff.id}" />
                         </div>
                     </div>
                 </form>

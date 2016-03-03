@@ -54,21 +54,9 @@ public class User implements Serializable {
     @Column(name = "password", nullable = false)
     private String password;
 
-    //@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     @ManyToOne
     @JoinColumn (name = "role_id")
     private Role role;
-
-
-    public User(String name, String email, String password) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-    }
-
-    public User(){
-
-    }
 
     public int getId() {
         return id;

@@ -61,12 +61,15 @@
                 <ul id="myTab" class="nav nav-tabs">
                     <li class="active"><a href="#general" data-toggle="tab">Основные</a></li>
                     <li class=""><a href="#possible" data-toggle="tab">Доступные опции</a></li>
+                    <li class="pull-right">
+                        <button type="submit" form="form-new-tariff" class="btn btn-success">Добавить</button>
+                    </li>
                 </ul>
 
             </div>
 
             <div class="col-lg-4 top-buffer" >
-                <form role="form" action="/pages/admin/tariff/SaveTariff" method="post">
+                <form role="form" id="form-new-tariff" action="/pages/admin/tariff/SaveTariff" method="post">
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="general">
                             <div class="form-group">
@@ -107,11 +110,6 @@
                                     </div>
                                 </c:if>
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="top-buffer">
-                            <button type="submit" class="btn btn-success">Добавить</button>
                         </div>
                     </div>
                 </form>

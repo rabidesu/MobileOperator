@@ -107,7 +107,7 @@
                                     <c:if test="${contract.blockedByAdmin}">
                                         <span class="contract-blocked">Заблокирован </span>
                                     </c:if>
-                                    <c:if test="${contract.blockedByClient}">
+                                    <c:if test="${contract.blockedByClient && !contract.blockedByAdmin}">
                                         <span class="contract-inactive" >Неактивен </span>
                                     </c:if>
                                     <c:if test="${!contract.blockedByAdmin && !contract.blockedByClient}">
@@ -119,11 +119,11 @@
                         </tbody>
                     </table>
                         </c:if>
-                        <c:if test="${not empty requestScope.message}">
+                        <c:if test="${empty requestScope.listContracts}">
                             <div class="col-lg-9">
                                 <div class="panel panel-warning">
                                     <div class="panel-heading">Ошибка!</div>
-                                    <div class="panel-body"><c:out value="${requestScope.message}"/></div>
+                                    <div class="panel-body">Нет ни одного контракта, удовлетворяющего условиям поиска</div>
                                 </div>
                             </div>
                         </c:if>

@@ -50,7 +50,7 @@
                         <c:if test="${requestScope.contract.blockedByAdmin}">
                             <span class="contract-blocked pull-right">Заблокирован </span>
                         </c:if>
-                        <c:if test="${requestScope.contract.blockedByClient}">
+                        <c:if test="${requestScope.contract.blockedByClient && !requestScope.contract.blockedByAdmin}">
                             <span class="contract-inactive pull-right" >Неактивен </span>
                         </c:if>
                         <c:if test="${!requestScope.contract.blockedByAdmin && !requestScope.contract.blockedByClient}">
@@ -151,7 +151,9 @@
 
 <!-- jQuery -->
 <script src="/js/jquery-2.2.0.min.js"></script>
-<script src="/js/edit-contract.js"></script>
+<c:if test="${!requestScope.contract.blockedByAdmin && !requestScope.contract.blockedByClient}">
+    <script src="/js/edit-contract.js"></script>
+</c:if>
 
 
 <!-- Bootstrap Core JavaScript -->

@@ -60,7 +60,7 @@
                     <li class=""><a href="#tariff" data-toggle="tab">Тариф</a></li>
                     <li class=""><a href="#options_tab" data-toggle="tab">Опции</a></li>
                     <li class="pull-right">
-                        <button type="submit"  class="btn btn-success" id="btn-save-contract">Добавить</button>
+                        <button type="submit"  class="btn btn-success" form="form-save-contract">Добавить</button>
                     </li>
                 </ul>
             </div>
@@ -156,14 +156,6 @@
 
 <!-- jQuery -->
 <script src="/js/jquery-2.2.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $("#btn-save-contract").click(function() {
-            $("#form-save-contract").submit();
-        });
-    });
-
-</script>
 
 
 <!-- Bootstrap Core JavaScript -->

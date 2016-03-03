@@ -97,11 +97,11 @@
                         </tbody>
                     </table>
                         </c:if>
-                        <c:if test="${not empty requestScope.message}">
+                        <c:if test="${empty requestScope.listTariffs}">
                             <div class="col-lg-9">
                                 <div class="panel panel-warning">
                                     <div class="panel-heading">Ошибка!</div>
-                                    <div class="panel-body"><c:out value="${requestScope.message}"/></div>
+                                    <div class="panel-body">Нет ни одного тарифа, удовлетворяющего условиям поиска</div>
                                 </div>
                             </div>
                         </c:if>

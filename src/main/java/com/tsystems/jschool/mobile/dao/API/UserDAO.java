@@ -1,7 +1,9 @@
 package com.tsystems.jschool.mobile.dao.API;
 
 import com.tsystems.jschool.mobile.entities.User;
+import com.tsystems.jschool.mobile.exceptions.MobileDAOException;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 /**
@@ -9,12 +11,10 @@ import java.util.List;
  */
 public interface UserDAO extends GenericDAO<User> {
 
-    List<User> getUserByEmailPassword(String email, String password);
+    List<User> getUserByPhoneNumber(String number, EntityManager entityManager) throws MobileDAOException;
 
-    List<User> getUserByPhoneNumber(String number);
+    List<User> getUserByEmail(String email, EntityManager entityManager) throws MobileDAOException;
 
-    List<User> getUserByEmail(String email);
-
-    List<User> getUserBySurname(String surname);
+    List<User> getUserBySurname(String surname, EntityManager entityManager) throws MobileDAOException;
 
 }

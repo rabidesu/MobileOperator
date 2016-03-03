@@ -1,18 +1,20 @@
 package com.tsystems.jschool.mobile.services.Impl;
 
-import com.tsystems.jschool.mobile.dao.Impl.UserDAOImpl;
+import com.tsystems.jschool.mobile.MobileContext;
 import com.tsystems.jschool.mobile.dao.API.UserDAO;
 import com.tsystems.jschool.mobile.dao.JpaUtil;
-import com.tsystems.jschool.mobile.entities.Role;
 import com.tsystems.jschool.mobile.entities.User;
 import com.tsystems.jschool.mobile.enumerates.RoleName;
+import com.tsystems.jschool.mobile.exceptions.LoginUserException;
+import com.tsystems.jschool.mobile.exceptions.MobileDAOException;
+import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
 import com.tsystems.jschool.mobile.services.API.UserService;
+import com.tsystems.jschool.mobile.services.Utils;
+import org.apache.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,36 +24,51 @@ import java.util.List;
  */
 public class UserServiceImpl implements UserService {
 
+    private final static Logger logger = Logger.getLogger(UserServiceImpl.class);
+
     private UserDAO userDAO;
 
-    public User adminExists(String email, String password) {
+    public UserServiceImpl(MobileContext context) {
+        userDAO = context.userDAO;
+    }
+
+    public User adminExists(String email, String password) throws MobileServiceException, LoginUserException {
         return userExists(email, password, RoleName.ADMIN);
     }
 
-    public User clientExists(String email, String password) {
+    public User clientExists(String email, String password) throws MobileServiceException, LoginUserException {
         return userExists(email, password, RoleName.CLIENT);
     }
 
-    public User userExists(String email, String password, RoleName role) {
-        EntityManager em = JpaUtil.getEntityManager();
-        userDAO = new UserDAOImpl(em);
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
-        //List<User> users = userDAO.getUserByEmailPassword(email, password);
-        List<User> users = userDAO.getUserByEmail(email);
-        transaction.commit();
-        em.close();
-        if (!users.isEmpty()) {
-            User user = users.get(0);
-            if (BCrypt.checkpw(password, user.getPassword()) && user.getRole().getRoleName() == role){
-                return user;
+    public User userExists(String email, String password, RoleName role) throws MobileServiceException, LoginUserException {
+        EntityManager em = null;
+        try {
+            em = JpaUtil.beginTransaction();
+            List<User> users = userDAO.getUserByEmail(email, em);
+            JpaUtil.commitTransaction(em);
+            if (!users.isEmpty()) {
+                User user = users.get(0);
+                if (BCrypt.checkpw(password, user.getPassword()) && user.getRole().getRoleName() == role){
+                    return user;
+                } else {
+                    String message = "Invalid password for user: " + email;
+                    logger.error(message);
+                    throw new LoginUserException();
+                }
+            } else {
+                String message = "Invalid login: " + email;
+                logger.error(message);
+                throw new LoginUserException();
             }
-
+        } catch (MobileDAOException e){
+            JpaUtil.rollbackTransaction(em);
+            throw new MobileServiceException(e);
         }
-        return null;
     }
 
-    public String addUser(String name, String surname, String date, String passport, String address, String email, String password) {
+    public void addUser(String name, String surname, String date, String passport, String address,
+                          String email, String password) throws MobileServiceException {
+
         User user = new User();
         user.setName(name);
         user.setSurname(surname);
@@ -62,76 +79,79 @@ public class UserServiceImpl implements UserService {
         String salt = BCrypt.gensalt();
         String hashPassword = BCrypt.hashpw(password, salt);
         user.setPassword(hashPassword);
-        Date birthday = null;
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-d");
         try {
-            birthday = sdf.parse(date);
+            Date birthday = Utils.parseDate(date);
+            user.setBirthday(birthday);
         } catch (ParseException e) {
-            e.printStackTrace();
+            String message = "Can not add new user. Invalid birthday data format:" + date;
+            logger.error(message);
+            throw new MobileServiceException(message, e);
         }
 
-        user.setBirthday(birthday);
-
-        EntityManager em = JpaUtil.getEntityManager();
-        userDAO = new UserDAOImpl(em);
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
-        userDAO.save(user);
-        transaction.commit();
-        em.close();
-        return "OK";
+        EntityManager em = null;
+        try {
+            em = JpaUtil.beginTransaction();
+            userDAO.save(user, em);
+            JpaUtil.commitTransaction(em);
+        } catch (MobileDAOException e){
+            JpaUtil.rollbackTransaction(em);
+            throw new MobileServiceException(e);
+        }
     }
 
-    public List<User> getAllUsers(){
-        EntityManager em = JpaUtil.getEntityManager();
-        userDAO = new UserDAOImpl(em);
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
-        List<User> users = userDAO.findAll(User.class);
-        transaction.commit();
-        em.close();
-        return users;
+    public List<User> getAllUsers() throws MobileServiceException {
+        EntityManager em = null;
+        try {
+            em = JpaUtil.beginTransaction();
+            List<User> users = userDAO.findAll(User.class, em);
+            JpaUtil.commitTransaction(em);
+            return users;
+        } catch (MobileDAOException e){
+            JpaUtil.rollbackTransaction(em);
+            throw new MobileServiceException(e);
+        }
     }
 
 
-    public List<User> getUserByField(String searchText, String searchField) {
-
+    public List<User> getUserByField(String searchText, String searchField) throws MobileServiceException {
         List<User> users = null;
-        EntityManager em = JpaUtil.getEntityManager();
-        userDAO = new UserDAOImpl(em);
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
+        EntityManager em = null;
+        try {
+            em = JpaUtil.beginTransaction();
 
-        if (searchField.equals("phone")){
-            users = userDAO.getUserByPhoneNumber("%" + searchText + "%");
-        } else if (searchField.equals("surname")) {
-            users = userDAO.getUserBySurname("%" + searchText + "%");
-        } else if (searchField.equals("email")) {
-            users = userDAO.getUserByEmail("%" + searchText + "%");
-        } else if (searchField.equals("user_id")) {
-            users = new ArrayList<User>();
-            try {
-                users.add(userDAO.findById(User.class, Integer.valueOf(searchText)));
-            } catch (NumberFormatException e){
-
+            switch (searchText){
+                case "phone": users = userDAO.getUserByPhoneNumber("%" + searchText + "%", em); break;
+                case "surname": users = userDAO.getUserBySurname("%" + searchText + "%", em); break;
+                case "email": users = userDAO.getUserByEmail("%" + searchText + "%", em); break;
+                case "user_id": {
+                    users = new ArrayList<>();
+                    try {
+                        users.add(userDAO.findById(User.class, Integer.valueOf(searchText), em));
+                    } catch (NumberFormatException e) {
+                        String message = "Can not find user. Invalid id format:" + searchText;
+                        logger.error(message);
+                        throw e;
+                    }
+                }
             }
+            JpaUtil.commitTransaction(em);
+            return users;
+        } catch (MobileDAOException | NumberFormatException e){
+            JpaUtil.rollbackTransaction(em);
+            throw new MobileServiceException(e);
         }
-
-        transaction.commit();
-        em.close();
-        return users;
-
     }
 
-    public User getUserById(String id){
-        EntityManager em = JpaUtil.getEntityManager();
-        userDAO = new UserDAOImpl(em);
-        EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
-        User user = userDAO.findById(User.class, Integer.valueOf(id));
-        transaction.commit();
-        em.close();
-        return user;
+    public User getUserById(String id) throws MobileServiceException {
+        EntityManager em = null;
+        try {
+            em = JpaUtil.beginTransaction();
+            User user = userDAO.findById(User.class, Integer.valueOf(id), em);
+            JpaUtil.commitTransaction(em);
+            return user;
+        } catch (MobileDAOException e){
+            JpaUtil.rollbackTransaction(em);
+            throw new MobileServiceException(e);
+        }
     }
 }

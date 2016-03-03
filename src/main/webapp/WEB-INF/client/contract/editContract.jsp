@@ -69,8 +69,8 @@
                     <li class=""><a href="#tariff" data-toggle="tab">Тариф</a></li>
                     <li class=""><a href="#options_tab" data-toggle="tab">Опции</a></li>
                     <li class="pull-right">
-                        <button type="submit" class="btn btn-success" form="form-save-contract" id="btn-save-contract">Сохранить</button>
                         <c:if test="${!requestScope.contract.blockedByAdmin && !requestScope.contract.blockedByClient}">
+                            <button type="submit" class="btn btn-success" form="form-save-contract" id="btn-save-contract">Сохранить</button>
                             <button type="submit" class="btn btn-danger" form="form-block-contract" id="btn-block">Заблокировать</button>
                         </c:if>
                         <c:if test="${!requestScope.contract.blockedByAdmin && requestScope.contract.blockedByClient}">
@@ -82,7 +82,7 @@
 
             <div class="row">
                 <div class="col-lg-4 top-buffer">
-                <form role="form" action="/pages/client/contract/ChangeContractByCLient" id="form-save-contract" method="post">
+                <form role="form" action="/pages/client/contract/ChangeContractByClient" id="form-save-contract" method="post">
 
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="general">
@@ -122,6 +122,7 @@
 
 
                         <jsp:include page="/WEB-INF/jspf/tariffOptionForContract.jsp" />
+
                         <input type="hidden" name="contract_id" value="${requestScope.contract.id}">
                         </div>
 
@@ -149,7 +150,10 @@
 
 <!-- jQuery -->
 <script src="/js/jquery-2.2.0.min.js"></script>
-<script src="/js/edit-contract.js"></script>
+<c:if test="${!requestScope.contract.blockedByAdmin && !requestScope.contract.blockedByClient}">
+    <script src="/js/edit-contract.js"></script>
+</c:if>
+
 
 
 <!-- Bootstrap Core JavaScript -->

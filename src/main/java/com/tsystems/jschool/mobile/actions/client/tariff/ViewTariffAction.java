@@ -1,7 +1,8 @@
 package com.tsystems.jschool.mobile.actions.client.tariff;
 
-import com.tsystems.jschool.mobile.controllers.Action;
+import com.tsystems.jschool.mobile.actions.Action;
 import com.tsystems.jschool.mobile.entities.Tariff;
+import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
 import com.tsystems.jschool.mobile.services.API.TariffService;
 import com.tsystems.jschool.mobile.services.Impl.TariffServiceImpl;
 
@@ -14,18 +15,16 @@ import java.util.List;
  */
 public class ViewTariffAction extends Action {
 
-    TariffService tariffService = new TariffServiceImpl();
-
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        List<Tariff> tariffs = tariffService.getAllTariffs();
-        request.setAttribute("listTariffs", tariffs);
 
-        if (tariffs.isEmpty()) {
-            request.setAttribute("message", "Нет ни одного тарифа, удовлетворяющего условиям поиска");
-        } else {
-            request.setAttribute("message", null);
+        try {
+            List<Tariff> tariffs = app.tariffService.getAllTariffs();
+            request.setAttribute("listTariffs", tariffs);
+            return "/client/tariff/searchTariff.jsp";
+        } catch (MobileServiceException e){
+            request.setAttribute("massage", "Просмотр тарифов невозможен! (" + e.getCause().getMessage() + ")");
+            return "/client/info.jsp";
         }
-        return "/client/tariff/searchTariff.jsp";
     }
 }

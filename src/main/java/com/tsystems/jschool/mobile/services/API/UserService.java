@@ -2,6 +2,8 @@ package com.tsystems.jschool.mobile.services.API;
 
 import com.tsystems.jschool.mobile.entities.User;
 import com.tsystems.jschool.mobile.enumerates.RoleName;
+import com.tsystems.jschool.mobile.exceptions.LoginUserException;
+import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
 
 import java.util.List;
 
@@ -10,18 +12,19 @@ import java.util.List;
  */
 public interface UserService {
 
-    User adminExists(String email, String password);
+    User adminExists(String email, String password) throws MobileServiceException, LoginUserException;
 
-    User clientExists(String email, String password);
+    User clientExists(String email, String password) throws MobileServiceException, LoginUserException;
 
-    User userExists(String email, String password, RoleName role);
+    User userExists(String email, String password, RoleName role) throws MobileServiceException, LoginUserException;
 
-    List<User> getAllUsers();
+    List<User> getAllUsers() throws MobileServiceException;
 
-    List<User> getUserByField(String searchText, String searchField);
+    List<User> getUserByField(String searchText, String searchField) throws MobileServiceException;
 
-    String addUser(String name, String surname, String date, String passport, String address, String email, String password);
+    void addUser(String name, String surname, String date, String passport,
+                   String address, String email, String password) throws MobileServiceException;
 
-    User getUserById(String id);
+    User getUserById(String id) throws MobileServiceException;
 
 }

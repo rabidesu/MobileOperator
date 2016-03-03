@@ -1,5 +1,6 @@
-package com.tsystems.jschool.mobile.controllers;
+package com.tsystems.jschool.mobile.actions;
 
+import com.tsystems.jschool.mobile.actions.Action;
 import com.tsystems.jschool.mobile.actions.LogoutAction;
 import com.tsystems.jschool.mobile.actions.admin.LoginAdminAction;
 import com.tsystems.jschool.mobile.actions.admin.client.AllClientsAction;
@@ -8,11 +9,13 @@ import com.tsystems.jschool.mobile.actions.admin.client.FindClientProfileAction;
 import com.tsystems.jschool.mobile.actions.admin.contract.*;
 import com.tsystems.jschool.mobile.actions.admin.option.*;
 import com.tsystems.jschool.mobile.actions.admin.tariff.*;
-import com.tsystems.jschool.mobile.actions.ajax.GetOptionsForTariffAction;
 import com.tsystems.jschool.mobile.actions.client.LoginClientAction;
+import com.tsystems.jschool.mobile.actions.client.contract.ChangeContractByClientAction;
 import com.tsystems.jschool.mobile.actions.client.contract.EditContractAction;
 import com.tsystems.jschool.mobile.actions.client.tariff.AddTariffToContractAction;
 import com.tsystems.jschool.mobile.actions.client.tariff.ViewTariffAction;
+import com.tsystems.jschool.mobile.exceptions.NoSuchActionException;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -23,6 +26,8 @@ import java.util.Map;
  */
 public class ActionFactory {
 
+    public static final String CONTROLLER_PREFIX = "/pages/";
+    private final static Logger logger = Logger.getLogger(ActionFactory.class);
     private static final Map<String, Action> actions = new HashMap<String, Action>();
 
     static {
@@ -53,18 +58,18 @@ public class ActionFactory {
         actions.put("client/contract/EditContract", new EditContractAction());
         actions.put("client/tariff/ViewTariff", new ViewTariffAction());
         actions.put("client/tariff/AddTariffToContract", new AddTariffToContractAction());
-        actions.put("ajax/GetOptionsForTariff", new GetOptionsForTariffAction());
+        actions.put("client/contract/ChangeContractByClient", new ChangeContractByClientAction());
     }
 
-    public static Action getAction(HttpServletRequest request){
+    public static Action getAction(HttpServletRequest request) throws NoSuchActionException {
 
-        String requestAction = request.getRequestURI().replace("/pages/", "");
-        System.out.println(requestAction);
+        String requestAction = request.getRequestURI().replace(CONTROLLER_PREFIX, "");
         Action action = actions.get(requestAction);
         if (action != null) {
             return action;
         } else {
-            return null;
+            logger.error("Not found action: " + requestAction);
+            throw new NoSuchActionException();
         }
 
     }

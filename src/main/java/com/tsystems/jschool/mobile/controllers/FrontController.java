@@ -1,6 +1,13 @@
 package com.tsystems.jschool.mobile.controllers;
 
+import com.tsystems.jschool.mobile.AppService;
+import com.tsystems.jschool.mobile.SingleAppService;
+import com.tsystems.jschool.mobile.actions.Action;
+import com.tsystems.jschool.mobile.actions.ActionFactory;
+import com.tsystems.jschool.mobile.exceptions.NoSuchActionException;
+
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +22,7 @@ public class FrontController extends HttpServlet {
     public static final String PAGES_DIR = "/WEB-INF/pages/";
     public static final String CONTROLLER_PREFIX = "pages/";
 
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         processRequest(request, response);
     }
@@ -26,19 +34,22 @@ public class FrontController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         RequestDispatcher dispatcher;
-        String uri = request.getPathInfo();
-
         String nextPage = request.getRequestURI().replace(CONTROLLER_PREFIX, "");
-        System.out.println(nextPage);
+
 
         if (!nextPage.endsWith(".jsp")) {
-            Action action = ActionFactory.getAction(request);
-            nextPage = action.execute(request, response);
-            if (nextPage.equals("index.jsp")){
-                dispatcher = getServletContext().getRequestDispatcher("/" + nextPage.replace(CONTROLLER_PREFIX, ""));
-                dispatcher.forward(request, response);
-            } else {
-                dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/" + nextPage.replace(CONTROLLER_PREFIX, ""));
+            try {
+                Action action = ActionFactory.getAction(request);
+                nextPage = action.execute(request, response);
+                if (nextPage.equals("index.jsp") || nextPage.equals("error.jsp")) {
+                    dispatcher = getServletContext().getRequestDispatcher("/" + nextPage.replace(CONTROLLER_PREFIX, ""));
+                    dispatcher.forward(request, response);
+                } else {
+                    dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/" + nextPage.replace(CONTROLLER_PREFIX, ""));
+                    dispatcher.forward(request, response);
+                }
+            } catch (NoSuchActionException e){
+                dispatcher = getServletContext().getRequestDispatcher("/error.jsp");
                 dispatcher.forward(request, response);
             }
         } else {

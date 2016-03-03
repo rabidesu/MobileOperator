@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Alexandra on 15.02.2016.
  */
-//
+
 @Entity
 @Table(name = "tariff")
 @NamedQueries({
@@ -30,9 +30,6 @@ public class Tariff implements Serializable {
     @Column(name = "tariff_price", nullable = false)
     private int price;
 
-//    @Column(name = "description", nullable = false)
-//    private String description;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "tariff_option", joinColumns = {@JoinColumn(name = "tariff_id")},
             inverseJoinColumns = {@JoinColumn(name = "option_id")})
@@ -41,7 +38,6 @@ public class Tariff implements Serializable {
     public int getId() {
         return id;
     }
-
 
     public String getName() {
         return name;

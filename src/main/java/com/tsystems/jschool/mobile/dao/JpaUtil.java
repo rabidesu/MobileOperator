@@ -2,6 +2,7 @@ package com.tsystems.jschool.mobile.dao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
 /**
@@ -20,13 +21,28 @@ public class JpaUtil {
         }
     }
 
-    public static EntityManagerFactory getFactory() {
-        return factory;
-    }
 
     public static EntityManager getEntityManager(){
         return factory.createEntityManager();
     }
+
+    public static EntityManager beginTransaction(){
+        EntityManager entityManager = getEntityManager();
+        entityManager.getTransaction().begin();
+        return entityManager;
+    }
+
+    public static void commitTransaction(EntityManager entityManager){
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
+    public static void rollbackTransaction(EntityManager entityManager){
+        entityManager.getTransaction().rollback();
+        entityManager.close();
+    }
+
+
 
 
 }

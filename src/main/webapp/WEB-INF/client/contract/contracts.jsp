@@ -90,7 +90,7 @@
                                     <c:if test="${contract.blockedByAdmin}">
                                         <span class="contract-blocked">Заблокирован </span>
                                     </c:if>
-                                    <c:if test="${contract.blockedByClient}">
+                                    <c:if test="${contract.blockedByClient && !contract.blockedByAdmin}">
                                         <span class="contract-inactive" >Неактивен </span>
                                     </c:if>
                                     <c:if test="${!contract.blockedByAdmin && !contract.blockedByClient}">

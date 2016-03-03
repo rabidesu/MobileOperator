@@ -57,12 +57,15 @@
                     <li class="active"><a href="#general" data-toggle="tab">Основные</a></li>
                     <li class=""><a href="#required" data-toggle="tab">Требуемые опции</a></li>
                     <li class=""><a href="#incompatible" data-toggle="tab">Несовместимые опции</a></li>
+                    <li class="pull-right">
+                        <button type="submit" form="form-new-option" class="btn btn-success">Добавить</button>
+                    </li>
                 </ul>
 
             </div>
 
                 <div class="col-lg-4 top-buffer" >
-                <form role="form" action="/pages/admin/option/SaveOption" method="post">
+                <form role="form" id="form-new-option" action="/pages/admin/option/SaveOption" method="post">
                     <div class="tab-content">
                     <div class="tab-pane fade in active" id="general">
                     <div class="form-group">
@@ -116,11 +119,7 @@
                         </div>
                     </div>
                         </div>
-                    <div class="form-group">
-                        <div class="top-buffer">
-                            <button type="submit" class="btn btn-success">Добавить</button>
-                        </div>
-                    </div>
+
                 </form>
 
                 </div>

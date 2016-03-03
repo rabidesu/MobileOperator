@@ -58,15 +58,15 @@
                     <li class="active"><a href="#options" data-toggle="tab">Опции</a></li>
                     <li class=""><a href="#contracts" data-toggle="tab">Контракт</a></li>
                     <li class="pull-right">
-                        <button type="submit"  class="btn btn-success" id="btn-save-contract">Сохранить</button>
+                        <button type="submit"  class="btn btn-success" form="form-save-contract">Перейти</button>
                     </li>
                 </ul>
             </div>
 
             <div class="row">
                 <div class="col-lg-4 top-buffer">
-                <form role="form" action="/pages/admin/contract/ChangeContract" id="form-save-contract" method="post">
-
+                <form role="form" action="/pages/client/contract/ChangeContractByClient" id="form-save-contract" method="post">
+                    <input type="hidden" name="tariff_id" value="${requestScope.tariff.id}">
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="options">
                             <div class="form-group">

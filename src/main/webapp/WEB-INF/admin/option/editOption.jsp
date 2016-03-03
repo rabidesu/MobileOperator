@@ -57,12 +57,16 @@
                     <li class="active"><a href="#general" data-toggle="tab">Основные</a></li>
                     <li class=""><a href="#required" data-toggle="tab">Требуемые опции</a></li>
                     <li class=""><a href="#incompatible" data-toggle="tab">Несовместимые опции</a></li>
+                    <li class="pull-right">
+                        <button type="submit" form="form-change-option" class="btn btn-success">Изменить</button>
+                        <button type="submit" form="form-remove-option" class="btn btn-danger" >Удалить</button>
+                    </li>
                 </ul>
 
             </div>
 
                 <div class="col-lg-4 top-buffer" >
-                <form role="form" action="/pages/admin/option/ChangeOption" method="post">
+                <form role="form" id="form-change-option" action="/pages/admin/option/ChangeOption" method="post">
                     <div class="tab-content">
                     <div class="tab-pane fade in active" id="general">
                     <div class="form-group">
@@ -124,18 +128,10 @@
                         </div>
                     </div>
                         </div>
-                    <div class="form-group">
-                        <div class="top-buffer">
-                            <button type="submit" class="btn btn-success" name="option_id" value="${requestScope.option.id}">Изменить</button>
-                        </div>
-                    </div>
+                    <input type="hidden" name="option_id" value="${requestScope.option.id}"/>
                 </form>
-                    <form action="/pages/admin/option/RemoveOption">
-                        <div class="form-group">
-                            <div class="top-buffer">
-                                <button type="submit" class="btn btn-danger" name="option_id" value="${requestScope.option.id}">Удалить</button>
-                            </div>
-                        </div>
+                    <form action="/pages/admin/option/RemoveOption" id="form-remove-option">
+                        <input type="hidden" name="option_id" value="${requestScope.option.id}"/>
                     </form>
 
                 </div>
