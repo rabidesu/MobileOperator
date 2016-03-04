@@ -2,11 +2,8 @@ package com.tsystems.jschool.mobile;
 
 import com.tsystems.jschool.mobile.dao.API.*;
 import com.tsystems.jschool.mobile.dao.Impl.*;
-import com.tsystems.jschool.mobile.dao.JpaUtil;
 
-/**
- * Created by Alexandra on 02.03.2016.
- */
+
 public class SingleAppService {
 
     private static AppService appService;

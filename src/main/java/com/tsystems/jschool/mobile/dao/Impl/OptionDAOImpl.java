@@ -9,9 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;
 
-/**
- * Created by Alexandra on 25.02.2016.
- */
 public class OptionDAOImpl extends GenericDAOImpl<Option> implements OptionDAO {
 
     private static Logger logger = Logger.getLogger(OptionDAOImpl.class);

@@ -42,22 +42,30 @@ public class ContractServiceImpl implements ContractService {
         contractDAO = context.contractDAO;
         userDAO = context.userDAO;
         roleDAO = context.roleDAO;
-
     }
 
     public void addContract(String name, String surname, String date, String passport, String address, String email,
-                            String password, String phone_number, String tariff_id, String[] options) throws MobileServiceException {
+                            String password, String phone_number, String tariff_id,
+                            String[] options) throws MobileServiceException {
+
+        boolean isUserDataEmpty = name.isEmpty() || surname.isEmpty() || date.isEmpty() || passport.isEmpty()
+                || address.isEmpty() || email.isEmpty() || password.isEmpty() || phone_number.isEmpty();
+
+        if (isUserDataEmpty) {
+            String message = "Invalid contract parameters";
+            logger.error(message);
+            throw new MobileServiceException(message);
+        }
 
         User user = new User();
         user.setName(name);
         user.setSurname(surname);
         user.setPassport(passport);
         user.setAddress(address);
-        user.setEmail(email);
 
-        String mysalt = BCrypt.gensalt();
-        String hashpass = BCrypt.hashpw(password, mysalt);
-        user.setPassword(hashpass);
+        String salt = BCrypt.gensalt();
+        String hashPassword = BCrypt.hashpw(password, salt);
+        user.setPassword(hashPassword);
 
         try {
             Date birthday = Utils.parseDate(date);
@@ -67,29 +75,41 @@ public class ContractServiceImpl implements ContractService {
             logger.error(message);
             throw new MobileServiceException(message, e);
         }
+
         Contract contract = new Contract();
         contract.setUser(user);
-        contract.setNumber(phone_number);
 
         EntityManager em = null;
         try {
             em = JpaUtil.beginTransaction();
+
+            List<User> users = userDAO.getUserByEmail(email, em);
+            if (!users.isEmpty()) throw new MobileServiceException("User with this email already exists");
+            user.setEmail(email);
+
             List<Role> roles =  roleDAO.getRoleByName(RoleName.CLIENT, em);
             if (!roles.isEmpty()) {
                 Role role = roles.get(0);
                 user.setRole(role);
             }
+
+            List<Contract> contracts = contractDAO.findContractByNumber(phone_number, em);
+            if (!contracts.isEmpty()) throw new MobileServiceException("Contract with this number already exists");
+            contract.setNumber(phone_number);
+
             Tariff tariff = tariffDAO.findById(Tariff.class, Integer.valueOf(tariff_id), em);
             contract.setTariff(tariff);
-            if (options != null) {
-                List<Option> contract_options = new ArrayList<>();
-                for (String optionId : options) {
-                    contract_options.add(optionDAO.findById(Option.class, Integer.valueOf(optionId), em));
-                }
-                contract.setOptions(contract_options);
+
+            try {
+                checkAndSetContractOptions(options, contract, em);
+            } catch (CompatibilityOptionException e){
+                logger.error(e.getMessage());
+                throw new MobileServiceException(e.getMessage(), e);
             }
+
             userDAO.save(user, em);
             contractDAO.save(contract, em);
+
             JpaUtil.commitTransaction(em);
         } catch (MobileDAOException e) {
             JpaUtil.rollbackTransaction(em);
@@ -97,31 +117,47 @@ public class ContractServiceImpl implements ContractService {
         }
     }
 
-    public void addContractForUser(String user_id, String phone_number, String tariff_id, String[] options) throws MobileServiceException {
+    /**
+     *
+     * @param user_id
+     * @param phone_number
+     * @param tariff_id
+     * @param options
+     * @throws MobileServiceException
+     */
+
+    public void addContractForUser(String user_id, String phone_number, String tariff_id, String[] options)
+            throws MobileServiceException {
+
+        if (phone_number.isEmpty()){
+            String message = "Недопустимые параметры контракта";
+            logger.error(message);
+            throw new MobileServiceException(message);
+        }
+
         EntityManager em = null;
         try {
             em = JpaUtil.beginTransaction();
-            Contract contract = new Contract();
+
             Tariff tariff = tariffDAO.findById(Tariff.class, Integer.valueOf(tariff_id), em);
+            Contract contract = new Contract();
             contract.setTariff(tariff);
+
+            List<Contract> contracts = contractDAO.findContractByNumber(phone_number, em);
+            if (!contracts.isEmpty()) throw new MobileServiceException("Contract with this number already exists");
             contract.setNumber(phone_number);
-            if (options != null) {
-                List<Option> contract_options = new ArrayList<>();
-                for (String optionId : options) {
-                    contract_options.add(optionDAO.findById(Option.class, Integer.valueOf(optionId), em));
-                }
-                try {
-                    CompatibilityOptionChecker.checkOptionCompatibility(contract_options);
-                    CompatibilityOptionChecker.checkAllRequiredOptionAvailable(contract_options);
-                } catch (CompatibilityOptionException e){
-                    logger.error(e.getMessage());
-                    throw new MobileServiceException(e.getMessage(), e);
-                }
-                contract.setOptions(contract_options);
+
+            try {
+                checkAndSetContractOptions(options, contract, em);
+            } catch (CompatibilityOptionException e){
+                logger.error(e.getMessage());
+                throw new MobileServiceException(e.getMessage(), e);
             }
+
             User user = userDAO.findById(User.class, Integer.valueOf(user_id), em);
             contract.setUser(user);
             contractDAO.merge(contract, em);
+
             JpaUtil.commitTransaction(em);
         } catch (MobileDAOException e) {
             JpaUtil.rollbackTransaction(em);
@@ -172,30 +208,64 @@ public class ContractServiceImpl implements ContractService {
         EntityManager em = null;
         try {
             em = JpaUtil.beginTransaction();
-            Contract contract = contractDAO.findById(Contract.class, Integer.valueOf(id), em);
-            if (tariff != null) {
+            Contract contract;
+            if (tariff != null && id != null) {
+                contract = contractDAO.findById(Contract.class, Integer.valueOf(id), em);
                 contract.setTariff(tariffDAO.findById(Tariff.class, Integer.valueOf(tariff), em));
+
+            } else {
+                String message = "Недопустимые параметры контракта";
+                logger.error(message);
+                throw new MobileServiceException(message);
             }
-            List<Option> contract_options = new ArrayList<Option>();
-            if (options != null) {
-                for (String optionId : options) {
-                    contract_options.add(optionDAO.findById(Option.class, Integer.valueOf(optionId), em));
-                }
+
+            try {
+                checkAndSetContractOptions(options, contract, em);
+            } catch (CompatibilityOptionException e){
+                logger.error(e.getMessage());
+                throw new MobileServiceException(e.getMessage(), e);
             }
-            contract.setOptions(contract_options);
 
             if (block != null){
                 switch (block){
-                    case "block": contract.setBlockedByAdmin(true); break;
-                    case "unblock":  contract.setBlockedByAdmin(false); break;
-                    case "unblockByClient": contract.setBlockedByClient(false); break;
-                    case "blockByClient": contract.setBlockedByClient(true);
+                    case "block":
+                        contract.setBlockedByAdmin(true);
+                        break;
+                    case "unblock":
+                        contract.setBlockedByAdmin(false);
+                        break;
+                    case "unblockByClient":
+                        contract.setBlockedByClient(false);
+                        break;
+                    case "blockByClient":
+                        contract.setBlockedByClient(true);
+                        break;
+                    default:
+                        logger.error("Unexpected block string");
                 }
             }
+
             JpaUtil.commitTransaction(em);
         } catch (MobileDAOException e) {
             JpaUtil.rollbackTransaction(em);
             throw new MobileServiceException(e);
+        }
+    }
+
+    private void checkAndSetContractOptions(String[] options, Contract contract, EntityManager em)
+            throws CompatibilityOptionException, MobileDAOException {
+
+        List<Option> contractOptions = new ArrayList<>();
+
+        if (options != null) {
+            for (String optionId : options) {
+                contractOptions.add(optionDAO.findById(Option.class, Integer.valueOf(optionId), em));
+            }
+
+            CompatibilityOptionChecker.checkOptionCompatibility(contractOptions);
+            CompatibilityOptionChecker.checkAllRequiredOptionAvailable(contractOptions);
+
+            contract.setOptions(contractOptions);
         }
     }
 

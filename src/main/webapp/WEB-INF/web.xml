@@ -6,6 +6,11 @@
 
   <display-name>Archetype Created Web Application</display-name>
 
+
+ <error-page>
+   <location>/404.jsp</location>
+ </error-page>
+
   <context-param>
     <param-name>liquibase.changelog</param-name>
     <param-value>db.changelogs/db.changelog-master.xml</param-value>

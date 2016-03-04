@@ -22,9 +22,6 @@
     <!-- Custom CSS -->
     <link href="/css/sb-admin-2.css" rel="stylesheet">
 
-    <!-- Morris Charts CSS -->
-    <link href="/css/plugins/morris.css" rel="stylesheet">
-
     <!-- Custom Fonts -->
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
@@ -130,10 +127,12 @@
                 </div>
                 <form action="/pages/client/contract/ChangeContractByClient" id="form-block-contract" method="post">
                     <input type="hidden" name="contract_id" value="${requestScope.contract.id}">
+                    <input type="hidden" name="tariff_id" value="${requestScope.contract.tariff.id}">
                     <input type="hidden" name="block" value="blockByClient">
                 </form>
                 <form action="/pages/client/contract/ChangeContractByClient" id="form-unblock-contract" method="post">
                     <input type="hidden" name="contract_id" value="${requestScope.contract.id}">
+                    <input type="hidden" name="tariff_id" value="${requestScope.contract.tariff.id}">
                     <input type="hidden" name="block" value="unblockByClient">
                 </form>
             </div>
@@ -150,21 +149,12 @@
 
 <!-- jQuery -->
 <script src="/js/jquery-2.2.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 <c:if test="${!requestScope.contract.blockedByAdmin && !requestScope.contract.blockedByClient}">
     <script src="/js/edit-contract.js"></script>
 </c:if>
 
 
-
-<!-- Bootstrap Core JavaScript -->
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/bselect.min.js"></script>
-<script src="/js/sb-admin-2.js"></script>
-
-<!-- Morris Charts JavaScript -->
-<script src="/js/plugins/morris/raphael.min.js"></script>
-<script src="/js/plugins/morris/morris.min.js"></script>
-<script src="/js/plugins/morris/morris-data.js"></script>
 
 </body>
 

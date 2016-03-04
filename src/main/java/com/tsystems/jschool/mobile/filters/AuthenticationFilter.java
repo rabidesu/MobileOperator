@@ -24,6 +24,7 @@ public class AuthenticationFilter implements Filter {
 
         String uri = request.getRequestURI();
         HttpSession session = request.getSession(false);
+
         User user = null;
         RoleName userRole = null;
         if (session != null){

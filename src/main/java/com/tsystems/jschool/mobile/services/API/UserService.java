@@ -22,9 +22,6 @@ public interface UserService {
 
     List<User> getUserByField(String searchText, String searchField) throws MobileServiceException;
 
-    void addUser(String name, String surname, String date, String passport,
-                   String address, String email, String password) throws MobileServiceException;
-
     User getUserById(String id) throws MobileServiceException;
 
 }

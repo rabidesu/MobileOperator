@@ -3,7 +3,7 @@
                    xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
     <changeSet id="10" author="Alexandra">
         <sql>
-            insert into user (email, user_name, surname, birthday, passport, role_id, address, password) values ('sss@mail.ru', 'max', 'maxov', '1993-02-19', 'UFPS 119', 2, 'komsomolskaya 21', 'pass')
+            insert into user (email, user_name, surname, birthday, passport, role_id, address, password) values ('admin@mail.ru', 'admin', 'admin', '1993-02-19', 'admin', 2, 'admin', '$2a$10$tU7UgS2Z5yYGrqluSmCyJ.RhdOchKHSnpzTEjWstE5EDLJ/CeW3hy')
         </sql>
         <rollback>
             <sql>

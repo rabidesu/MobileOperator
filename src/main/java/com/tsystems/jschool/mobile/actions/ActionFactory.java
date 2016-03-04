@@ -1,9 +1,6 @@
 package com.tsystems.jschool.mobile.actions;
 
-import com.tsystems.jschool.mobile.actions.Action;
-import com.tsystems.jschool.mobile.actions.LogoutAction;
 import com.tsystems.jschool.mobile.actions.admin.LoginAdminAction;
-import com.tsystems.jschool.mobile.actions.admin.client.AllClientsAction;
 import com.tsystems.jschool.mobile.actions.admin.client.FindClientAction;
 import com.tsystems.jschool.mobile.actions.admin.client.FindClientProfileAction;
 import com.tsystems.jschool.mobile.actions.admin.contract.*;
@@ -21,17 +18,15 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Alexandra on 16.02.2016.
- */
 public class ActionFactory {
 
     public static final String CONTROLLER_PREFIX = "/pages/";
+
     private final static Logger logger = Logger.getLogger(ActionFactory.class);
+
     private static final Map<String, Action> actions = new HashMap<String, Action>();
 
     static {
-        actions.put("admin/client/AllClient", new AllClientsAction());
         actions.put("admin/client/FindClient", new FindClientAction());
         actions.put("admin/client/FindClientProfile", new FindClientProfileAction());
         actions.put("admin/contract/ChangeContract", new ChangeContractAction());
@@ -68,10 +63,10 @@ public class ActionFactory {
         if (action != null) {
             return action;
         } else {
-            logger.error("Not found action: " + requestAction);
-            throw new NoSuchActionException();
+            String message = "Not found action: " + requestAction;
+            logger.error(message);
+            throw new NoSuchActionException(message);
         }
-
     }
 
 }

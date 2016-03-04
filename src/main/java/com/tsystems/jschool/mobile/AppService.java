@@ -9,9 +9,6 @@ import com.tsystems.jschool.mobile.services.Impl.OptionServiceImpl;
 import com.tsystems.jschool.mobile.services.Impl.TariffServiceImpl;
 import com.tsystems.jschool.mobile.services.Impl.UserServiceImpl;
 
-/**
- * Created by Alexandra on 02.03.2016.
- */
 public class AppService {
 
     public final UserService userService;

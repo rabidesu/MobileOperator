@@ -6,9 +6,6 @@ import com.tsystems.jschool.mobile.exceptions.MobileDAOException;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-/**
- * Created by Alexandra on 18.02.2016.
- */
 public interface UserDAO extends GenericDAO<User> {
 
     List<User> getUserByPhoneNumber(String number, EntityManager entityManager) throws MobileDAOException;

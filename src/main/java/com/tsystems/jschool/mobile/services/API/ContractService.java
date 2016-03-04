@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * Created by Alexandra on 26.02.2016.
  */
+
 public interface ContractService {
 
     List<Contract> getAllContracts() throws MobileServiceException;

@@ -41,12 +41,19 @@
                 <c:forEach var="option" items="${show_opt}">
                     <div class="checkbox">
                         <label><input type="checkbox"
-                            <c:set var="req_options" value="" scope="page"/>
+                            <c:set var="req_options" value=" " scope="page"/>
 
                         <c:forEach var="req_option" items="${option.optionsRequired}">
                             <c:set var="req_options" value="${req_options} ${req_option.id}"/>
                         </c:forEach>
                                       data-req="${req_options}"
+
+                            <c:set var="inc_options" value=" " scope="page"/>
+
+                        <c:forEach var="incomp_option" items="${option.optionsIncompatible}">
+                            <c:set var="inc_options" value="${inc_options} ${incomp_option.id}"/>
+                        </c:forEach>
+                                      data-inc="${inc_options}"
 
                                       <c:if test="${requestScope.contract.blockedByAdmin ||
                                                           requestScope.contract.blockedByClient}">disabled</c:if>

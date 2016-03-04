@@ -2,7 +2,6 @@ package com.tsystems.jschool.mobile.services.Impl;
 
 import com.tsystems.jschool.mobile.MobileContext;
 import com.tsystems.jschool.mobile.dao.API.OptionDAO;
-import com.tsystems.jschool.mobile.dao.Impl.OptionDAOImpl;
 import com.tsystems.jschool.mobile.dao.JpaUtil;
 import com.tsystems.jschool.mobile.entities.Option;
 import com.tsystems.jschool.mobile.exceptions.CompatibilityOptionException;
@@ -13,13 +12,10 @@ import com.tsystems.jschool.mobile.services.CompatibilityOptionChecker;
 import org.apache.log4j.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Alexandra on 25.02.2016.
- */
+
 public class OptionServiceImpl implements OptionService {
 
     private final static Logger logger = Logger.getLogger(OptionServiceImpl.class);
@@ -84,22 +80,35 @@ public class OptionServiceImpl implements OptionService {
     public void addOption(String name, String price, String connectPrice, String[] requiredOption,
                           String[] incompatibleOption) throws MobileServiceException {
         Option option = new Option();
+
+        if (name.isEmpty()) {
+            String message = "Invalid name for option";
+            logger.error(message);
+            throw new MobileServiceException(message);
+        }
         option.setName(name);
-        option.setPrice(Integer.valueOf(price));
-        option.setConnectPrice(Integer.valueOf(connectPrice));
+        try {
+            option.setPrice(Integer.valueOf(price));
+            option.setConnectPrice(Integer.valueOf(connectPrice));
+        } catch (NumberFormatException e) {
+            String message = "Invalid parameters for option";
+            logger.error(message);
+            throw new MobileServiceException(message, e);
+        }
 
         EntityManager em = null;
         try {
             em = JpaUtil.beginTransaction();
             optionDAO.save(option, em);
             em.flush();
-            serRequiredAndIncompatibleOptions(option, requiredOption, incompatibleOption, em);
+
             try {
-                CompatibilityOptionChecker.checkReqAndIncompIntersection(option);
+                setRequiredAndIncompatibleOptions(option, requiredOption, incompatibleOption, em);
             } catch (CompatibilityOptionException e){
                 logger.error(e.getMessage());
                 throw new MobileServiceException(e.getMessage(), e);
             }
+
             em.merge(option);
             em.flush();
             JpaUtil.commitTransaction(em);
@@ -125,14 +134,37 @@ public class OptionServiceImpl implements OptionService {
     public void changeOption(String id, String name, String price, String connectPrice,
                              String[] requiredOption, String[] incompatibleOption) throws MobileServiceException {
 
+
+        if (name.isEmpty()) {
+            String message = "Invalid name for option";
+            logger.error(message);
+            throw new MobileServiceException(message);
+        }
+
         EntityManager em = null;
         try {
             em = JpaUtil.beginTransaction();
+
             Option option = optionDAO.findById(Option.class, Integer.valueOf(id), em);
             option.setName(name);
-            option.setPrice(Integer.valueOf(price));
-            option.setConnectPrice(Integer.valueOf(connectPrice));
-            serRequiredAndIncompatibleOptions(option, requiredOption, incompatibleOption, em);
+
+            try {
+                option.setPrice(Integer.valueOf(price));
+                option.setConnectPrice(Integer.valueOf(connectPrice));
+            } catch (NumberFormatException e) {
+                String message = "Invalid parameters for option";
+                logger.error(message);
+                JpaUtil.rollbackTransaction(em);
+                throw new MobileServiceException(message, e);
+            }
+
+            try {
+                setRequiredAndIncompatibleOptions(option, requiredOption, incompatibleOption, em);
+            } catch (CompatibilityOptionException e){
+                logger.error(e.getMessage());
+                throw new MobileServiceException(e.getMessage(), e);
+            }
+
             JpaUtil.commitTransaction(em);
         } catch (MobileDAOException e) {
             JpaUtil.rollbackTransaction(em);
@@ -140,22 +172,52 @@ public class OptionServiceImpl implements OptionService {
         }
     }
 
-    private void serRequiredAndIncompatibleOptions(Option option, String[] requiredOption, String[] incompatibleOption,
-                                                   EntityManager em) throws MobileDAOException{
+    private void setRequiredAndIncompatibleOptions(Option option, String[] requiredOption, String[] incompatibleOption,
+                                                   EntityManager em) throws MobileDAOException, CompatibilityOptionException{
+
         List<Option> requiredOptions = new ArrayList<>();
+        option.setOptionsRequired(requiredOptions);
         if (requiredOption != null) {
             for (String requiredOptionId : requiredOption) {
                 requiredOptions.add(optionDAO.findById(Option.class, Integer.valueOf(requiredOptionId), em));
             }
-
         }
-        option.setOptionsRequired(requiredOptions);
-        List<Option> incompatibleOptions = new ArrayList<>();
+
+        List<Option> allOptions = optionDAO.findAll(Option.class, em);
+
+        if (!allOptions.isEmpty() && !requiredOptions.isEmpty()) {
+            CompatibilityOptionChecker.checkInterdependentOptions(option, allOptions, requiredOptions);
+        }
+
+        List<Option> newIncompatibleOptions = new ArrayList<>();
+        option.setOptionsIncompatible(newIncompatibleOptions);
+
         if (incompatibleOption != null) {
             for (String incompatibleOptionId : incompatibleOption) {
-                incompatibleOptions.add(optionDAO.findById(Option.class, Integer.valueOf(incompatibleOptionId), em));
+                Option incOption = optionDAO.findById(Option.class, Integer.valueOf(incompatibleOptionId), em);
+                newIncompatibleOptions.add(incOption);
+                if (!incOption.getOptionsIncompatible().contains(option)) {
+                    incOption.getOptionsIncompatible().add(option);
+                    CompatibilityOptionChecker.checkRequiredAndIncompatibleIntersection(incOption);
+                }
             }
         }
-        option.setOptionsIncompatible(incompatibleOptions);
+
+        List<Option> oldIncompatibleOptions = option.getOptionsIncompatible();
+        if (!oldIncompatibleOptions.isEmpty()) {
+            for (Option oldInc : oldIncompatibleOptions) {
+                if (!newIncompatibleOptions.contains(oldInc)) {
+                    oldInc = optionDAO.findById(Option.class, oldInc.getId(), em);
+                    oldInc.getOptionsIncompatible().remove(option);
+                }
+            }
+        }
+
+        CompatibilityOptionChecker.checkIncompatibleWithRequiredOptions(allOptions, requiredOptions, newIncompatibleOptions);
+
+        option.setOptionsRequired(requiredOptions);
+        option.setOptionsIncompatible(newIncompatibleOptions);
+
+        CompatibilityOptionChecker.checkRequiredAndIncompatibleIntersection(option);
     }
 }

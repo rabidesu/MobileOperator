@@ -92,7 +92,7 @@
                                     <c:forEach var="option" items="${requestScope.options}">
                                         <div class="checkbox">
                                             <label><input type="checkbox" name="options"
-                                                <c:set var="req_options" value="" scope="page"/>
+                                                <c:set var="req_options" value=" " scope="page"/>
 
                                             <c:forEach var="req_option" items="${option.optionsRequired}">
                                                 <c:set var="req_options" value="${req_options} ${req_option.id}"/>
@@ -118,6 +118,7 @@
                             </div>
                         </div>
                     </div>
+                    <input type="hidden" name="tariff_id" value="${requestScope.tariff.id}" />
                 </form>
                 <form id="form-remove-tariff" action="/pages/admin/tariff/RemoveTariff">
                     <div class="form-group">
@@ -141,71 +142,67 @@
 
 <!-- jQuery -->
 <script src="/js/jquery-2.2.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-    $('.option_chb input:checkbox').each(function(){
-        var $cur_req_options = $(this).data("req");
-        var $cur_options_arr = $cur_req_options.split(' ');
-        if (this.checked){
-            $current_id = $(this).val();
-            $('.option_chb input:checkbox').each(function(){
-                if ($.inArray($(this).val(), $cur_options_arr) !== -1){
-                    $(this).prop("checked", true);
-                    $(this).prop("disabled", true);
-                    $(this).addClass("by_"+$current_id);
-                    $('#hidden_'+$(this).val()).prop("disabled", false);
-                }
-            })
-        } else {
-            $current_id = $(this).val();
-            $('.option_chb input:checkbox').each(function(){
-                if ($.inArray($(this).val(), $cur_options_arr) !== -1){
-                    $(this).removeClass("by_"+$current_id);
-                    $className = $(this).attr('class').split(' ');
-                    if ($className.length == 1) {
-                        $(this).prop("disabled", false);
-                        $('#hidden_'+$(this).val()).prop("disabled", true);
-                    }
-                }
-            })
-        }
-    }).change(function () {
-        var $req_options = $(this).data("req");
-        var $options_arr = $req_options.split(' ');
-        if (this.checked){
-            $current_id = $(this).val();
-            $('.option_chb input:checkbox').each(function(){
-                if ($.inArray($(this).val(), $options_arr) !== -1){
-                    $(this).prop("checked", true);
-                    $(this).prop("disabled", true);
-                    $(this).addClass("by_"+$current_id);
-                    $('#hidden_'+$(this).val()).prop("disabled", false);
-                }
-            })
-        } else {
-            $current_id = $(this).val();
-            $('.option_chb input:checkbox').each(function(){
-                if ($.inArray($(this).val(), $options_arr) !== -1){
-                    $(this).removeClass("by_"+$current_id);
-                    $className = $(this).attr('class').split(' ');
-                    if ($className.length == 1) {
-                        $(this).prop("disabled", false);
-                        $('#hidden_'+$(this).val()).prop("disabled", true);
-                    }
-                }
-            })
-        }
-    });
-    });
-</script>
+<script src="/js/edit-tariff.js"></script>
+<%--<script>--%>
+    <%--$(document).ready(function () {--%>
+    <%--$('.option_chb input:checkbox').each(function(){--%>
+        <%--var $cur_req_options = $(this).data("req");--%>
+        <%--var $cur_options_arr = $cur_req_options.split(' ');--%>
+        <%--if (this.checked){--%>
+            <%--$current_id = $(this).val();--%>
+            <%--$('.option_chb input:checkbox').each(function(){--%>
+                <%--if ($.inArray($(this).val(), $cur_options_arr) !== -1){--%>
+                    <%--$(this).prop("checked", true);--%>
+                    <%--$(this).prop("disabled", true);--%>
+                    <%--$(this).addClass("by_"+$current_id);--%>
+                    <%--$('#hidden_'+$(this).val()).prop("disabled", false);--%>
+                <%--}--%>
+            <%--})--%>
+        <%--} else {--%>
+            <%--$current_id = $(this).val();--%>
+            <%--$('.option_chb input:checkbox').each(function(){--%>
+                <%--if ($.inArray($(this).val(), $cur_options_arr) !== -1){--%>
+                    <%--$(this).removeClass("by_"+$current_id);--%>
+                    <%--$className = $(this).attr('class').split(' ');--%>
+                    <%--if ($className.length == 1) {--%>
+                        <%--$(this).prop("disabled", false);--%>
+                        <%--$('#hidden_'+$(this).val()).prop("disabled", true);--%>
+                    <%--}--%>
+                <%--}--%>
+            <%--})--%>
+        <%--}--%>
+    <%--}).change(function () {--%>
+        <%--var $req_options = $(this).data("req");--%>
+        <%--var $options_arr = $req_options.split(' ');--%>
+        <%--if (this.checked){--%>
+            <%--$current_id = $(this).val();--%>
+            <%--$('.option_chb input:checkbox').each(function(){--%>
+                <%--if ($.inArray($(this).val(), $options_arr) !== -1){--%>
+                    <%--$(this).prop("checked", true);--%>
+                    <%--$(this).prop("disabled", true);--%>
+                    <%--$(this).addClass("by_"+$current_id);--%>
+                    <%--$('#hidden_'+$(this).val()).prop("disabled", false);--%>
+                <%--}--%>
+            <%--})--%>
+        <%--} else {--%>
+            <%--$current_id = $(this).val();--%>
+            <%--$('.option_chb input:checkbox').each(function(){--%>
+                <%--if ($.inArray($(this).val(), $options_arr) !== -1){--%>
+                    <%--$(this).removeClass("by_"+$current_id);--%>
+                    <%--$className = $(this).attr('class').split(' ');--%>
+                    <%--if ($className.length == 1) {--%>
+                        <%--$(this).prop("disabled", false);--%>
+                        <%--$('#hidden_'+$(this).val()).prop("disabled", true);--%>
+                    <%--}--%>
+                <%--}--%>
+            <%--})--%>
+        <%--}--%>
+    <%--});--%>
+    <%--});--%>
+<%--</script>--%>
 
 <!-- Bootstrap Core JavaScript -->
 <script src="/js/bootstrap.min.js"></script>
-
-<!-- Morris Charts JavaScript -->
-<script src="/js/plugins/morris/raphael.min.js"></script>
-<script src="/js/plugins/morris/morris.min.js"></script>
-<script src="/js/plugins/morris/morris-data.js"></script>
 
 </body>
 

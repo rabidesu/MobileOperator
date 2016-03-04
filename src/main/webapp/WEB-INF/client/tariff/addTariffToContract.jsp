@@ -22,9 +22,6 @@
     <!-- Custom CSS -->
     <link href="/css/sb-admin-2.css" rel="stylesheet">
 
-    <!-- Morris Charts CSS -->
-    <link href="/css/plugins/morris.css" rel="stylesheet">
-
     <!-- Custom Fonts -->
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
@@ -98,11 +95,13 @@
                     <div class="tab-pane fade" id="contracts">
                         <div class="form-group">
                             <label>Выберите контракт для перехода:</label>
+                            <select class="form-control" name="contract_id">
                             <c:forEach var="contract" items="${sessionScope.user.contracts}">
-                                <select class="form-control" name="contract_id">
+                                <c:if test="${!contract.blockedByAdmin && !contract.blockedByClient}">
                                     <option value="${contract.id}"><c:out value="${contract.number}"/></option>
-                                </select>
+                                </c:if>
                             </c:forEach>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -123,47 +122,9 @@
 
 <!-- jQuery -->
 <script src="/js/jquery-2.2.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('.option_chb input:checkbox').change(function () {
-            var $req_options = $(this).data("req");
-            var $options_arr = $req_options.split(' ');
-            if (this.checked){
-                $current_id = $(this).val();
-                $('.option_chb input:checkbox').each(function(){
-                    if ($.inArray($(this).val(), $options_arr) !== -1){
-                        $(this).prop("checked", true);
-                        $(this).prop("disabled", true);
-                        $(this).addClass("by_"+$current_id);
-                        $('#hidden_'+$(this).val()).prop("disabled", false);
-                    }
-                })
-            } else {
-                $current_id = $(this).val();
-                $('.option_chb input:checkbox').each(function(){
-                    if ($.inArray($(this).val(), $options_arr) !== -1){
-                        $(this).removeClass("by_"+$current_id);
-                        $className = $(this).attr('class').split(' ');
-                        if ($className.length == 1) {
-                            $(this).prop("disabled", false);
-                            $('#hidden_'+$(this).val()).prop("disabled", true);
-                        }
-                    }
-                })
-            }
-    });
-    });
-</script>
-
-<!-- Bootstrap Core JavaScript -->
 <script src="/js/bootstrap.min.js"></script>
-<script src="/js/bselect.min.js"></script>
-<script src="/js/sb-admin-2.js"></script>
+<script src="/js/add-tariff-to-contract.js"></script>
 
-<!-- Morris Charts JavaScript -->
-<script src="/js/plugins/morris/raphael.min.js"></script>
-<script src="/js/plugins/morris/morris.min.js"></script>
-<script src="/js/plugins/morris/morris-data.js"></script>
 
 </body>
 

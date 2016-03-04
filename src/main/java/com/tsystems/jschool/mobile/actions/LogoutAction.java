@@ -3,9 +3,7 @@ package com.tsystems.jschool.mobile.actions;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Created by Alexandra on 23.02.2016.
- */
+
 public class LogoutAction extends Action {
 
     @Override

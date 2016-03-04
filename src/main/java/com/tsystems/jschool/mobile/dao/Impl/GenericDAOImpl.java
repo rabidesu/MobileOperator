@@ -8,9 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;
 
-/**
- * Created by Alexandra on 19.02.2016.
- */
 public class GenericDAOImpl<T> implements GenericDAO<T> {
 
     private static Logger logger = Logger.getLogger(GenericDAOImpl.class);

@@ -16,17 +16,11 @@
     <link href="/css/ecare-style.css" rel="stylesheet">
     <!-- Bootstrap Core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
-
     <link href="/css/bselect.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link href="/css/sb-admin.css" rel="stylesheet">
 
-    <!-- Morris Charts CSS -->
-    <link href="/css/plugins/morris.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
 </head>
 
@@ -50,7 +44,6 @@
                     </h1>
                 </div>
             </div>
-            <!-- /.row -->
 
             <!-- Main -->
             <div class="row">
@@ -108,38 +101,9 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="tariff">
-                            <div class="form-group">
-                                <label for="tariff_select">Выберите тариф:</label>
-                                <select class="form-control"  id="tariff_select" name="tariff_id">
-                                    <c:forEach items="${requestScope.tariffs}" var="tariff">
-                                        <option value="${tariff.id}"><c:out value="${tariff.name}"/></option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                        </div>
+                        <jsp:include page="/WEB-INF/jspf/tariffOptionForContract.jsp" />
 
-                        <div class="tab-pane fade" id="options_tab">
-                            <div class="form-group">
-                                <c:if test="${not empty requestScope.options}">
-                                    <label>Выберите опции:</label>
-                                    <c:forEach var="option" items="${requestScope.options}">
-                                        <div class="checkbox">
-                                            <label><input type="checkbox"  name="options" value="${option.id}">${option.name}</label>
-                                        </div>
-                                    </c:forEach>
-                                </c:if>
-                                <c:if test="${empty requestScope.options}">
-                                    <div class="panel panel-warning">
-                                        <div class="panel-heading">Информация</div>
-                                        <div class="panel-body"><c:out value="Нет опций, доступных для данного тарифа"/></div>
-                                    </div>
-                                </c:if>
-                            </div>
-                        </div>
-
-                        </div>
-
+                    </div>
                 </form>
                 </div>
             </div>
@@ -156,16 +120,13 @@
 
 <!-- jQuery -->
 <script src="/js/jquery-2.2.0.min.js"></script>
+<script src="/js/new-contract.js"></script>
 
 
 <!-- Bootstrap Core JavaScript -->
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/bselect.min.js"></script>
 
-<!-- Morris Charts JavaScript -->
-<script src="/js/plugins/morris/raphael.min.js"></script>
-<script src="/js/plugins/morris/morris.min.js"></script>
-<script src="/js/plugins/morris/morris-data.js"></script>
 
 </body>
 

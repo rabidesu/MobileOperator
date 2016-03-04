@@ -128,10 +128,12 @@
                 </div>
                 <form action="/pages/admin/contract/ChangeContract" id="form-block-contract" method="post">
                     <input type="hidden" name="contract_id" value="${requestScope.contract.id}">
+                    <input type="hidden" name="tariff_id" value="${requestScope.contract.tariff.id}">
                     <input type="hidden" name="block" value="block">
                 </form>
                 <form action="/pages/admin/contract/ChangeContract" id="form-unblock-contract" method="post">
                     <input type="hidden" name="contract_id" value="${requestScope.contract.id}">
+                    <input type="hidden" name="tariff_id" value="${requestScope.contract.tariff.id}">
                     <input type="hidden" name="block" value="unblock">
                 </form>
                 <form action="/pages/admin/client/FindClientProfile" id="form-client-profile">
@@ -160,10 +162,6 @@
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/bselect.min.js"></script>
 
-<!-- Morris Charts JavaScript -->
-<script src="/js/plugins/morris/raphael.min.js"></script>
-<script src="/js/plugins/morris/morris.min.js"></script>
-<script src="/js/plugins/morris/morris-data.js"></script>
 
 </body>
 

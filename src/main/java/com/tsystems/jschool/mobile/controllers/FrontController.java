@@ -41,7 +41,7 @@ public class FrontController extends HttpServlet {
             try {
                 Action action = ActionFactory.getAction(request);
                 nextPage = action.execute(request, response);
-                if (nextPage.equals("index.jsp") || nextPage.equals("error.jsp")) {
+                if (nextPage.equals("index.jsp") || nextPage.equals("404.jsp")) {
                     dispatcher = getServletContext().getRequestDispatcher("/" + nextPage.replace(CONTROLLER_PREFIX, ""));
                     dispatcher.forward(request, response);
                 } else {
@@ -49,7 +49,7 @@ public class FrontController extends HttpServlet {
                     dispatcher.forward(request, response);
                 }
             } catch (NoSuchActionException e){
-                dispatcher = getServletContext().getRequestDispatcher("/error.jsp");
+                dispatcher = getServletContext().getRequestDispatcher("/404.jsp");
                 dispatcher.forward(request, response);
             }
         } else {

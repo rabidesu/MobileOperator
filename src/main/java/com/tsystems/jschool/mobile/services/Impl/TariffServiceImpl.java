@@ -3,24 +3,20 @@ package com.tsystems.jschool.mobile.services.Impl;
 import com.tsystems.jschool.mobile.MobileContext;
 import com.tsystems.jschool.mobile.dao.API.OptionDAO;
 import com.tsystems.jschool.mobile.dao.API.TariffDAO;
-import com.tsystems.jschool.mobile.dao.Impl.OptionDAOImpl;
-import com.tsystems.jschool.mobile.dao.Impl.TariffDAOImpl;
 import com.tsystems.jschool.mobile.dao.JpaUtil;
 import com.tsystems.jschool.mobile.entities.Option;
 import com.tsystems.jschool.mobile.entities.Tariff;
+import com.tsystems.jschool.mobile.exceptions.CompatibilityOptionException;
 import com.tsystems.jschool.mobile.exceptions.MobileDAOException;
 import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
+import com.tsystems.jschool.mobile.services.CompatibilityOptionChecker;
 import org.apache.log4j.Logger;
 import com.tsystems.jschool.mobile.services.API.TariffService;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Alexandra on 26.02.2016.
- */
 public class TariffServiceImpl implements TariffService {
 
     private final static Logger logger = Logger.getLogger(TariffServiceImpl.class);
@@ -36,11 +32,18 @@ public class TariffServiceImpl implements TariffService {
     public void addTariff(String name, String price, String[] possibleOptions) throws MobileServiceException {
 
         Tariff tariff = new Tariff();
+
+        if (name == null || name.isEmpty()) {
+            String message = "Invalid tariff name: " + name;
+            logger.error(message);
+            throw new MobileServiceException(message);
+        }
         tariff.setName(name);
+
         try {
             tariff.setPrice(Integer.valueOf(price));
         } catch (NumberFormatException e) {
-            String message = "Неверное значение для цены тарифа: " + price;
+            String message = "Invalid tariff price: " + price;
             logger.error(message);
             throw new MobileServiceException(message, e);
         }
@@ -51,7 +54,7 @@ public class TariffServiceImpl implements TariffService {
             setOptionsForTariff(tariff, possibleOptions, em);
             tariffDAO.save(tariff, em);
             JpaUtil.commitTransaction(em);
-        } catch (MobileDAOException e) {
+        } catch (MobileDAOException | CompatibilityOptionException e) {
             JpaUtil.rollbackTransaction(em);
             throw new MobileServiceException(e.getMessage(), e);
         }
@@ -109,6 +112,14 @@ public class TariffServiceImpl implements TariffService {
     }
 
     public void changeTariff(String id, String name, String price, String[] possibleOptions) throws MobileServiceException {
+
+
+        if (name.isEmpty() || price.isEmpty()) {
+            String message = "Invalid parameters for tariff";
+            logger.error(message);
+            throw new MobileServiceException(message);
+        }
+
         EntityManager em = null;
         try {
             em = JpaUtil.beginTransaction();
@@ -117,19 +128,22 @@ public class TariffServiceImpl implements TariffService {
             tariff.setPrice(Integer.valueOf(price));
             setOptionsForTariff(tariff, possibleOptions, em);
             JpaUtil.commitTransaction(em);
-        } catch (MobileDAOException e) {
+        } catch (MobileDAOException | CompatibilityOptionException e) {
             JpaUtil.rollbackTransaction(em);
-            throw new MobileServiceException(e);
+            throw new MobileServiceException(e.getMessage(), e);
         }
     }
 
-    private void setOptionsForTariff(Tariff tariff, String[] possibleOptions, EntityManager em) throws MobileDAOException{
+    private void setOptionsForTariff(Tariff tariff, String[] possibleOptions, EntityManager em)
+            throws MobileDAOException, CompatibilityOptionException{
+
+        List<Option> options = new ArrayList<>();
         if (possibleOptions != null) {
-            List<Option> options = new ArrayList<Option>();
             for (String optionId : possibleOptions) {
                 options.add(optionDAO.findById(Option.class, Integer.valueOf(optionId), em));
             }
-            tariff.setOptions(options);
         }
+        CompatibilityOptionChecker.checkAllRequiredOptionAvailable(options);
+        tariff.setOptions(options);
     }
 }

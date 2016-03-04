@@ -2,12 +2,8 @@ package com.tsystems.jschool.mobile.dao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
-/**
- * Created by Alexandra on 18.02.2016.
- */
 public class JpaUtil {
 
     private static final EntityManagerFactory factory;

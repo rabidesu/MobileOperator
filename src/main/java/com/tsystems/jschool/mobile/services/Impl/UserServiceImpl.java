@@ -66,39 +66,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public void addUser(String name, String surname, String date, String passport, String address,
-                          String email, String password) throws MobileServiceException {
-
-        User user = new User();
-        user.setName(name);
-        user.setSurname(surname);
-        user.setPassport(passport);
-        user.setAddress(address);
-        user.setEmail(email);
-
-        String salt = BCrypt.gensalt();
-        String hashPassword = BCrypt.hashpw(password, salt);
-        user.setPassword(hashPassword);
-        try {
-            Date birthday = Utils.parseDate(date);
-            user.setBirthday(birthday);
-        } catch (ParseException e) {
-            String message = "Can not add new user. Invalid birthday data format:" + date;
-            logger.error(message);
-            throw new MobileServiceException(message, e);
-        }
-
-        EntityManager em = null;
-        try {
-            em = JpaUtil.beginTransaction();
-            userDAO.save(user, em);
-            JpaUtil.commitTransaction(em);
-        } catch (MobileDAOException e){
-            JpaUtil.rollbackTransaction(em);
-            throw new MobileServiceException(e);
-        }
-    }
-
     public List<User> getAllUsers() throws MobileServiceException {
         EntityManager em = null;
         try {

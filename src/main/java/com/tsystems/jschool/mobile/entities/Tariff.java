@@ -19,6 +19,15 @@ public class Tariff implements Serializable {
     public static final String GET_BY_NAME = "tariffGetByName";
     public static final String REMOVE_BY_ID = "tariffRemoveById";
 
+    public Tariff() {
+    }
+
+    public Tariff(String name, int price, List<Option> options) {
+        this.name = name;
+        this.price = price;
+        this.options = options;
+    }
+
     @Id
     @GeneratedValue
     @Column(name = "tariff_id")

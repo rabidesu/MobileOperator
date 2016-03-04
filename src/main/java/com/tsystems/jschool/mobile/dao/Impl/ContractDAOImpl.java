@@ -9,9 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;
 
-/**
- * Created by Alexandra on 25.02.2016.
- */
 public class ContractDAOImpl extends GenericDAOImpl<Contract> implements ContractDAO {
 
     private static Logger logger = Logger.getLogger(ContractDAOImpl.class);

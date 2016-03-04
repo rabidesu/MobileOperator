@@ -12,4 +12,7 @@ public class MobileServiceException extends Exception {
     public MobileServiceException(Throwable cause) {
         super(cause);
     }
+    public MobileServiceException(String message) {
+        super(message);
+    }
 }
