@@ -3,16 +3,24 @@ package com.tsystems.jschool.mobile.dao.Impl;
 import com.tsystems.jschool.mobile.dao.API.GenericDAO;
 import com.tsystems.jschool.mobile.exceptions.MobileDAOException;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
 import java.util.List;
 
-public class GenericDAOImpl<T> implements GenericDAO<T> {
+public abstract class GenericDAOImpl<T> implements GenericDAO<T> {
+
+    @Autowired
+    private EntityManager entityManager;
 
     private static Logger logger = Logger.getLogger(GenericDAOImpl.class);
 
-    public void save(T entity, EntityManager entityManager) throws MobileDAOException {
+    public void save(T entity) throws MobileDAOException {
         try {
             entityManager.persist(entity);
         } catch (Exception e){
@@ -22,7 +30,7 @@ public class GenericDAOImpl<T> implements GenericDAO<T> {
         }
     }
 
-    public void merge(T entity, EntityManager entityManager) throws MobileDAOException {
+    public void merge(T entity) throws MobileDAOException {
         try {
             entityManager.merge(entity);
         } catch (Exception e){
@@ -32,7 +40,7 @@ public class GenericDAOImpl<T> implements GenericDAO<T> {
         }
     }
 
-    public void delete(T entity, EntityManager entityManager) throws MobileDAOException {
+    public void delete(T entity) throws MobileDAOException {
         try {
             entityManager.remove(entity);
         } catch (Exception e){
@@ -54,7 +62,7 @@ public class GenericDAOImpl<T> implements GenericDAO<T> {
         }
     }
 
-    public T findById(Class clazz, int id, EntityManager entityManager) throws MobileDAOException {
+    public T findById(Class clazz, int id) throws MobileDAOException {
         try {
             T entity = null;
             entity = (T) entityManager.find(clazz, id);
@@ -66,7 +74,7 @@ public class GenericDAOImpl<T> implements GenericDAO<T> {
         }
     }
 
-    public List<T> findAll(Class clazz, EntityManager entityManager) throws MobileDAOException {
+    public List<T> findAll(Class clazz) throws MobileDAOException {
         try {
             List<T> entities = null;
             Query query = entityManager.createQuery("from " + clazz.getName());

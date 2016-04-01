@@ -49,7 +49,7 @@
                     </h1>
                     <div class="row">
                     <div class="col-lg-6">
-                            <form role="form" action="/pages/admin/tariff/FindTariff" >
+                            <form role="form" action="/pages/searchTariff" >
                                 <div class="form-group input-group">
                                     <input type="text" class="form-control" placeholder="Поиск по названию..." name="search_text">
                                     <span class="input-group-btn">
@@ -75,7 +75,6 @@
                     <table class="table table-bordered table-hover table-striped">
                         <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Название</th>
                             <th>Стоимость</th>
                             <th>Возможные опции</th>
@@ -83,10 +82,9 @@
                         </thead>
                         <tbody>
                         <c:forEach items="${requestScope.listTariffs}" var="tariff">
-                            <tr class="click-row" data-value="${tariff.id}">
-                                <td><c:out value="${tariff.id}"/></td>
+                            <tr class="click-row <c:if test="${!tariff.available}">text-muted</c:if>" data-value="${tariff.id}">
                                 <td><c:out value="${tariff.name}"/></td>
-                                <td><c:out value="${tariff.price}"/></td>
+                                <td><c:out value="${tariff.price}"/>&#8381</td>
                                 <td>
                                 <c:forEach items="${tariff.options}" var="option">
                                     <c:out value="${option.name}"/>,
@@ -105,7 +103,7 @@
                                 </div>
                             </div>
                         </c:if>
-                    <form role="form" id="send" action="/pages/admin/tariff/EditTariff" method="post">
+                    <form role="form" id="send" action="/pages/editTariff" method="post">
                     <input type="text" id="entity_id" name="entity_id" hidden>
                     </form>
                 </div>

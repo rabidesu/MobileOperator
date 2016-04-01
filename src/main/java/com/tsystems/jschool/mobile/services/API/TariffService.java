@@ -22,4 +22,13 @@ public interface TariffService {
 
     void removeTariffById(String id) throws MobileServiceException;
 
+    void saveTariff(Tariff tariff);
+
+    void changeTariff(String tariffId, Tariff tariff);
+
+    List<Tariff> getAvailableTariffs();
+
+    List<Tariff> getAvailableTariffsForContract(String contract_id);
+
+
 }

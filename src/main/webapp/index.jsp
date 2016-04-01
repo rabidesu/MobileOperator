@@ -35,8 +35,8 @@
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav pull-right">
-                        <li><a href="/pages/client/index.jsp">Личный кабинет</a></li>
-                        <li><a href="/pages/admin/index.jsp">Управление</a></li>
+                        <li><a href="/pages/client/index">Личный кабинет</a></li>
+                        <li><a href="/pages/admin/index">Управление</a></li>
                     </ul>
                 </div>
             </div>

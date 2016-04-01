@@ -7,6 +7,8 @@
             tariff_id integer not null auto_increment,
             tariff_name varchar(255) not null,
             tariff_price integer not null,
+            description text not null,
+            available boolean default true,
             primary key (tariff_id)
             )
         </sql>

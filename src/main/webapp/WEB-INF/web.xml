@@ -7,9 +7,10 @@
   <display-name>Archetype Created Web Application</display-name>
 
 
- <error-page>
-   <location>/404.jsp</location>
- </error-page>
+ <!--<error-page>-->
+   <!--<location>/404.jsp</location>-->
+ <!--</error-page>-->
+
 
   <context-param>
     <param-name>liquibase.changelog</param-name>
@@ -19,24 +20,27 @@
     <param-name>liquibase.datasource</param-name>
     <param-value>java:jboss/datasources/LiquibaseDS</param-value>
   </context-param>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            /WEB-INF/spring/root.xml
+            <!--/WEB-INF/spring/spring-security.xml-->
+        </param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
     <filter>
-        <filter-name>AuthenticationFilter</filter-name>
-        <filter-class>com.tsystems.jschool.mobile.filters.AuthenticationFilter</filter-class>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     </filter>
+
     <filter-mapping>
-        <filter-name>AuthenticationFilter</filter-name>
-        <url-pattern>*.jsp</url-pattern>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
     </filter-mapping>
-
-    <servlet>
-    <servlet-name>FrontController</servlet-name>
-    <servlet-class>com.tsystems.jschool.mobile.controllers.FrontController</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>FrontController</servlet-name>
-    <url-pattern>/pages/*</url-pattern>
-  </servlet-mapping>
 
   <filter>
     <filter-name>EncodingFilter</filter-name>
@@ -52,6 +56,27 @@
     <filter-name>EncodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
+    <servlet>
+        <servlet-name>dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring/dispatcher-servlet.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>/pages/*</url-pattern>
+    </servlet-mapping>
+
+    <persistence-context-ref>
+        <persistence-context-ref-name>EntityManager</persistence-context-ref-name>
+        <persistence-unit-name>MobileDS</persistence-unit-name>
+    </persistence-context-ref>
+
 
 </web-app>
 

@@ -4,19 +4,24 @@ import com.tsystems.jschool.mobile.dao.API.TariffDAO;
 import com.tsystems.jschool.mobile.entities.Tariff;
 import com.tsystems.jschool.mobile.exceptions.MobileDAOException;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import javax.persistence.Query;
 import java.util.List;
 
-/**
- * Created by Alexandra on 26.02.2016.
- */
+@Repository("tariffDAO")
 public class TariffDAOImpl extends GenericDAOImpl<Tariff> implements TariffDAO {
+
+    @Autowired
+    private EntityManager entityManager;
 
     private static Logger logger = Logger.getLogger(TariffDAOImpl.class);
 
-    public List<Tariff> findTariffByName(String name, EntityManager entityManager) throws MobileDAOException {
+    public List<Tariff> findTariffByName(String name) throws MobileDAOException {
         try {
             Query query = entityManager.createNamedQuery(Tariff.GET_BY_NAME);
             query.setParameter(1, name);
@@ -28,7 +33,12 @@ public class TariffDAOImpl extends GenericDAOImpl<Tariff> implements TariffDAO {
         }
     }
 
-    public void removeTariffById(int id, EntityManager entityManager) throws MobileDAOException {
+    public List<Tariff> getAvailableTariffs() throws MobileDAOException {
+            Query query = entityManager.createNamedQuery(Tariff.GET_ALL_AVAILABLE);
+            return findMany(query);
+    }
+
+    public void removeTariffById(int id) throws MobileDAOException {
         try {
             Query query = entityManager.createNamedQuery(Tariff.REMOVE_BY_ID);
             query.setParameter(1, id);

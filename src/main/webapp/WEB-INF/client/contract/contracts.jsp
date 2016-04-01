@@ -1,147 +1,95 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
     <title>Личный кабинет</title>
 
-
-    <link href="/css/ecare-style.css" rel="stylesheet">
-    <!-- Bootstrap Core CSS -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="/css/sb-admin-2.css" rel="stylesheet">
-
-    <!-- Morris Charts CSS -->
-    <link href="/css/plugins/morris.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <%--<link href="/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>--%>
 </head>
-
 <body>
 
-<div id="wrapper">
+<jsp:include page="/WEB-INF/jspf/clientNavigation.jsp" />
 
-    <!-- Navigation -->
-    <jsp:include page="/WEB-INF/jspf/clientNavigation.jsp" />
-    <!-- /Navigation -->
-
-    <div id="page-wrapper">
-
-        <div class="container-fluid">
-
-            <!-- Page Heading -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">
-                        Список контрактов
-                    </h1>
-
-                    <ol class="breadcrumb">
-                        <li class="active">
-                            <i class="fa fa-dashboard"></i> Нажмите на контракт для подробной информации и редактирования
-                        </li>
-                    </ol>
+<div class="container">
+    <h2 class="header center orange-text">Контракты</h2>
+    <div class="row">
+        <c:forEach items="${user.contracts}" var="contract">
+        <div class="col s12 m4">
+            <div class="card">
+                <div class="card-content center">
+                    <h5 class="card-title light-blue-text"><c:out value="${contract.number}"/></h5>
+                    <p class="card-title grey-text text-darken-4"><b>Тариф: </b><c:out value="${contract.tariff.name}"/></p>
+                    <p class="card-title grey-text text-darken-4"><b>Цена: </b><c:out value="${contract.tariff.price}"/>&#8381</p>
                 </div>
-            </div>
-            <!-- /.row -->
-
-            <!-- Main -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <c:if test="${not empty sessionScope.user.contracts}">
-                    <table class="table table-bordered table-hover table-striped">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Номер</th>
-                            <th>Тариф</th>
-                            <th>Опции</th>
-                            <th>Цена в месяц</th>
-                            <th>Статус</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach items="${sessionScope.user.contracts}" var="contract">
-                            <tr class="click-row" data-value="${contract.id}">
-                                <td><c:out value="${contract.id}"/></td>
-                                <td><c:out value="${contract.number}"/></td>
-                                <td><c:out value="${contract.tariff.name}"/></td>
-                                <c:set var="price" value="${contract.tariff.price}" scope="page"/>
-                                <td>
-                                <c:forEach items="${contract.options}" var="option">
-                                    <c:set var="price" value="${price + option.price}"/>
-                                    <c:out value="${option.name}"/>,
-                                </c:forEach>
-                                </td>
-                                <td><c:out value="${price}"/></td>
-                                <td>
-                                    <c:if test="${contract.blockedByAdmin}">
-                                        <span class="contract-blocked">Заблокирован </span>
-                                    </c:if>
-                                    <c:if test="${contract.blockedByClient && !contract.blockedByAdmin}">
-                                        <span class="contract-inactive" >Неактивен </span>
-                                    </c:if>
-                                    <c:if test="${!contract.blockedByAdmin && !contract.blockedByClient}">
-                                        <span class="contract-active">Активен </span>
-                                    </c:if>
-                                </td>
-                            </tr>
+                <div class="card-action center">
+                    <a href="">Изменить</a>
+                    <span class="activator orange-text"> MORE</span>
+                </div>
+                <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Опции<i class="material-icons right">close</i></span>
+                    <ul class="collection">
+                        <c:forEach items="${contract.options}" var="option">
+                            <li class="collection-item"><c:out value="${option.name}"/></li>
                         </c:forEach>
-                        </tbody>
-                    </table>
-                        </c:if>
-                        <c:if test="${empty sessionScope.user.contracts}">
-                            <div class="col-lg-9">
-                                <div class="panel panel-warning">
-                                    <div class="panel-heading">Ошибка!</div>
-                                    <div class="panel-body">У Вас еще нет контрактов. Обратитесь к администратору.</div>
-                                </div>
-                            </div>
-                        </c:if>
-                    <form role="form" id="send" action="/pages/client/contract/EditContract" method="post">
-                    <input type="text" id="entity_id" name="entity_id" hidden>
-                    </form>
+                    </ul>
                 </div>
             </div>
-            <!-- /Main -->
-
         </div>
-        <!-- /.container-fluid -->
-
-    </div>
-    <!-- /#page-wrapper -->
-
+            </c:forEach>
+        </div>
+    <br><br>
 </div>
-<!-- /#wrapper -->
 
-<!-- jQuery -->
+
+<footer class="page-footer orange">
+    <div class="container">
+        <div class="row">
+            <div class="col l6 s12">
+                <h5 class="white-text">Company Bio</h5>
+                <p class="grey-text text-lighten-4">We are a team of college students working on this project like it's our full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
+
+
+            </div>
+            <div class="col l3 s12">
+                <h5 class="white-text">Settings</h5>
+                <ul>
+                    <li><a class="white-text" href="#!">Link 1</a></li>
+                    <li><a class="white-text" href="#!">Link 2</a></li>
+                    <li><a class="white-text" href="#!">Link 3</a></li>
+                    <li><a class="white-text" href="#!">Link 4</a></li>
+                </ul>
+            </div>
+            <div class="col l3 s12">
+                <h5 class="white-text">Connect</h5>
+                <ul>
+                    <li><a class="white-text" href="#!">Link 1</a></li>
+                    <li><a class="white-text" href="#!">Link 2</a></li>
+                    <li><a class="white-text" href="#!">Link 3</a></li>
+                    <li><a class="white-text" href="#!">Link 4</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <div class="container">
+            Made by <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+        </div>
+    </div>
+</footer>
+
+
+<!--  Scripts-->
 <script src="/js/jquery-2.2.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $(".click-row").click(function() {
-            var $entity_id = $(this).attr("data-value");
-            $("#entity_id").val($entity_id);
-            $("#send").submit();
-        });
-    });
-</script>
-
-<!-- Bootstrap Core JavaScript -->
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/sb-admin-2.js"></script>
+<script src="/js/materialize.min.js"></script>
+<%--<script src="/js/init.js"></script>--%>
 
 </body>
-
 </html>
+

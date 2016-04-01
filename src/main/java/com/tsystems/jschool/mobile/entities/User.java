@@ -1,5 +1,8 @@
 package com.tsystems.jschool.mobile.entities;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,9 +32,11 @@ public class User implements Serializable {
     @Column(name = "user_id")
     private int id;
 
+    @NotEmpty
     @Column(name = "user_name", nullable = false)
     private String name;
 
+    @NotEmpty
     @Column(name = "surname", nullable = false)
     private String surname;
 
@@ -39,15 +44,19 @@ public class User implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date birthday;
 
+    @NotEmpty
     @Column(name = "passport", nullable = false)
     private String passport;
 
+    @NotEmpty
     @Column(name = "address", nullable = false)
     private String address;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Contract> contracts;
 
+    @NotEmpty
+    @Email
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 

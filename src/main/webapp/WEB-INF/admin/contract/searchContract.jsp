@@ -1,4 +1,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<c:url var="firstUrl" value="/pages/contract/page/1/${searchText}" />
+<c:url var="lastUrl" value="/pages/contract/page/${totalPage}/${searchText}" />
+<c:url var="prevUrl" value="/pages/contract/page/${currentIndex - 1}/${searchText}" />
+<c:url var="nextUrl" value="/pages/contract/page/${currentIndex + 1}/${searchText}" />
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,9 +54,10 @@
                     </h1>
                     <div class="row">
                     <div class="col-lg-6">
-                            <form role="form" action="/pages/admin/contract/FindContract" >
+                            <form role="form" action="/pages/contract/page/1" >
                                 <div class="form-group input-group">
                                     <input type="text" class="form-control" placeholder="Поиск по номеру..." name="search_text">
+
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="submit" id="search"><i class="fa fa-search"></i></button>
                                     </span>
@@ -61,7 +67,7 @@
                     </div>
                     <ol class="breadcrumb">
                         <li class="active">
-                            <i class="fa fa-dashboard"></i> Нажмите на контракт для подробной информации и редактирования
+                            <i class="fa fa-dashboard"></i> Нажмите на контракт для подробной информации и редактирования>
                         </li>
                     </ol>
                 </div>
@@ -69,40 +75,71 @@
             <!-- /.row -->
 
             <!-- Main -->
+            <div>
+                <c:if test="${totalPage != 0}">
+                <ul class="pagination">
+                    <c:choose>
+                        <c:when test="${currentIndex == 1}">
+                            <li class="disabled"><a href="#">&lt;&lt;</a></li>
+                            <li class="disabled"><a href="#">&lt;</a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li><a href="${firstUrl}">&lt;&lt;</a></li>
+                            <li><a href="${prevUrl}">&lt;</a></li>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:forEach var="i" begin="${beginIndex}" end="${endIndex}">
+                        <c:url var="pageUrl" value="/pages/contract/page/${i}/${searchText}" />
+                        <c:choose>
+                            <c:when test="${i == currentIndex}">
+                                <li class="active"><a href="${pageUrl}"><c:out value="${i}" /></a></li>
+                            </c:when>
+                            <c:otherwise>
+                                <li><a href="${pageUrl}"><c:out value="${i}" /></a></li>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                    <c:choose>
+                        <c:when test="${currentIndex == totalPage}">
+                            <li class="disabled"><a href="#">&gt;</a></li>
+                            <li class="disabled"><a href="#">&gt;&gt;</a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li><a href="${nextUrl}">&gt;</a></li>
+                            <li><a href="${lastUrl}">&gt;&gt;</a></li>
+                        </c:otherwise>
+                    </c:choose>
+                </ul>
+                </c:if>
+            </div>
             <div class="row">
                 <div class="col-lg-12">
                     <c:if test="${not empty requestScope.listContracts}">
                     <table class="table table-bordered table-hover table-striped">
                         <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Номер</th>
                             <th>E-mail</th>
                             <th>Имя</th>
                             <th>Фамилия</th>
                             <th>Тариф</th>
                             <th>Опции</th>
-                            <th>Цена в месяц</th>
                             <th>Статус</th>
                         </tr>
                         </thead>
                         <tbody>
                         <c:forEach items="${requestScope.listContracts}" var="contract">
                             <tr class="click-row" data-value="${contract.id}">
-                                <td><c:out value="${contract.id}"/></td>
                                 <td><c:out value="${contract.number}"/></td>
                                 <td><c:out value="${contract.user.email}"/></td>
                                 <td><c:out value="${contract.user.name}"/></td>
                                 <td><c:out value="${contract.user.surname}"/></td>
                                 <td><c:out value="${contract.tariff.name}"/></td>
-                                <c:set var="price" value="${contract.tariff.price}" scope="page"/>
                                 <td>
                                 <c:forEach items="${contract.options}" var="option">
-                                    <c:set var="price" value="${price + option.price}"/>
                                     <c:out value="${option.name}"/>,
                                 </c:forEach>
                                 </td>
-                                <td><c:out value="${price}"/></td>
                                 <td>
                                     <c:if test="${contract.blockedByAdmin}">
                                         <span class="contract-blocked">Заблокирован </span>
@@ -127,7 +164,7 @@
                                 </div>
                             </div>
                         </c:if>
-                    <form role="form" id="send" action="/pages/admin/contract/EditContractByAdmin" method="post">
+                    <form role="form" id="send" action="/pages/editContractByAdmin" method="post">
                     <input type="text" id="entity_id" name="entity_id" hidden>
                     </form>
                 </div>

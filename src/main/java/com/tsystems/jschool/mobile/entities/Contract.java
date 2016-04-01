@@ -11,11 +11,21 @@ import java.util.List;
 @Entity
 @Table(name = "contract")
 @NamedQueries({
-        @NamedQuery(name = Contract.GET_BY_NUMBER, query = "SELECT x FROM Contract x WHERE x.number LIKE ?1")
+        @NamedQuery(name = Contract.GET_COUNT_BY_NUMBER, query = "SELECT COUNT(x.id) FROM Contract x WHERE x.number LIKE ?1"),
+        @NamedQuery(name = Contract.GET_COUNT, query = "SELECT COUNT(x.id) FROM Contract x"),
+        @NamedQuery(name = Contract.GET_ALL, query = "SELECT x FROM Contract x"),
+        @NamedQuery(name = Contract.GET_BY_NUMBER, query = "SELECT x FROM Contract x WHERE x.number LIKE ?1"),
+        @NamedQuery(name = Contract.GET_WITH_TARIFF, query = "SELECT x FROM Contract x WHERE x.tariff.id = ?1"),
+        @NamedQuery(name = Contract.GET_WITH_OPTION, query = "SELECT x FROM Contract x LEFT JOIN x.options c WHERE c.id = ?1")
 })
 public class Contract implements Serializable {
 
     public static final String GET_BY_NUMBER = "contractGetByNumber";
+    public static final String GET_WITH_TARIFF = "contractGetWithTariff";
+    public static final String GET_WITH_OPTION = "contractGetWithOption";
+    public static final String GET_ALL = "contractGetALL";
+    public static final String GET_COUNT = "contractGetCount";
+    public static final String GET_COUNT_BY_NUMBER = "contractGetCountByNumber";
 
     @Id
     @GeneratedValue

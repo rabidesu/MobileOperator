@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,8 +23,7 @@
     <!-- Custom CSS -->
     <link href="/css/sb-admin.css" rel="stylesheet">
 
-    <!-- Morris Charts CSS -->
-    <link href="/css/plugins/morris.css" rel="stylesheet">
+    <link href="/css/bootstrap-formhelpers.min.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -67,53 +67,86 @@
 
             <div class="row">
                 <div class="col-lg-4 top-buffer">
-                <form role="form" action="/pages/admin/contract/SaveContractForUser" id="form-save-contract" method="post">
 
-                    <div class="tab-content">
-                        <div class="tab-pane fade" id="general">
-                                <div class="form-group">
-                                    <label for="name">Имя</label>
-                                    <input type="text" class="form-control" disabled id="name" name="name" value="${requestScope.user.name}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="surname">Фамилия</label>
-                                    <input type="text" class="form-control" id="surname" disabled name="surname" value="${requestScope.user.surname}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="date">Дата рождения</label>
-                                    <input type="date" class="form-control" id="date" name="date" disabled value="${requestScope.user.birthday}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="passport">Паспортные данные</label>
-                                    <input type="text" class="form-control" id="passport" name="passport" disabled value="${requestScope.user.passport}" >
-                                </div>
-                                <div class="form-group">
-                                    <label for="address">Адрес</label>
-                                    <input type="text" class="form-control" id="address" name="address" disabled value="${requestScope.user.address}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" class="form-control" id="email" placeholder="Введите email" name="email" disabled value="${requestScope.user.email}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="password">Пароль</label>
-                                    <input type="password" class="form-control" id="password" placeholder="Введите пароль" name="password" disabled value="${requestScope.user.password}">
-                                </div>
-                        </div>
+                    <form:form id="form-save-contract" action="/pages/saveContractForUser" modelAttribute="contract">
+                        <div class="tab-content">
+                            <div class="tab-pane fade" id="general">
 
-                        <div class="tab-pane fade in active" id="phone">
-                            <div class="form-group">
-                                <label for="phone_number">Номер телефона</label>
-                                <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="Введите номер" >
+                                <div class="form-group">
+                                    <label>E-mail</label>
+                                    <p class="form-control"><c:out value="${user.email}"/></p>
+                                        <%--<input type="email" class="form-control" id="email" placeholder="Введите email" name="email">--%>
+                                </div>
+                                <div class="form-group">
+                                    <label>Name</label>
+                                    <p class="form-control"><c:out value="${user.name}"/></p>
+                                        <%--<input type="text" class="form-control" id="name" name="name" placeholder="Введите имя">--%>
+                                </div>
+                                <div class="form-group">
+                                    <label>Фамилия</label>
+                                    <p class="form-control"><c:out value="${user.surname}"/></p>
+                                        <%--<input type="text" class="form-control" id="surname" name="surname" placeholder="Введите фамилию">--%>
+                                </div>
+                                <div class="form-group">
+                                    <label>Дата рождения</label>
+                                        <%--<input type="date" class="form-control" id="user.birthday" name="user.birthday">--%>
+                                    <p class="form-control"><c:out value="${user.birthday}"/></p>
+                                        <%--<input type="date" class="form-control" id="date" name="date">--%>
+                                </div>
+                                <div class="form-group">
+                                    <label>Паспортные данные</label>
+                                    <p class="form-control"><c:out value="${user.passport}"/></p>
+                                        <%--<input type="text" class="form-control" id="passport" name="passport" >--%>
+                                </div>
+                                <div class="form-group">
+                                    <label>Адрес</label>
+                                    <p class="form-control"><c:out value="${user.address}"/></p>
+                                        <%--<input type="text" class="form-control" id="address" name="address">--%>
+                                </div>
                             </div>
+
+                            <div class="tab-pane fade in active" id="phone">
+                                <div class="form-group">
+                                    <label for="number">Номер телефона</label>
+                                        <%--<input type="text" class="input-medium bfh-phone form-control" data-format="+7 (ddd) ddd-dd-dd" name="number" id="number">--%>
+                                    <form:input class="input-medium bfh-phone form-control" data-format="+7 (ddd) ddd-dd-dd" path="number"/>
+                                    <form:errors path="number" cssClass="red"/>
+                                        <%--<input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="Введите номер">--%>
+                                </div>
+
+                            </div>
+
+                            <div class="tab-pane fade" id="tariff">
+                                <div class="form-group">
+                                    <label for="tariff">Выберите тариф:</label>
+                                    <form:select path="tariff" items="${tariffs}" itemValue="id" itemLabel="name" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="options_tab">
+                                <div class="form-group">
+                                        <%--<c:if test="${not empty requestScope.options}">--%>
+                                    <label>Выберите опции:</label>
+                                    <div id="text-empty-option">
+                                        Для данного тарифа нет доступных опций
+                                    </div>
+                                    <div id="option_chb">
+                                            <%--<form:checkboxes path="options" items="${options}" itemValue="id" itemLabel="name" element="div"/>--%>
+                                    </div>
+                                        <%--</c:if>--%>
+                                        <%--<c:if test="${empty requestScope.options}">--%>
+                                        <%--<div class="panel panel-warning">--%>
+                                        <%--<div class="panel-heading">Информация</div>--%>
+                                        <%--<div class="panel-body"><c:out value="Нет опций, доступных для данного тарифа"/></div>--%>
+                                        <%--</div>--%>
+                                        <%--</c:if>--%>
+                                </div>
+                            </div>
+                            <form:errors path="options" cssClass="red"/>
+
                         </div>
-
-                        <jsp:include page="/WEB-INF/jspf/tariffOptionForContract.jsp" />
-
                         <input type="hidden" name="user_id" value="${requestScope.user.id}">
-                        </div>
 
-                </form>
+                </form:form>
                 </div>
             </div>
             <!-- /Main -->
@@ -130,7 +163,43 @@
 <!-- jQuery -->
 <script src="/js/jquery-2.2.0.min.js"></script>
 <script src="/js/new-contract.js"></script>
+<script src="/js/bootstrap-formhelpers-phone.js"></script>
+<script type="text/javascript">
 
+    $(document).ready(function f() {
+                $('#tariff').on('change', doAjaxGetOption).change();
+
+                function doAjaxGetOption() {
+
+                    var selected_tariff = $('#tariff option:selected').val();
+                    $('#option_chb').empty();
+                    $.ajax({
+                        url: '/pages/getOptionsForTariff',
+                        type: 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        mimeType: 'application/json',
+                        data: ({
+                            tariffId: selected_tariff
+                        }),
+                        success: function (data) {
+
+                            if (data.length == 0) {
+                                $('#text-empty-option').show();
+                            } else {
+                                $('#text-empty-option').hide();
+                            }
+                            data.forEach(function (elem, index, array) {
+                                $('#option_chb').append("<div class='checkbox'><label><input type='checkbox' name='options' id='option'" + elem.id
+                                        + " value=" + elem.id + ">" + elem.name + "</label></div>")
+                            });
+
+                        }
+                    });
+                }
+    });
+
+</script>
 
 <!-- Bootstrap Core JavaScript -->
 <script src="/js/bootstrap.min.js"></script>

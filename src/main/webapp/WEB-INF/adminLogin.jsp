@@ -41,10 +41,10 @@
     </div>
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
-            <c:if test="${not empty requestScope.errorMassage}">
+            <c:if test="${not empty message}">
                 <div class="panel panel-danger">
                     <div class="panel-heading">Ошибка!</div>
-                    <div class="panel-body"><c:out value="${requestScope.errorMassage}" /></div>
+                    <div class="panel-body"><c:out value="${message}" /></div>
                 </div>
             </c:if>
             </div>

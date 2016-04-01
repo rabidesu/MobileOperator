@@ -53,10 +53,10 @@
             <!-- Main -->
             <div class="container">
                 <div class="row">
-                        <c:if test="${not empty requestScope.massage}">
+                        <c:if test="${not empty requestScope.message}">
                             <div class="panel panel-success">
                                 <div class="panel-heading">Информация</div>
-                                <div class="panel-body"><c:out value="${requestScope.massage}" /></div>
+                                <div class="panel-body"><c:out value="${requestScope.message}" /></div>
                             </div>
                         </c:if>
                  </div>

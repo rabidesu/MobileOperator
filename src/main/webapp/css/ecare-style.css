@@ -1,4 +1,13 @@
 
+.fa-btn {
+    cursor: pointer;
+    color: #00C853;
+}
+
+.fa-btn :hover {
+    color: #00C853;
+}
+
 .login-panel {
     margin-top: 25%;
 }

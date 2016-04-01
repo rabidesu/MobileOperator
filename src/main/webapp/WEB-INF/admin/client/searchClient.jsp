@@ -1,4 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:url var="firstUrl" value="/pages/users/page/1" />
+<c:url var="lastUrl" value="/pages/users/page/${listUsers.totalPages}" />
+<c:url var="prevUrl" value="/pages/users/page/${currentIndex - 1}" />
+<c:url var="nextUrl" value="/pages/users/page/${currentIndex + 1}" />
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,14 +53,14 @@
                     <div class="row">
                         <div class="col-lg-2">
                             <select class="form-control" form="search-client-form" name="search_field">
-                                <option selected="selected" value="phone">Телефон</option>
+                                <option value="phone">Телефон</option>
                                 <option value="surname">Фамилия</option>
                                 <option value="email">E-mail</option>
                                 <option value="user_id">ID</option>
                             </select>
                         </div>
                         <div class="col-lg-6">
-                            <form role="form" action="/pages/admin/client/FindClient" id="search-client-form" >
+                            <form role="form" action="/pages/users/page/1" id="search-client-form" >
                                 <div class="form-group input-group">
                                     <input type="text" class="form-control" placeholder="Поиск..." name="search_text">
                                     <span class="input-group-btn"><button class="btn btn-default" type="submit" id="search">
@@ -76,13 +80,49 @@
             <!-- /.row -->
 
             <!-- Main -->
+            <div>
+                <c:if test="${listUsers.totalPages != 0}">
+                    <ul class="pagination">
+                        <c:choose>
+                            <c:when test="${currentIndex == 1}">
+                                <li class="disabled"><a href="#">&lt;&lt;</a></li>
+                                <li class="disabled"><a href="#">&lt;</a></li>
+                            </c:when>
+                            <c:otherwise>
+                                <li><a href="${firstUrl}">&lt;&lt;</a></li>
+                                <li><a href="${prevUrl}">&lt;</a></li>
+                            </c:otherwise>
+                        </c:choose>
+                        <c:forEach var="i" begin="${beginIndex}" end="${endIndex}">
+                            <c:url var="pageUrl" value="/pages/users/page/${i}" />
+                            <c:choose>
+                                <c:when test="${i == currentIndex}">
+                                    <li class="active"><a href="${pageUrl}"><c:out value="${i}" /></a></li>
+                                </c:when>
+                                <c:otherwise>
+                                    <li><a href="${pageUrl}"><c:out value="${i}" /></a></li>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                        <c:choose>
+                            <c:when test="${currentIndex == listUsers.totalPages}">
+                                <li class="disabled"><a href="#">&gt;</a></li>
+                                <li class="disabled"><a href="#">&gt;&gt;</a></li>
+                            </c:when>
+                            <c:otherwise>
+                                <li><a href="${nextUrl}">&gt;</a></li>
+                                <li><a href="${lastUrl}">&gt;&gt;</a></li>
+                            </c:otherwise>
+                        </c:choose>
+                    </ul>
+                </c:if>
+            </div>
             <div class="row">
                 <div class="col-lg-12">
-                    <c:if test="${not empty requestScope.listUsers}">
+                    <c:if test="${not empty requestScope.listUsers.content}">
                         <table class="table table-bordered table-hover table-striped">
                             <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Имя</th>
                                 <th>Фамилия</th>
                                 <th>E-mail</th>
@@ -91,16 +131,16 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach items="${requestScope.listUsers}" var="user">
+                            <c:forEach items="${listUsers.content}" var="user">
                                 <tr class="click-row" data-value="${user.id}">
-                                    <td><c:out value="${user.id}"/></td>
                                     <td><c:out value="${user.name}"/></td>
                                     <td><c:out value="${user.surname}"/></td>
                                     <td><c:out value="${user.email}"/></td>
                                     <td><c:out value="${user.birthday}"/></td>
                                     <td>
-                                    <c:forEach items="${user.contracts}" var="contract">
-                                    <c:out value="${contract.number} "/>
+                                    <c:forEach items="${user.contracts}" var="contract" varStatus="count">
+                                    <c:out value="${contract.number}" />
+                                        <c:if test="${!count.last}"><br></c:if>
                                     </c:forEach>
                                     </td>
                                 </tr>
@@ -108,7 +148,7 @@
                             </tbody>
                         </table>
                     </c:if>
-                    <c:if test="${empty requestScope.listUsers}">
+                    <c:if test="${empty requestScope.listUsers.content}">
                         <div class="col-lg-9">
                             <div class="panel panel-warning">
                                 <div class="panel-heading">Ошибка!</div>
@@ -116,7 +156,7 @@
                             </div>
                         </div>
                     </c:if>
-                    <form role="form" id="send" action="/pages/admin/client/FindClientProfile" method="post">
+                    <form role="form" id="send" action="/pages/findClientProfile" method="post">
                         <input type="text" id="entity_id" name="user_id" hidden>
                     </form>
                 </div>

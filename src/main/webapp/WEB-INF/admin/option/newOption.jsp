@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -65,33 +66,47 @@
             </div>
 
                 <div class="col-lg-4 top-buffer" >
-                <form role="form" id="form-new-option" action="/pages/admin/option/SaveOption" method="post">
+                <form:form id="form-new-option" action="/pages/saveOption" method="post" modelAttribute="option">
                     <div class="tab-content">
                     <div class="tab-pane fade in active" id="general">
                     <div class="form-group">
                         <label for="name">Название</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Введите название">
+                        <%--<input type="text" class="form-control" id="name" name="name" placeholder="Введите название"/>--%>
+                        <form:input class="form-control" path="name"/>
+                        <form:errors path="name" cssClass="text-danger"/>
                     </div>
                     <div class="form-group">
                         <label for="price">Цена</label>
-                        <input type="number" class="form-control" id="price" name="price">
+                        <%--<input class="form-control" id="price" name="price"/>--%>
+                        <form:input type="number" class="form-control" path="price"/>
+                        <form:errors path="price" cssClass="text-danger"/>
                     </div>
                     <div class="form-group">
-                        <label for="connect_price">Стоимость подключения</label>
-                        <input type="number" class="form-control" id="connect_price" name="connect_price">
+                        <label for="connectPrice">Стоимость подключения</label>
+                        <%--<input type="number" class="form-control" id="connectPrice" name="connect_price">--%>
+                        <form:input type="number" class="form-control" path="connectPrice"/>
+                        <form:errors path="connectPrice" cssClass="text-danger"/>
                     </div>
                     </div>
 
                     <div class="tab-pane fade" id="required">
                         <div class="form-group">
-                            <c:if test="${not empty requestScope.options}">
-                                <label>Требуемые опции:</label>
-                                <c:forEach var="option" items="${requestScope.options}">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox" class="required_option" name="required_option" value="${option.id}">${option.name}</label>
-                                    </div>
-                                </c:forEach>
-                            </c:if>
+                            <label>Требуемые опции:</label>
+                            <c:forEach items="${options}" var="req_option">
+                            <div class="checkbox">
+                                <label><form:checkbox path="optionsRequired" value="${req_option.id}" class="required_option"/>
+                                    <c:out value="${req_option.name}" /></label>
+                                </div>
+                            </c:forEach>
+                            <%--<form:checkboxes path="optionsRequired" items="${options}" itemLabel="name" itemValue="id" element="div"/>--%>
+                            <%--<c:if test="${not empty requestScope.options}">--%>
+                                <%--<label>Требуемые опции:</label>--%>
+                                <%--<c:forEach var="option" items="${requestScope.options}">--%>
+                                    <%--<div class="checkbox">--%>
+                                        <%--<label><input type="checkbox" class="required_option" name="required_option" value="${option.id}">${option.name}</label>--%>
+                                    <%--</div>--%>
+                                <%--</c:forEach>--%>
+                            <%--</c:if>--%>
                             <c:if test="${empty requestScope.options}">
                                 <div class="panel panel-warning">
                                     <div class="panel-heading">Информация</div>
@@ -102,14 +117,21 @@
                     </div>
                     <div class="tab-pane fade" id="incompatible">
                         <div class="form-group">
-                            <c:if test="${not empty requestScope.options}">
-                                <label>Несовместима с опциями:</label>
-                                <c:forEach var="option" items="${requestScope.options}">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox"  class="incompatible_option" name="incompatible_option" value="${option.id}">${option.name}</label>
-                                    </div>
-                                </c:forEach>
-                            </c:if>
+                            <label>Несовместима с опциями:</label>
+                            <c:forEach items="${options}" var="inc_option">
+                            <div class="checkbox">
+                                <label><form:checkbox path="optionsIncompatible" value="${inc_option.id}" class="incompatible_option" />
+                                <c:out value="${inc_option.name}" /></label>
+                                </div>
+                            </c:forEach>
+                            <%--<c:if test="${not empty requestScope.options}">--%>
+                                <%--<label>Несовместима с опциями:</label>--%>
+                                <%--<c:forEach var="option" items="${requestScope.options}">--%>
+                                    <%--<div class="checkbox">--%>
+                                        <%--<label><input type="checkbox"  class="incompatible_option" name="incompatible_option" value="${option.id}">${option.name}</label>--%>
+                                    <%--</div>--%>
+                                <%--</c:forEach>--%>
+                            <%--</c:if>--%>
                             <c:if test="${empty requestScope.options}">
                                 <div class="panel panel-warning">
                                     <div class="panel-heading">Информация</div>
@@ -118,9 +140,10 @@
                             </c:if>
                         </div>
                     </div>
+                        <form:errors path="optionsIncompatible" cssClass="bg-danger"/>
                         </div>
 
-                </form>
+                </form:form>
 
                 </div>
             </div>

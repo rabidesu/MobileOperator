@@ -8,6 +8,7 @@
             option_name varchar(255) not null,
             option_price integer not null,
             connect_price integer not null,
+            available boolean default true,
             primary key (option_id)
             )
         </sql>

@@ -2,6 +2,8 @@ package com.tsystems.jschool.mobile.services.API;
 
 import com.tsystems.jschool.mobile.entities.Contract;
 import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -11,17 +13,38 @@ import java.util.List;
 
 public interface ContractService {
 
+    public void addContract(Contract contract);
+
+//    public Page<Contract> getContractsListByNumber(Integer pageNumber, String text);
+//
+    List<Contract> getContractsPage(int pageNumber, int pageSize);
+
+    public List<Contract> getContractsPageByNumber(int pageNumber, int pageSize, String number);
+
+    int getCountContracts();
+
+    int getCountContractsByNumber(String number);
+
     List<Contract> getAllContracts() throws MobileServiceException;
 
-    void addContract(String name, String surname, String date, String passport, String address, String email, String password,
-                            String phone_number, String tariff_id, String[] options) throws MobileServiceException;
+    boolean isExistContractWithTariff(String tariffId);
+
+    boolean isExistContractWithOption(String optionId);
 
     List<Contract> findContractByNumber(String number) throws MobileServiceException;
 
     Contract getContractById(String id) throws MobileServiceException;
 
-    void changeContract(String id, String tariff, String[] options, String block) throws MobileServiceException;
+    void changeContract(String contractId, Contract contract) throws MobileServiceException;
 
-    void addContractForUser(String user_id, String phone_number, String tariff, String[] options) throws MobileServiceException;
+    void addContractForUser(Contract contract) throws MobileServiceException;
+
+    void blockContractByAdmin(String contractId);
+
+    void unblockContractByAdmin(String contractId);
+
+    void blockContractByClient(String contractId);
+
+    void unblockContractByClient(String contractId);
 
 }

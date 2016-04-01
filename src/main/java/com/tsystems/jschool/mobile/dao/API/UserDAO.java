@@ -8,10 +8,10 @@ import java.util.List;
 
 public interface UserDAO extends GenericDAO<User> {
 
-    List<User> getUserByPhoneNumber(String number, EntityManager entityManager) throws MobileDAOException;
+    List<User> getUserByPhoneNumber(String number) throws MobileDAOException;
 
-    List<User> getUserByEmail(String email, EntityManager entityManager) throws MobileDAOException;
+    List<User> getUserByEmail(String email) throws MobileDAOException;
 
-    List<User> getUserBySurname(String surname, EntityManager entityManager) throws MobileDAOException;
+    List<User> getUserBySurname(String surname) throws MobileDAOException;
 
 }

@@ -78,28 +78,35 @@
 
                         <form role="form" action="">
                             <div class="form-group">
-                                <label for="name">Имя</label>
-                                <input type="text" class="form-control" disabled id="name" value="${requestScope.user.name}">
+                                <label>E-mail</label>
+                                <p class="form-control"><c:out value="${user.email}"/></p>
+                                <%--<input type="email" class="form-control" id="email" placeholder="Введите email" name="email">--%>
                             </div>
                             <div class="form-group">
-                                <label for="surname">Фамилия</label>
-                                <input type="text" class="form-control" id="surname" disabled  value="${requestScope.user.surname}">
+                                <label>Name</label>
+                                <p class="form-control"><c:out value="${user.name}"/></p>
+                                <%--<input type="text" class="form-control" id="name" name="name" placeholder="Введите имя">--%>
                             </div>
                             <div class="form-group">
-                                <label for="date">Дата рождения</label>
-                                <input type="date" class="form-control" id="date"  disabled value="${requestScope.user.birthday}">
+                                <label>Фамилия</label>
+                                <p class="form-control"><c:out value="${user.surname}"/></p>
+                                <%--<input type="text" class="form-control" id="surname" name="surname" placeholder="Введите фамилию">--%>
                             </div>
                             <div class="form-group">
-                                <label for="passport">Паспортные данные</label>
-                                <input type="text" class="form-control" id="passport"  disabled value="${requestScope.user.passport}" >
+                                <label>Дата рождения</label>
+                                <%--<input type="date" class="form-control" id="user.birthday" name="user.birthday">--%>
+                                <p class="form-control"><c:out value="${user.birthday}"/></p>
+                                <%--<input type="date" class="form-control" id="date" name="date">--%>
                             </div>
                             <div class="form-group">
-                                <label for="address">Адрес</label>
-                                <input type="text" class="form-control" id="address"  disabled value="${requestScope.user.address}">
+                                <label>Паспортные данные</label>
+                                <p class="form-control"><c:out value="${user.passport}"/></p>
+                                <%--<input type="text" class="form-control" id="passport" name="passport" >--%>
                             </div>
                             <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email"   disabled value="${requestScope.user.email}">
+                                <label>Адрес</label>
+                                <p class="form-control"><c:out value="${user.address}"/></p>
+                                <%--<input type="text" class="form-control" id="address" name="address">--%>
                             </div>
                         </form>
                     </div>
@@ -111,7 +118,6 @@
                             <table class="table table-bordered table-hover table-striped">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
                                         <th>Номер</th>
                                         <th>Тариф</th>
                                         <th>Опции</th>
@@ -122,7 +128,6 @@
                                 <tbody>
                                     <c:forEach items="${requestScope.user.contracts}" var="contract">
                                         <tr class="click-row" data-value="${contract.id}">
-                                            <td><c:out value="${contract.id}"/></td>
                                             <td><c:out value="${contract.number}"/></td>
                                             <td><c:out value="${contract.tariff.name}"/></td>
                                             <c:set var="price" value="${contract.tariff.price}" scope="page"/>
@@ -157,13 +162,13 @@
                                     </div>
                                 </div>
                             </c:if>
-                        <form role="form" id="send" action="/pages/admin/contract/EditContractByAdmin" method="post">
+                        <form role="form" id="send" action="/pages/editContractByAdmin" method="post">
                             <input type="text" id="entity_id" name="entity_id" hidden>
                         </form>
                         </div>
                     </div>
                 </div>
-            <form action="/pages/admin/contract/NewContract" id="form-new-contract-for-user">
+            <form action="/pages/newContractForUser" method="post" id="form-new-contract-for-user">
                 <input type="hidden" name="user_id" value="${requestScope.user.id}">
             </form>
             </div>

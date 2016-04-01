@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,7 +45,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">
-                        Опция: <c:out value="${requestScope.option.name}"/>
+                        Опция: <c:out value="${requestScope.option_name}"/>
                     </h1>
                 </div>
             </div>
@@ -58,46 +59,66 @@
                     <li class=""><a href="#required" data-toggle="tab">Требуемые опции</a></li>
                     <li class=""><a href="#incompatible" data-toggle="tab">Несовместимые опции</a></li>
                     <li class="pull-right">
+                        <c:if test="${option.available}">
                         <button type="submit" form="form-change-option" class="btn btn-success">Изменить</button>
+                        </c:if>
+                        <button type="submit" id="check_option" class="btn btn-success">Проверить</button>
                         <button type="submit" form="form-remove-option" class="btn btn-danger" >Удалить</button>
                     </li>
                 </ul>
 
             </div>
+            <div class="row">
 
                 <div class="col-lg-4 top-buffer" >
-                <form role="form" id="form-change-option" action="/pages/admin/option/ChangeOption" method="post">
+                <form:form role="form" id="form-change-option" action="/pages/changeOption" method="post" modelAttribute="option">
                     <div class="tab-content">
                     <div class="tab-pane fade in active" id="general">
                     <div class="form-group">
                         <label for="name">Название</label>
-                        <input type="text" class="form-control" id="name" name="name" value="${option.name}">
+                        <form:input class="form-control" path="name" disabled="${!option.available}"/>
+                        <form:errors path="name" cssClass="text-danger"/>
+                        <%--<input type="text" class="form-control" id="name" name="name" value="${option.name}">--%>
                     </div>
                     <div class="form-group">
                         <label for="price">Цена</label>
-                        <input type="number" class="form-control" id="price" name="price" value="${option.price}">
+                        <form:input type="number" class="form-control" path="price" disabled="${!option.available}"/>
+                        <form:errors path="price" cssClass="text-danger"/>
+                        <%--<input type="number" class="form-control" id="price" name="price" value="${option.price}">--%>
                     </div>
                     <div class="form-group">
-                        <label for="connect_price">Стоимость подключения</label>
-                        <input type="number" class="form-control" id="connect_price" name="connect_price" value="${option.connectPrice}">
+                        <label for="connectPrice">Стоимость подключения</label>
+                        <form:input type="number" class="form-control" path="connectPrice" disabled="${!option.available}"/>
+                        <form:errors path="connectPrice" cssClass="text-danger"/>
+                        <%--<input type="number" class="form-control" id="connect_price" name="connect_price" value="${option.connectPrice}">--%>
                     </div>
                     </div>
 
                     <div class="tab-pane fade" id="required">
                         <div class="form-group">
-                            <c:if test="${not empty requestScope.options}">
-                                <label>Требуемые опции:</label>
-                                <c:forEach var="option" items="${requestScope.options}">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox"
-                                            <c:forEach var="req_option" items="${requestScope.option.optionsRequired}">
-                                                <c:if test="${option.id eq req_option.id}">checked</c:if>
-                                            </c:forEach>
-                                                      class="required_option" name="required_option" value="${option.id}">${option.name}</label>
-                                    </div>
-                                </c:forEach>
-                            </c:if>
-                            <c:if test="${empty requestScope.options}">
+                            <label>Требуемые опции:</label>
+                            <form:checkboxes path="optionsRequired" items="${anotherOptions}" itemValue="id" itemLabel="name" element="div" disabled="${!option.available}"/>
+                            <%--<c:forEach items="${options}" var="req_option">--%>
+                                <%--<div class="checkbox">--%>
+                                    <%--<label><form:checkbox path="optionsRequired" value="${req_option.id}" class="required_option" --%>
+
+                                    <%--/>--%>
+                                        <%--<c:out value="${req_option.name}" /></label>--%>
+                                <%--</div>--%>
+                            <%--</c:forEach>--%>
+                            <%--<c:if test="${not empty requestScope.options}">--%>
+                                <%--<label>Требуемые опции:</label>--%>
+                                <%--<c:forEach var="option" items="${requestScope.options}">--%>
+                                    <%--<div class="checkbox">--%>
+                                        <%--<label><input type="checkbox"--%>
+                                            <%--<c:forEach var="req_option" items="${requestScope.option.optionsRequired}">--%>
+                                                <%--<c:if test="${option.id eq req_option.id}">checked</c:if>--%>
+                                            <%--</c:forEach>--%>
+                                                      <%--class="required_option" name="required_option" value="${option.id}">${option.name}</label>--%>
+                                    <%--</div>--%>
+                                <%--</c:forEach>--%>
+                            <%--</c:if>--%>
+                            <c:if test="${empty requestScope.anotherOptions}">
                                 <div class="panel panel-warning">
                                     <div class="panel-heading">Информация</div>
                                     <div class="panel-body"><c:out value="Нет опций, доступных для выбора. Добавьте сначала новые опции." /></div>
@@ -107,19 +128,28 @@
                     </div>
                     <div class="tab-pane fade" id="incompatible">
                         <div class="form-group">
-                            <c:if test="${not empty requestScope.options}">
-                                <label>Несовместима с опциями:</label>
-                                <c:forEach var="option" items="${requestScope.options}">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox"
-                                        <c:forEach var="inc_option" items="${requestScope.option.optionsIncompatible}">
-                                                      <c:if test="${option.id eq inc_option.id}">checked</c:if>
-                                        </c:forEach>
-                                                      class="incompatible_option" name="incompatible_option" value="${option.id}">${option.name}</label>
-                                    </div>
-                                </c:forEach>
-                            </c:if>
-                            <c:if test="${empty requestScope.options}">
+                            <label>Несовместима с опциями:</label>
+                            <form:checkboxes path="optionsIncompatible" items="${anotherOptions}" itemValue="id" itemLabel="name" element="div"
+                                             disabled="${!option.available}"/>
+                            <%--<c:forEach items="${anotherOptions}" var="inc_option">--%>
+                                <%--<div class="checkbox">--%>
+                                    <%--<label><form:checkbox path="optionsIncompatible" value="${inc_option.id}" class="incompatible_option" />--%>
+                                        <%--<c:out value="${inc_option.name}" /></label>--%>
+                                <%--</div>--%>
+                            <%--</c:forEach>--%>
+                            <%--<c:if test="${not empty requestScope.options}">--%>
+                                <%--<label>Несовместима с опциями:</label>--%>
+                                <%--<c:forEach var="option" items="${requestScope.options}">--%>
+                                    <%--<div class="checkbox">--%>
+                                        <%--<label><input type="checkbox"--%>
+                                        <%--<c:forEach var="inc_option" items="${requestScope.option.optionsIncompatible}">--%>
+                                                      <%--<c:if test="${option.id eq inc_option.id}">checked</c:if>--%>
+                                        <%--</c:forEach>--%>
+                                                      <%--class="incompatible_option" name="incompatible_option" value="${option.id}">${option.name}</label>--%>
+                                    <%--</div>--%>
+                                <%--</c:forEach>--%>
+                            <%--</c:if>--%>
+                            <c:if test="${empty requestScope.anotherOptions}">
                                 <div class="panel panel-warning">
                                     <div class="panel-heading">Информация</div>
                                     <div class="panel-body"><c:out value="Нет опций, доступных для выбора. Добавьте сначала новые опции." /></div>
@@ -127,14 +157,23 @@
                             </c:if>
                         </div>
                     </div>
+                        <form:errors path="optionsIncompatible" cssClass="bg-danger"/>
                         </div>
-                    <input type="hidden" name="option_id" value="${requestScope.option.id}"/>
-                </form>
-                    <form action="/pages/admin/option/RemoveOption" id="form-remove-option">
+                    <form:hidden path="id"/>
+                </form:form>
+                    <form action="/pages/removeOption" id="form-remove-option">
                         <input type="hidden" name="option_id" value="${requestScope.option.id}"/>
                     </form>
 
                 </div>
+            </div>
+
+            <div class="row ">
+                <br><br>
+                <div class="col-lg-6 col-lg-offset-3">
+                <p class="alert alert-info" id="check-option-result" hidden></p>
+                    </div>
+            </div>
             </div>
             <!-- /Main -->
 
@@ -151,45 +190,73 @@
 <script src="/js/jquery-2.2.0.min.js"></script>
 <script language="JavaScript" type="text/javascript">
 
-    $(document).ready(function () {
-        $('input[name="required_option"]:checkbox').each(function (i) {
-            if (this.checked) {
-                var value = $(this).prop("value");
-                $('input[name="incompatible_option"]:checkbox[value="' + value + '"]').prop("disabled", true);
-            }
-        });
-    });
+    $(document).ready(function f() {
+        $('#check_option').on('click', doAjax);
 
-    $(document).ready(function () {
-        $('input[name="incompatible_option"]:checkbox').each(function (i) {
-            if (this.checked) {
-                var value = $(this).prop("value");
-                $('input[name="required_option"]:checkbox[value="' + value + '"]').prop("disabled", true);
-            }
-        });
     });
+    function doAjax() {
 
-        $(document).ready(function () {
-        $('input[name="required_option"]:checkbox').change(function () {
-            var value = $(this).prop("value");
-            if (this.checked){
-                $('input[name="incompatible_option"]:checkbox[value="' + value + '"]').prop("disabled", true);
-            } else {
-                $('input[name="incompatible_option"]:checkbox[value="' + value + '"]').prop("disabled", false);
-            }
-        });
-    });
-
-        $(document).ready(function () {
-            $('input[name="incompatible_option"]:checkbox').change(function () {
-                var value = $(this).prop("value");
-                if (this.checked){
-                    $('input[name="required_option"]:checkbox[value="' + value + '"]').prop("disabled", true);
+        var optionId = ${option.id};
+        $.ajax({
+            url: '/pages/checkOptionUsed',
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json',
+            mimeType: 'application/json',
+            data: ({
+                optionId: optionId
+            }),
+            success: function (data) {
+                var result;
+                if (data) {
+                    result = "Опция подключена к одному или нескольким контрактам. При удалении она станет недоступной для подключения, но не будет удалена.";
                 } else {
-                    $('input[name="required_option"]:checkbox[value="' + value + '"]').prop("disabled", false);
+                    result = "Опция не подключена ни к одному контракту и может быть удалена";
                 }
-            });
+                $('#check-option-result').text(result).show();
+            }
         });
+    }
+
+//    $(document).ready(function () {
+//        $('input[name="required_option"]:checkbox').each(function (i) {
+//            if (this.checked) {
+//                var value = $(this).prop("value");
+//                $('input[name="incompatible_option"]:checkbox[value="' + value + '"]').prop("disabled", true);
+//            }
+//        });
+//    });
+//
+//    $(document).ready(function () {
+//        $('input[name="incompatible_option"]:checkbox').each(function (i) {
+//            if (this.checked) {
+//                var value = $(this).prop("value");
+//                $('input[name="required_option"]:checkbox[value="' + value + '"]').prop("disabled", true);
+//            }
+//        });
+//    });
+//
+//        $(document).ready(function () {
+//        $('input[name="required_option"]:checkbox').change(function () {
+//            var value = $(this).prop("value");
+//            if (this.checked){
+//                $('input[name="incompatible_option"]:checkbox[value="' + value + '"]').prop("disabled", true);
+//            } else {
+//                $('input[name="incompatible_option"]:checkbox[value="' + value + '"]').prop("disabled", false);
+//            }
+//        });
+//    });
+//
+//        $(document).ready(function () {
+//            $('input[name="incompatible_option"]:checkbox').change(function () {
+//                var value = $(this).prop("value");
+//                if (this.checked){
+//                    $('input[name="required_option"]:checkbox[value="' + value + '"]').prop("disabled", true);
+//                } else {
+//                    $('input[name="required_option"]:checkbox[value="' + value + '"]').prop("disabled", false);
+//                }
+//            });
+//        });
 </script>
 
 <!-- Bootstrap Core JavaScript -->

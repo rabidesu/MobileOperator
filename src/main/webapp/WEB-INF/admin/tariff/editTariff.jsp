@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,24 +63,39 @@
                     <li class="active"><a href="#general" data-toggle="tab">Основные</a></li>
                     <li class=""><a href="#possible" data-toggle="tab">Доступные опции</a></li>
                     <li class="pull-right">
+                        <c:if test="${tariff.available}">
                         <button type="submit" form="form-change-tariff" class="btn btn-success">Изменить</button>
+                        </c:if>
+                        <button type="submit" id="check_tariff" class="btn btn-success">Проверить</button>
                         <button type="submit" form="form-remove-tariff" class="btn btn-danger">Удалить</button>
                     </li>
                 </ul>
 
             </div>
+            <div class="row">
 
             <div class="col-lg-4 top-buffer" >
-                <form role="form" id="form-change-tariff" action="/pages/admin/tariff/ChangeTariff" method="post">
+                <form:form id="form-change-tariff" action="/pages/changeTariff" method="post" modelAttribute="tariff">
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="general">
                             <div class="form-group">
                                 <label for="name">Название</label>
-                                <input type="text" class="form-control" id="name" name="name" value="${requestScope.tariff.name}">
+                                <form:input class="form-control" path="name" disabled="${!tariff.available}"/>
+                                <form:errors path="name" cssClass="red"/>
+                                <%--<input type="text" class="form-control" id="name" name="name" value="${requestScope.tariff.name}">--%>
                             </div>
                             <div class="form-group">
                                 <label for="price">Цена</label>
-                                <input type="number" class="form-control" id="price" name="price" value="${requestScope.tariff.price}">
+                                <form:input type="number" class="form-control" path="price" disabled="${!tariff.available}"/>
+                                <form:errors path="price" cssClass="red"/>
+                                <%--<input type="number" class="form-control" id="price" name="price" >--%>
+                            </div>
+                            <div class="form-group">
+                                <label for="price">Описание</label>
+                                    <%--<input type="number" class="form-control" id="price" name="price">--%>
+                                <form:textarea class="form-control" rows="4" path="description" disabled="${!tariff.available}"/>
+                                <form:errors path="description" cssClass="red"/>
+
                             </div>
                         </div>
 
@@ -89,24 +105,26 @@
                                 <c:if test="${not empty requestScope.options}">
 
                                 <div class="option_chb">
-                                    <c:forEach var="option" items="${requestScope.options}">
-                                        <div class="checkbox">
-                                            <label><input type="checkbox" name="options"
-                                                <c:set var="req_options" value=" " scope="page"/>
+                                    <form:checkboxes path="options" items="${options}" itemValue="id" itemLabel="name" element="div"
+                                                     disabled="${!tariff.available}"/>
+                                    <%--<c:forEach var="option" items="${requestScope.options}">--%>
+                                        <%--<div class="checkbox">--%>
+                                            <%--<label><input type="checkbox" name="options"--%>
+                                                <%--<c:set var="req_options" value=" " scope="page"/>--%>
 
-                                            <c:forEach var="req_option" items="${option.optionsRequired}">
-                                                <c:set var="req_options" value="${req_options} ${req_option.id}"/>
-                                            </c:forEach>
+                                            <%--<c:forEach var="req_option" items="${option.optionsRequired}">--%>
+                                                <%--<c:set var="req_options" value="${req_options} ${req_option.id}"/>--%>
+                                            <%--</c:forEach>--%>
 
-                                            <c:forEach var="possible_option" items="${requestScope.tariff.options}">
-                                                          <c:if test="${option.id eq possible_option.id}">checked</c:if>
-                                            </c:forEach>
-                                                          data-req="${req_options}"
-                                                          class="depended_option" value="${option.id}">${option.name}
-                                                <input name="options" type="hidden"  disabled id="hidden_${option.id}" value="${option.id}"/>
-                                            </label>
-                                        </div>
-                                    </c:forEach>
+                                            <%--<c:forEach var="possible_option" items="${requestScope.tariff.options}">--%>
+                                                          <%--<c:if test="${option.id eq possible_option.id}">checked</c:if>--%>
+                                            <%--</c:forEach>--%>
+                                                          <%--data-req="${req_options}"--%>
+                                                          <%--class="depended_option" value="${option.id}">${option.name}--%>
+                                                <%--<input name="options" type="hidden"  disabled id="hidden_${option.id}" value="${option.id}"/>--%>
+                                            <%--</label>--%>
+                                        <%--</div>--%>
+                                    <%--</c:forEach>--%>
                                     </div>
                                 </c:if>
                                 <c:if test="${empty requestScope.options}">
@@ -117,16 +135,26 @@
                                 </c:if>
                             </div>
                         </div>
+                        <form:errors path="options" cssClass="bg-danger"/>
                     </div>
-                    <input type="hidden" name="tariff_id" value="${requestScope.tariff.id}" />
-                </form>
-                <form id="form-remove-tariff" action="/pages/admin/tariff/RemoveTariff">
+                    <form:hidden path="id"/>
+                    <%--<input type="hidden" name="tariff_id" value="${requestScope.tariff.id}" />--%>
+                </form:form>
+                <form id="form-remove-tariff" action="/pages/removeTariff">
                     <div class="form-group">
                         <div class="top-buffer">
                             <input type="hidden" name="tariff_id" value="${requestScope.tariff.id}" />
                         </div>
                     </div>
                 </form>
+                </div>
+
+                <div class="row ">
+                    <br><br>
+                    <div class="col-lg-6 col-lg-offset-3">
+                        <p class="alert alert-info" id="check-tariff-result" hidden></p>
+                    </div>
+                </div>
             </div>
 
             <!-- /Main -->
@@ -142,7 +170,38 @@
 
 <!-- jQuery -->
 <script src="/js/jquery-2.2.0.min.js"></script>
-<script src="/js/edit-tariff.js"></script>
+<%--<script src="/js/edit-tariff.js"></script>--%>
+<script>
+    $(document).ready(function f() {
+        $('#check_tariff').on('click', doAjax);
+
+    });
+    function doAjax() {
+
+        var tariffId = ${tariff.id};
+        $.ajax({
+            url: '/pages/checkTariffUsed',
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json',
+            mimeType: 'application/json',
+            data: ({
+                tariffId: tariffId
+            }),
+            success: function (data) {
+                var result;
+                if (data) {
+                    result = "Тариф подключен к одному или нескольким контрактам. При удалении он станет недоступным" +
+                            " для подключения, но не будет удален.";
+                } else {
+                    result = "Тариф не подключен ни к одному контракту и может быть удален";
+                }
+                $('#check-tariff-result').text(result).show();
+            }
+        });
+    }
+</script>
+
 <%--<script>--%>
     <%--$(document).ready(function () {--%>
     <%--$('.option_chb input:checkbox').each(function(){--%>

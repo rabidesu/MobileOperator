@@ -124,6 +124,12 @@
                 </div>
             </div>
             <!-- /.row -->
+            <div align="center">
+                <h3>Enter text:</h3>
+                <input id="input_str" type="text">
+                <input type="button" value="OK" onclick="doAjax()">
+                <p id="result_text"></p>
+            </div>
 
         </div>
         <!-- /.container-fluid -->
@@ -136,6 +142,39 @@
 
 <!-- jQuery -->
 <script src="/js/jquery-2.2.0.min.js"></script>
+
+<script type="text/javascript">
+
+//    $(document).ready(function f() {
+//        $('#but').on('click', doAjax);
+//
+//    });
+    function doAjax() {
+
+        var inputText = $("#input_str").val();
+
+        $.ajax({
+            url : '/pages/getCharNum',
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json',
+            mimeType: 'application/json',
+            data : ({
+                text: inputText
+            }),
+            success: function (data) {
+
+                var result = data.name;
+                $("#result_text").text(result);
+            }
+        });
+    }
+</script>
+
+<%--<script type="text/javascript">--%>
+    <%--var intervalId = 0;--%>
+    <%--intervalId = setInterval(crunchifyAjax, 3000);--%>
+<%--</script>--%>
 
 <!-- Bootstrap Core JavaScript -->
 <script src="/js/bootstrap.min.js"></script>

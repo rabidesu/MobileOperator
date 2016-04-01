@@ -75,7 +75,6 @@
                     <table class="table table-bordered table-hover table-striped">
                         <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Название</th>
                             <th>Стоимость</th>
                             <th>Цена подключения</th>
@@ -85,11 +84,10 @@
                         </thead>
                         <tbody>
                         <c:forEach items="${requestScope.listOptions}" var="option">
-                            <tr class="click-row" data-value="${option.id}">
-                                <td><c:out value="${option.id}"/></td>
+                            <tr class="click-row <c:if test="${!option.available}">text-muted</c:if> " data-value="${option.id}">
                                 <td><c:out value="${option.name}"/></td>
-                                <td><c:out value="${option.price}"/></td>
-                                <td><c:out value="${option.connectPrice}"/></td>
+                                <td><c:out value="${option.price}"/>&#8381</td>
+                                <td><c:out value="${option.connectPrice}"/>&#8381</td>
                                 <td>
                                 <c:forEach items="${option.optionsRequired}" var="req_option">
                                     <c:out value="${req_option.name}"/>,
@@ -113,7 +111,7 @@
                                 </div>
                             </div>
                         </c:if>
-                    <form role="form" id="send" action="/pages/admin/option/EditOption" method="post">
+                    <form role="form" id="send" action="/pages/editOption" method="post">
                     <input type="text" id="entity_id" name="entity_id" hidden>
                     </form>
                 </div>

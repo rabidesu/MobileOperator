@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -69,40 +70,53 @@
             </div>
 
             <div class="col-lg-4 top-buffer" >
-                <form role="form" id="form-new-tariff" action="/pages/admin/tariff/SaveTariff" method="post">
+                <form:form id="form-new-tariff" action="/pages/saveTariff" method="post" modelAttribute="tariff" >
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="general">
                             <div class="form-group">
                                 <label for="name">Название</label>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Введите название">
+                                <form:input class="form-control" path="name"/>
+                                <form:errors path="name" cssClass="red"/>
+                                <%--<input type="text" class="form-control" id="name" name="name" placeholder="Введите название">--%>
                             </div>
                             <div class="form-group">
                                 <label for="price">Цена</label>
-                                <input type="number" class="form-control" id="price" name="price">
+                                    <%--<input type="number" class="form-control" id="price" name="price">--%>
+                                <form:input type="number" class="form-control" path="price"/>
+                                <form:errors path="price" cssClass="red"/>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="price">Описание</label>
+                                    <%--<input type="number" class="form-control" id="price" name="price">--%>
+                                <form:textarea class="form-control" rows="4" path="description"/>
+                                <form:errors path="description" cssClass="red"/>
+
                             </div>
                         </div>
 
                         <div class="tab-pane fade" id="possible">
                             <div class="form-group">
                                 <label>Список доступных опций:</label>
-                                <c:if test="${not empty requestScope.options}">
-                                <div class="option_chb">
-                                    <c:forEach var="option" items="${requestScope.options}">
-                                        <div class="checkbox">
-                                            <label><input type="checkbox" name="options"
-                                                <c:set var="req_options" value=" " scope="page"/>
+                                <form:checkboxes path="options" items="${options}" itemValue="id" itemLabel="name" element="div"/>
+                                <%--<c:if test="${not empty requestScope.options}">--%>
+                                <%--<div class="option_chb">--%>
+                                    <%--<c:forEach var="option" items="${requestScope.options}">--%>
+                                        <%--<div class="checkbox">--%>
+                                            <%--<label><input type="checkbox" name="options"--%>
+                                                <%--<c:set var="req_options" value=" " scope="page"/>--%>
 
-                                            <c:forEach var="req_option" items="${option.optionsRequired}">
-                                                    <c:set var="req_options" value="${req_options} ${req_option.id}"/>
-                                            </c:forEach>
-                                                          data-req="${req_options}"
-                                                          class="depended_option" value="${option.id}">${option.name}
-                                                <input name="options" type="hidden"  disabled id="hidden_${option.id}" value="${option.id}"/>
-                                            </label>
-                                        </div>
-                                    </c:forEach>
-                                    </div>
-                                </c:if>
+                                            <%--<c:forEach var="req_option" items="${option.optionsRequired}">--%>
+                                                    <%--<c:set var="req_options" value="${req_options} ${req_option.id}"/>--%>
+                                            <%--</c:forEach>--%>
+                                                          <%--data-req="${req_options}"--%>
+                                                          <%--class="depended_option" value="${option.id}">${option.name}--%>
+                                                <%--<input name="options" type="hidden"  disabled id="hidden_${option.id}" value="${option.id}"/>--%>
+                                            <%--</label>--%>
+                                        <%--</div>--%>
+                                    <%--</c:forEach>--%>
+                                    <%--</div>--%>
+                                <%--</c:if>--%>
                                 <c:if test="${empty requestScope.options}">
                                     <div class="panel panel-warning">
                                         <div class="panel-heading">Информация</div>
@@ -111,8 +125,9 @@
                                 </c:if>
                             </div>
                         </div>
+                        <form:errors path="options" cssClass="red"/>
                     </div>
-                </form>
+                </form:form>
             </div>
 
             <!-- /Main -->

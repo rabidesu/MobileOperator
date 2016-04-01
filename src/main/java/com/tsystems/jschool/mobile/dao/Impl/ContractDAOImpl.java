@@ -4,16 +4,91 @@ import com.tsystems.jschool.mobile.dao.API.ContractDAO;
 import com.tsystems.jschool.mobile.entities.Contract;
 import com.tsystems.jschool.mobile.exceptions.MobileDAOException;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
+
+@Repository("contractDAO")
 public class ContractDAOImpl extends GenericDAOImpl<Contract> implements ContractDAO {
+
+    @Autowired
+    private EntityManager entityManager;
 
     private static Logger logger = Logger.getLogger(ContractDAOImpl.class);
 
-    public List<Contract> findContractByNumber(String number, EntityManager entityManager) throws MobileDAOException {
+
+    public List<Contract> findContractPage(int page, int pageSize){
+        Query query = entityManager.createNamedQuery(Contract.GET_ALL);
+        query.setFirstResult(page * pageSize);
+        query.setMaxResults(pageSize);
+        return query.getResultList();
+
+    }
+
+
+    public List<Contract> findContractPageByNumber(int page, int pageSize, String number){
+        Query query = entityManager.createNamedQuery(Contract.GET_BY_NUMBER);
+        query.setParameter(1, number);
+        query.setFirstResult(page * pageSize);
+        query.setMaxResults(pageSize);
+        return query.getResultList();
+
+    }
+
+
+    public long getCountContracts() {
+        Query query = entityManager.createNamedQuery(Contract.GET_COUNT);
+        return (long) query.getSingleResult();
+    }
+
+
+    public long getCountContractsByNumber(String number) {
+        Query query = entityManager.createNamedQuery(Contract.GET_COUNT_BY_NUMBER);
+        query.setParameter(1, number);
+        return (long) query.getSingleResult();
+    }
+
+
+    public List<Contract> findContractWithTariff(int tariffId) throws MobileDAOException {
+        try {
+            Query query = entityManager.createNamedQuery(Contract.GET_WITH_TARIFF);
+            query.setParameter(1, tariffId);
+            query.setMaxResults(1);
+            return findMany(query);
+        } catch (Exception e){
+            String message = "Error on find contract by number: " + tariffId;
+            logger.error(message);
+            throw new MobileDAOException(message, e);
+        }
+    }
+
+
+    public List<Contract> findContractWithOption(int optionId) throws MobileDAOException {
+        try {
+            Query query = entityManager.createNamedQuery(Contract.GET_WITH_OPTION);
+            query.setParameter(1, optionId);
+            query.setMaxResults(1);
+            return findMany(query);
+        } catch (Exception e){
+            String message = "Error on find contract by number: " + optionId;
+            logger.error(message);
+            throw new MobileDAOException(message, e);
+        }
+    }
+
+
+    public List<Contract> findContractByNumber(String number) throws MobileDAOException {
         try {
             Query query = entityManager.createNamedQuery(Contract.GET_BY_NUMBER);
             query.setParameter(1, number);
@@ -24,5 +99,4 @@ public class ContractDAOImpl extends GenericDAOImpl<Contract> implements Contrac
             throw new MobileDAOException(message, e);
         }
     }
-
 }
