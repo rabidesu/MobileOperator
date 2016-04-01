@@ -8,12 +8,12 @@ import java.util.List;
 
 public interface OptionDAO extends GenericDAO<Option> {
 
-    List<Option> getAnotherOptions(int id) throws MobileDAOException;
+    List<Option> getAnotherOptions(int id);
 
-    void removeOptionById(int id) throws MobileDAOException;
+    void removeOptionById(int id);
 
-    List<Option> getOptionsByName(String name) throws MobileDAOException;
+    List<Option> getOptionsByName(String name);
 
-    public List<Option> getAvailableOptions();
+    List<Option> getAvailableOptions();
 
 }

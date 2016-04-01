@@ -22,8 +22,5 @@ public class EncodingFilter implements Filter {
         }
     }
 
-    public void destroy() {
-
-    }
-
+    public void destroy() {}
 }

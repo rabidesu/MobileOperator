@@ -10,25 +10,19 @@ import java.util.List;
  */
 public interface OptionService {
 
-    List<Option> getAllOptions() throws MobileServiceException;
+    List<Option> getAllOptions();
 
     List<Option> getAvailableOptions();
 
-    List<Option> getAllAnotherOptions(String id) throws MobileServiceException;
-
-    void addOption(Option option, List<Integer> requiredOption,
-                   List<Integer> incompatibleOption) throws MobileServiceException;
-
-    void changeOption(String id, String name, String price, String connectPrice, List<Integer> requiredOption,
-                      List<Integer> incompatibleOption) throws MobileServiceException;
+    List<Option> getAllAnotherOptions(String id);
 
     void changeOption(String optionId, Option option);
 
-    Option getOptionById(String id) throws MobileServiceException;
+    Option getOptionById(String id);
 
-    void removeOptionById(String id) throws MobileServiceException;
+    void removeOptionById(String id);
 
-    List<Option> getOptionsByName(String name) throws MobileServiceException;
+    List<Option> getOptionsByName(String name);
 
     void saveOption(Option option);
 

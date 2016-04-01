@@ -8,6 +8,7 @@ import com.tsystems.jschool.mobile.services.API.ContractService;
 import com.tsystems.jschool.mobile.services.API.OptionService;
 import com.tsystems.jschool.mobile.services.API.TariffService;
 import com.tsystems.jschool.mobile.services.API.UserService;
+import com.tsystems.jschool.mobile.utils.constants.Actions;
 import com.tsystems.jschool.mobile.validators.ChangeContractValidator;
 import com.tsystems.jschool.mobile.validators.CompatibilityOptionValidator;
 import com.tsystems.jschool.mobile.validators.NewContractValidator;
@@ -70,7 +71,7 @@ public class AdminController {
 //                case "phone": page = userService.getUserListByContract(pageNumber, text); break;
 //                case "surname": page = userService.getUserListBySurname(pageNumber, text); break;
 //                case "email": page = userService.getUserListByEmail(pageNumber, text); break;
-//                default: page = userService.getUserList(pageNumber); //todo log
+//                default: page = userService.getUserList(pageNumber);
 //            }
 //        }
 //
@@ -86,7 +87,7 @@ public class AdminController {
 //        return "/admin/client/searchClient";
 //    }
 
-    @RequestMapping(value = "findClientProfile")
+    @RequestMapping(value = Actions.SHOW_CLIENT_PROFILE)
     public String findClientProfile(@RequestParam(value = "user_id")String userId, Model model) {
         User user = userService.getUserById(userId);
         model.addAttribute("user", user);
@@ -97,7 +98,7 @@ public class AdminController {
     * Contracts control
      */
 
-    @RequestMapping(value = {"contract/page/{pageNumber}/{searchText}", "contract/page/{pageNumber}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {Actions.SHOW_CONTRACTS_PAGE_WITH_SEARCH, Actions.SHOW_CONTRACTS_PAGE}, method = RequestMethod.GET)
     public String getContractPage(@PathVariable Integer pageNumber, @PathVariable Optional<String> searchText,
                                   @RequestParam(value = "search_text", required = false) String text, Model model) {
 
@@ -132,7 +133,7 @@ public class AdminController {
         return "/admin/contract/searchContract";
     }
 
-    @RequestMapping(value = "newContract")
+    @RequestMapping(value = Actions.NEW_CONTRACT)
     public String newContract(Model model) {
         List<Tariff> tariffs = tariffService.getAvailableTariffs();
         model.addAttribute("tariffs", tariffs);
@@ -140,7 +141,7 @@ public class AdminController {
         return "/admin/contract/newContract";
     }
 
-    @RequestMapping(value = "newContractForUser")
+    @RequestMapping(value = Actions.NEW_CONTRACT_FOR_USER)
     public String newContractForUser(@RequestParam(value = "user_id") String userId, Model model) {
         List<Tariff> tariffs = tariffService.getAvailableTariffs();
         model.addAttribute("tariffs", tariffs);
@@ -150,7 +151,7 @@ public class AdminController {
         return "/admin/contract/newContractForUser";
     }
 
-    @RequestMapping(value = "saveContractForUser")
+    @RequestMapping(value = Actions.SAVE_CONTRACT_FOR_USER)
     public String saveContractForUser(@RequestParam(value = "user_id")String userId, Contract contract, BindingResult errors, Model model, HttpServletRequest request) {
         contract.setUser(userService.getUserById(userId));
         newContractValidator.validate(contract, errors);
@@ -168,7 +169,7 @@ public class AdminController {
         return "/admin/info";
     }
 
-    @RequestMapping(value = "saveContract")
+    @RequestMapping(value = Actions.SAVE_CONTRACT)
     public String saveContract(Contract contract, BindingResult errors, Model model) {
         newContractValidator.validate(contract, errors);
         if (errors.hasErrors()){
@@ -183,7 +184,7 @@ public class AdminController {
         return "/admin/info";
     }
 
-    @RequestMapping(value = "editContractByAdmin")
+    @RequestMapping(value = Actions.ADMIN_EDIT_CONTRACT)
     public String editContractByAdmin(@RequestParam(value = "entity_id")String contractId, Model model) {
         model.addAttribute("contract", contractService.getContractById(contractId));
         model.addAttribute("tariffs",  tariffService.getAvailableTariffsForContract(contractId));
@@ -191,7 +192,7 @@ public class AdminController {
         return "admin/contract/editContract";
     }
 
-    @RequestMapping(value = "changeContract")
+    @RequestMapping(value = Actions.ADMIN_CHANGE_CONTRACT)
     public String changeContract(@RequestParam(value = "contract_id") String contractId, Contract contract,
                                  BindingResult errors, Model model) {
         changeContractValidator.validate(contract, errors);
@@ -208,40 +209,32 @@ public class AdminController {
         return "/admin/info";
     }
 
-    @RequestMapping(value = "blockContractByAdmin")
+    @RequestMapping(value = Actions.ADMIN_BLOCK_CONTRACT)
     public String blockContractByAdmin(@RequestParam(value = "contract_id")String contractId, Model model) {
         contractService.blockContractByAdmin(contractId);
         model.addAttribute("message", "Контракт успешно заблокирован!");
         return "admin/info";
     }
 
-    @RequestMapping(value = "unblockContractByAdmin")
+    @RequestMapping(value = Actions.ADMIN_UNBLOCK_CONTRACT)
     public String unblockContractByAdmin(@RequestParam(value = "contract_id")String contractId, Model model) {
         contractService.unblockContractByAdmin(contractId);
         model.addAttribute("message", "Контракт успешно разблокирован!");
         return "admin/info";
     }
 
-    @RequestMapping(value = "searchContract")
-    public String searchContract(Model model) {
-
-        List<Contract> contracts = contractService.getAllContracts();
-        model.addAttribute("listContracts", contracts);
-        return "/admin/contract/searchContract";
-    }
-
     /*
     * Tariff control
      */
 
-    @RequestMapping(value = "newTariff", method = RequestMethod.GET)
+    @RequestMapping(value = Actions.NEW_TARIFF, method = RequestMethod.GET)
     public String newTariff(Model model) {
         model.addAttribute("options", optionService.getAvailableOptions());
         model.addAttribute("tariff", new Tariff());
         return "/admin/tariff/newTariff";
     }
 
-    @RequestMapping(value = "searchTariff")
+    @RequestMapping(value = Actions.SHOW_TARIFFS)
     public String searchTariff(@RequestParam(value = "search_text", required = false) String searchText, Model model) {
 
         List<Tariff> tariffs;
@@ -254,7 +247,7 @@ public class AdminController {
         return "/admin/tariff/searchTariff";
     }
 
-    @RequestMapping(value = "saveTariff")
+    @RequestMapping(value = Actions.SAVE_TARIFF)
     public String saveTariff(@Valid Tariff tariff, BindingResult errors, Model model) {
         tariffValidator.validate(tariff, errors);
         if (errors.hasErrors()){
@@ -268,7 +261,7 @@ public class AdminController {
         return "/admin/info";
     }
 
-    @RequestMapping(value = "editTariff")
+    @RequestMapping(value = Actions.EDIT_TARIFF)
     public String editTariff(@RequestParam(value = "entity_id")String tariffId, Model model) {
         Tariff tariff = tariffService.getTariffById(tariffId);
         model.addAttribute("options", optionService.getAvailableOptions());
@@ -276,7 +269,7 @@ public class AdminController {
         return "/admin/tariff/editTariff";
     }
 
-    @RequestMapping(value = "changeTariff")
+    @RequestMapping(value = Actions.CHANGE_TARIFF)
     public String changeTariff(@RequestParam(value = "id")String tariffId, @Valid Tariff tariff, BindingResult errors, Model model) {
         tariffValidator.validate(tariff, errors);
         if (errors.hasErrors()){
@@ -289,7 +282,7 @@ public class AdminController {
         return "/admin/info";
     }
 
-    @RequestMapping(value = "removeTariff")
+    @RequestMapping(value = Actions.REMOVE_TARIFF)
     public String removeTariff(@RequestParam(value = "tariff_id")String tariffId, Model model) {
 
         // todo validation
@@ -299,18 +292,9 @@ public class AdminController {
     }
 
 
-
-
-
-
     /*
     *  Options control
      */
-
-//    @ModelAttribute("options")
-//    public List getAllOptions(){
-//        return optionService.getAllOptions();
-//    }
 
 
     @InitBinder
@@ -366,14 +350,14 @@ public class AdminController {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("yyyy-MM-d"), true));
     }
 
-    @RequestMapping(value = "newOption", method = RequestMethod.GET)
+    @RequestMapping(value = Actions.NEW_OPTION, method = RequestMethod.GET)
     public String newOption(Model model) {
         model.addAttribute("options", optionService.getAvailableOptions());
         model.addAttribute("option", new Option());
         return "/admin/option/newOption";
     }
 
-    @RequestMapping(value = "saveOption")
+    @RequestMapping(value = Actions.SAVE_OPTION)
     public String saveOption(@Valid Option option, BindingResult errors, Model model) {
         optionValidator.validate(option, errors);
         if (errors.hasErrors()){
@@ -385,7 +369,7 @@ public class AdminController {
         return "/admin/info";
     }
 
-    @RequestMapping(value = "editOption")
+    @RequestMapping(value = Actions.EDIT_OPTION)
     public String editOption(@RequestParam(value = "entity_id")String optionId, Model model) {
         Option option = optionService.getOptionById(optionId);
         optionService.getAllRequiredOption(option);
@@ -396,7 +380,7 @@ public class AdminController {
         return "/admin/option/editOption";
     }
 
-    @RequestMapping(value = "changeOption")
+    @RequestMapping(value = Actions.CHANGE_OPTION)
     public String changeOption(@RequestParam(value = "id")String optionId, @Valid Option option, BindingResult errors, Model model) {
         optionValidator.validate(option, errors);
         if (errors.hasErrors()){
@@ -411,7 +395,7 @@ public class AdminController {
     }
 
 
-    @RequestMapping(value = "searchOption")
+    @RequestMapping(value = Actions.SHOW_OPTIONS)
     public String searchOption(@RequestParam(value = "search_text", required = false) String searchText, Model model) {
 
         List<Option> options;
@@ -424,7 +408,7 @@ public class AdminController {
         return "/admin/option/searchOption";
     }
 
-    @RequestMapping(value = "removeOption")
+    @RequestMapping(value = Actions.REMOVE_OPTION)
     public String removeOption(@RequestParam(value = "option_id")String optionId, Model model) {
 
         // todo validation

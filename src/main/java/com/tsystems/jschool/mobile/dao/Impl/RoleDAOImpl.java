@@ -22,15 +22,8 @@ public class RoleDAOImpl extends GenericDAOImpl<Role> implements RoleDAO {
     private static Logger logger = Logger.getLogger(RoleDAOImpl.class);
 
     public Role getRoleByName(RoleName name) {
-        try {
             Query query = entityManager.createNamedQuery(Role.GET_BY_NAME);
             query.setParameter(1, name);
-
             return findMany(query).get(0);
-        } catch (Exception e){
-            String message = "Error on get role by role name: " + name.toString();
-            logger.error(message);
-            throw new MobileDAOException(message, e);
-        }
     }
 }

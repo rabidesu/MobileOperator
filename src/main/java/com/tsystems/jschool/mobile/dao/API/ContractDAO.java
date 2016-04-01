@@ -13,11 +13,11 @@ import java.util.List;
 
 public interface ContractDAO extends GenericDAO<Contract> {
 
-    List<Contract> findContractByNumber(String number) throws MobileDAOException;
+    List<Contract> findContractByNumber(String number);
 
-    long getCountContracts() throws MobileDAOException;
+    long getCountContracts();
 
-    long getCountContractsByNumber(String number) throws MobileDAOException;
+    long getCountContractsByNumber(String number);
 
     List<Contract> findContractPageByNumber(int page, int pageSize, String number);
 

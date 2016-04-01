@@ -18,40 +18,22 @@ public class UserDAOImpl extends GenericDAOImpl<User> implements UserDAO {
 
     private static Logger logger = Logger.getLogger(UserDAOImpl.class);
 
-    public List<User> getUserByPhoneNumber(String number) throws MobileDAOException {
-        try {
-            Query query = entityManager.createNamedQuery(User.GET_BY_PHONE_NUMBER);
-            query.setParameter(1, number);
-            return findMany(query);
-        } catch (Exception e){
-            String message = "Error on get user by phone number: " + number;
-            logger.error(message);
-            throw new MobileDAOException(message, e);
-        }
+    public List<User> getUserByPhoneNumber(String number) {
+        Query query = entityManager.createNamedQuery(User.GET_BY_PHONE_NUMBER);
+        query.setParameter(1, number);
+        return findMany(query);
     }
 
-    public List<User> getUserByEmail(String email) throws MobileDAOException {
-        try {
-            Query query = entityManager.createNamedQuery(User.GET_BY_EMAIL);
-            query.setParameter(1, email);
-            return findMany(query);
-        } catch (Exception e){
-            String message = "Error on get user by e-mail: " + email;
-            logger.error(message);
-            throw new MobileDAOException(message, e);
-        }
+    public List<User> getUserByEmail(String email) {
+        Query query = entityManager.createNamedQuery(User.GET_BY_EMAIL);
+        query.setParameter(1, email);
+        return findMany(query);
     }
 
-    public List<User> getUserBySurname(String surname) throws MobileDAOException {
-        try {
-            Query query = entityManager.createNamedQuery(User.GET_BY_SURNAME);
-            query.setParameter(1, surname);
-            return findMany(query);
-        } catch (Exception e){
-            String message = "Error on get user by surname: " + surname;
-            logger.error(message);
-            throw new MobileDAOException(message, e);
-        }
+    public List<User> getUserBySurname(String surname) {
+        Query query = entityManager.createNamedQuery(User.GET_BY_SURNAME);
+        query.setParameter(1, surname);
+        return findMany(query);
     }
 
 }

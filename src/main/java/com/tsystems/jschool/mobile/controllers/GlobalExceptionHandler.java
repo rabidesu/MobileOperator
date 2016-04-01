@@ -1,14 +1,10 @@
 package com.tsystems.jschool.mobile.controllers;
 
-import com.tsystems.jschool.mobile.entities.CurrentUser;
 import com.tsystems.jschool.mobile.enumerates.RoleName;
-import com.tsystems.jschool.mobile.exceptions.CompatibilityOptionException;
 import com.tsystems.jschool.mobile.exceptions.MobileDAOException;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;

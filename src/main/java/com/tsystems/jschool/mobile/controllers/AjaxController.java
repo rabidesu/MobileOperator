@@ -7,6 +7,7 @@ import com.tsystems.jschool.mobile.services.API.ContractService;
 import com.tsystems.jschool.mobile.services.API.OptionService;
 import com.tsystems.jschool.mobile.services.API.TariffService;
 import com.tsystems.jschool.mobile.services.API.UserService;
+import com.tsystems.jschool.mobile.utils.constants.Actions;
 import jdk.nashorn.internal.runtime.JSONFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,41 +35,33 @@ public class AjaxController {
     private OptionService optionService;
 
 
-    @RequestMapping(value = "/checkOptionUsed")
+    @RequestMapping(value = Actions.CHECK_IF_OPTION_USED)
     public @ResponseBody
     boolean checkOptionUsed(@RequestParam String optionId) {
         return contractService.isExistContractWithOption(optionId);
     }
 
-    @RequestMapping(value = "/checkTariffUsed")
+    @RequestMapping(value = Actions.CHECK_IF_TARIFF_USED)
     public @ResponseBody
     boolean checkTariffUsed(@RequestParam String tariffId) {
         return contractService.isExistContractWithTariff(tariffId);
     }
 
-    @RequestMapping(value = "/checkEmailExists")
+    @RequestMapping(value = Actions.CHECK_IF_EMAIL_EXISTS)
     public @ResponseBody
     boolean checkEmailExists(@RequestParam String email) {
         return userService.existsUserWithEmail(email);
     }
 
-//    @RequestMapping(value = "/getUser")
-//    public @ResponseBody
-//    User getUser(@RequestParam String email) {
-//        User user = userService.getUserByEmail(email);
-//        user.setContracts(null);
-//        user.setPassword(null);
-//        return user;
-//    }
 
-    @RequestMapping(value = "/getUser")
+    @RequestMapping(value = Actions.GET_USER_DATA)
     public @ResponseBody
     int getUser(@RequestParam String email) {
         User user = userService.getUserByEmail(email);
         return user.getId();
     }
 
-    @RequestMapping(value = "/getOptionsForTariff")
+    @RequestMapping(value = Actions.GET_OPTIONS_FOR_TARIFF)
     public @ResponseBody
     List<Option> getOptionsForTariff(@RequestParam String tariffId) {
         List<Option> optionList = new ArrayList<>();
@@ -77,9 +70,4 @@ public class AjaxController {
         return optionList;
     }
 
-//    @RequestMapping(value = "/getOptionsForTariffAndContract")
-//    public @ResponseBody
-//    List<Option> getOptionsForTariffAndContract(@RequestParam String tariffId, @RequestParam String contractId) {
-//        return optionService.getOptionsForTariffAndContract(tariffId, contractId);
-//    }
 }

@@ -10,17 +10,13 @@ import java.util.List;
  */
 public interface TariffService {
 
-    void addTariff(String name, String price, String[] options) throws MobileServiceException;
-
-    void changeTariff(String id, String name, String price, String[] options) throws MobileServiceException;
-
     List<Tariff> getAllTariffs() throws MobileServiceException;
 
-    List<Tariff> findTariffByName(String name) throws MobileServiceException;
+    List<Tariff> findTariffByName(String name);
 
-    Tariff getTariffById(String id) throws MobileServiceException;
+    Tariff getTariffById(String id);
 
-    void removeTariffById(String id) throws MobileServiceException;
+    void removeTariffById(String id);
 
     void saveTariff(Tariff tariff);
 

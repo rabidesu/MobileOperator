@@ -10,7 +10,7 @@ public interface TariffDAO extends GenericDAO<Tariff> {
 
     List<Tariff> findTariffByName(String name) throws MobileDAOException;
 
-    void removeTariffById(int id) throws MobileDAOException;
+    void removeTariffById(int id);
 
     List<Tariff> getAvailableTariffs();
 

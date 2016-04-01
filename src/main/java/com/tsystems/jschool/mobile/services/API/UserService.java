@@ -21,19 +21,14 @@ public interface UserService {
 //
 //    Page<User> getUserListByEmail(Integer pageNumber, String text);
 
-    User adminExists(String email, String password) throws MobileServiceException, LoginUserException;
 
-    User clientExists(String email, String password) throws MobileServiceException, LoginUserException;
+    List<User> getAllUsers();
+//
+//    List<User> getUserByField(String searchText, String searchField) throws MobileServiceException;
 
-    User userExists(String email, String password, RoleName role) throws MobileServiceException, LoginUserException;
+    User getUserById(String id);
 
-    List<User> getAllUsers() throws MobileServiceException;
-
-    List<User> getUserByField(String searchText, String searchField) throws MobileServiceException;
-
-    User getUserById(String id) throws MobileServiceException;
-
-    User getUserByEmail(String email) throws MobileServiceException;
+    User getUserByEmail(String email);
 
     boolean existsUserWithEmail(String email);
 

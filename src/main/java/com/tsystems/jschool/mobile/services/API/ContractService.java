@@ -15,8 +15,6 @@ public interface ContractService {
 
     public void addContract(Contract contract);
 
-//    public Page<Contract> getContractsListByNumber(Integer pageNumber, String text);
-//
     List<Contract> getContractsPage(int pageNumber, int pageSize);
 
     public List<Contract> getContractsPageByNumber(int pageNumber, int pageSize, String number);
@@ -25,19 +23,17 @@ public interface ContractService {
 
     int getCountContractsByNumber(String number);
 
-    List<Contract> getAllContracts() throws MobileServiceException;
-
     boolean isExistContractWithTariff(String tariffId);
 
     boolean isExistContractWithOption(String optionId);
 
-    List<Contract> findContractByNumber(String number) throws MobileServiceException;
+    List<Contract> findContractByNumber(String number);
 
-    Contract getContractById(String id) throws MobileServiceException;
+    Contract getContractById(String id);
 
-    void changeContract(String contractId, Contract contract) throws MobileServiceException;
+    void changeContract(String contractId, Contract contract);
 
-    void addContractForUser(Contract contract) throws MobileServiceException;
+    void addContractForUser(Contract contract);
 
     void blockContractByAdmin(String contractId);
 

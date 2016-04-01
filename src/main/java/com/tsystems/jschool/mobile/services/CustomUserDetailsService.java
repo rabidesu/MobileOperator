@@ -1,12 +1,6 @@
 package com.tsystems.jschool.mobile.services;
 
 
-import com.tsystems.jschool.mobile.dao.API.UserDAO;
-
-import com.tsystems.jschool.mobile.entities.Contract;
-import com.tsystems.jschool.mobile.entities.CurrentUser;
-import com.tsystems.jschool.mobile.entities.Role;
-import com.tsystems.jschool.mobile.exceptions.MobileDAOException;
 import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
 import com.tsystems.jschool.mobile.services.API.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +13,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 @Service(value = "customUserDetailsService")
@@ -45,22 +37,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
 
-        return new CurrentUser(
+        return new User(
                 domainUser.getEmail(),
                 domainUser.getPassword(),
                 enabled,
                 accountNonExpired,
                 credentialsNonExpired,
                 accountNonLocked,
-                getAuthorities(domainUser.getRole().getId()),
-                domainUser.getId(),
-                domainUser.getBirthday(),
-                domainUser.getPassport(),
-                domainUser.getAddress(),
-                domainUser.getContracts(),
-                domainUser.getName(),
-                domainUser.getSurname()
-
+                getAuthorities(domainUser.getRole().getId())
         );
     }
 

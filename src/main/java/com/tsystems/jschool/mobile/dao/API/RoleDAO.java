@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface RoleDAO extends GenericDAO<Role> {
 
-    Role getRoleByName(RoleName name) throws MobileDAOException;
+    Role getRoleByName(RoleName name);
 
 }

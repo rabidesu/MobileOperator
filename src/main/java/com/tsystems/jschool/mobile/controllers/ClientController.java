@@ -6,6 +6,7 @@ import com.tsystems.jschool.mobile.services.API.ContractService;
 import com.tsystems.jschool.mobile.services.API.OptionService;
 import com.tsystems.jschool.mobile.services.API.TariffService;
 import com.tsystems.jschool.mobile.services.API.UserService;
+import com.tsystems.jschool.mobile.utils.constants.Actions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,19 +32,19 @@ public class ClientController {
     @Autowired
     private OptionService optionService;
 
-    @RequestMapping(value = "clientProfile")
+    @RequestMapping(value = Actions.CLIENT_PROFILE)
     public String clientProfile(Model model) {
         return "/client/profile/profile";
     }
 
-    @RequestMapping(value = "clientContracts")
+    @RequestMapping(value = Actions.SHOW_CLIENT_CONTRACTS)
     public String clientContracts(@ModelAttribute(value = "loggedUser") User loggedUser, Model model) {
         User user = userService.getUserByEmail(loggedUser.getEmail());
         model.addAttribute("user", user);
         return "/client/contract/contracts";
     }
 
-    @RequestMapping(value = "searchTariffs")
+    @RequestMapping(value = Actions.CLIENT_SHOW_TARIFFS)
     public String searchTariffs(Model model) {
         List<Tariff> tariffs = tariffService.getAvailableTariffs();
         model.addAttribute("tariffs", tariffs);

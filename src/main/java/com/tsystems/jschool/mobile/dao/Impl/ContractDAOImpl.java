@@ -33,9 +33,7 @@ public class ContractDAOImpl extends GenericDAOImpl<Contract> implements Contrac
         query.setFirstResult(page * pageSize);
         query.setMaxResults(pageSize);
         return query.getResultList();
-
     }
-
 
     public List<Contract> findContractPageByNumber(int page, int pageSize, String number){
         Query query = entityManager.createNamedQuery(Contract.GET_BY_NUMBER);
@@ -43,15 +41,12 @@ public class ContractDAOImpl extends GenericDAOImpl<Contract> implements Contrac
         query.setFirstResult(page * pageSize);
         query.setMaxResults(pageSize);
         return query.getResultList();
-
     }
-
 
     public long getCountContracts() {
         Query query = entityManager.createNamedQuery(Contract.GET_COUNT);
         return (long) query.getSingleResult();
     }
-
 
     public long getCountContractsByNumber(String number) {
         Query query = entityManager.createNamedQuery(Contract.GET_COUNT_BY_NUMBER);
@@ -59,44 +54,23 @@ public class ContractDAOImpl extends GenericDAOImpl<Contract> implements Contrac
         return (long) query.getSingleResult();
     }
 
-
     public List<Contract> findContractWithTariff(int tariffId) throws MobileDAOException {
-        try {
-            Query query = entityManager.createNamedQuery(Contract.GET_WITH_TARIFF);
-            query.setParameter(1, tariffId);
-            query.setMaxResults(1);
-            return findMany(query);
-        } catch (Exception e){
-            String message = "Error on find contract by number: " + tariffId;
-            logger.error(message);
-            throw new MobileDAOException(message, e);
-        }
+        Query query = entityManager.createNamedQuery(Contract.GET_WITH_TARIFF);
+        query.setParameter(1, tariffId);
+        query.setMaxResults(1);
+        return findMany(query);
     }
-
 
     public List<Contract> findContractWithOption(int optionId) throws MobileDAOException {
-        try {
-            Query query = entityManager.createNamedQuery(Contract.GET_WITH_OPTION);
-            query.setParameter(1, optionId);
-            query.setMaxResults(1);
-            return findMany(query);
-        } catch (Exception e){
-            String message = "Error on find contract by number: " + optionId;
-            logger.error(message);
-            throw new MobileDAOException(message, e);
-        }
+        Query query = entityManager.createNamedQuery(Contract.GET_WITH_OPTION);
+        query.setParameter(1, optionId);
+        query.setMaxResults(1);
+        return findMany(query);
     }
 
-
     public List<Contract> findContractByNumber(String number) throws MobileDAOException {
-        try {
-            Query query = entityManager.createNamedQuery(Contract.GET_BY_NUMBER);
-            query.setParameter(1, number);
-            return findMany(query);
-        } catch (Exception e){
-            String message = "Error on find contract by number: " + number;
-            logger.error(message);
-            throw new MobileDAOException(message, e);
-        }
+        Query query = entityManager.createNamedQuery(Contract.GET_BY_NUMBER);
+        query.setParameter(1, number);
+        return findMany(query);
     }
 }

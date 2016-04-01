@@ -28,64 +28,15 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDAO userDAO;
 
-//    @Autowired
-//    private UserRepo userRepo;
-
-    public User adminExists(String email, String password) throws MobileServiceException, LoginUserException {
-        return userExists(email, password, RoleName.ADMIN);
-    }
-
-    public User clientExists(String email, String password) throws MobileServiceException, LoginUserException {
-        return userExists(email, password, RoleName.CLIENT);
-    }
-
-    @Transactional
-    public User userExists(String email, String password, RoleName role) throws MobileServiceException, LoginUserException {
-        try {
-            List<User> users = userDAO.getUserByEmail(email);
-            if (!users.isEmpty()) {
-                User user = users.get(0);
-                if (BCrypt.checkpw(password, user.getPassword()) && user.getRole().getRoleName() == role){
-                    return user;
-                } else {
-                    String message = "Invalid password for user: " + email;
-                    logger.error(message);
-                    throw new LoginUserException();
-                }
-            } else {
-                String message = "Invalid login: " + email;
-                logger.error(message);
-                throw new LoginUserException();
-            }
-        } catch (MobileDAOException e){
-            throw new MobileServiceException(e);
-        }
-    }
 
     @Transactional
     public List<User> getAllUsers() throws MobileServiceException {
-        try {
-            List<User> users = userDAO.findAll(User.class);
-            return users;
-        } catch (MobileDAOException e){
-            throw new MobileServiceException(e);
-        }
+        return userDAO.findAll(User.class);
     }
 
     @Transactional
-    public User getUserByEmail(String email) throws MobileServiceException {
-        List<User> users = null;
-        try {
-            users = userDAO.getUserByEmail(email);
-            if (users.isEmpty()) {
-                String message = "Can not find user. Invalid email:" + email;
-                logger.error(message);
-                throw new MobileServiceException(message);
-            }
-        } catch (MobileDAOException e){
-            throw new MobileServiceException(e);
-        }
-        return users.get(0);
+    public User getUserByEmail(String email) {
+        return userDAO.getUserByEmail(email).get(0);
     }
 
     @Transactional
@@ -94,40 +45,35 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    @Transactional
-    public List<User> getUserByField(String searchText, String searchField) throws MobileServiceException {
-        List<User> users = null;
-        try {
+//    @Transactional
+//    public List<User> getUserByField(String searchText, String searchField) throws MobileServiceException {
+//        List<User> users = null;
+//        try {
+//
+//            switch (searchText){
+//                case "phone": users = userDAO.getUserByPhoneNumber("%" + searchText + "%"); break;
+//                case "surname": users = userDAO.getUserBySurname("%" + searchText + "%"); break;
+//                case "email": users = userDAO.getUserByEmail("%" + searchText + "%"); break;
+//                case "user_id": {
+//                    users = new ArrayList<>();
+//                    try {
+//                        users.add(userDAO.findById(User.class, Integer.valueOf(searchText)));
+//                    } catch (NumberFormatException e) {
+//                        String message = "Can not find user. Invalid id format:" + searchText;
+//                        logger.error(message);
+//                        throw e;
+//                    }
+//                }
+//            }
+//            return users;
+//        } catch (MobileDAOException | NumberFormatException e){
+//            throw new MobileServiceException(e);
+//        }
+//    }
 
-            switch (searchText){
-                case "phone": users = userDAO.getUserByPhoneNumber("%" + searchText + "%"); break;
-                case "surname": users = userDAO.getUserBySurname("%" + searchText + "%"); break;
-                case "email": users = userDAO.getUserByEmail("%" + searchText + "%"); break;
-                case "user_id": {
-                    users = new ArrayList<>();
-                    try {
-                        users.add(userDAO.findById(User.class, Integer.valueOf(searchText)));
-                    } catch (NumberFormatException e) {
-                        String message = "Can not find user. Invalid id format:" + searchText;
-                        logger.error(message);
-                        throw e;
-                    }
-                }
-            }
-            return users;
-        } catch (MobileDAOException | NumberFormatException e){
-            throw new MobileServiceException(e);
-        }
-    }
-
     @Transactional
-    public User getUserById(String id) throws MobileServiceException {
-        try {
-            User user = userDAO.findById(User.class, Integer.valueOf(id));
-            return user;
-        } catch (MobileDAOException e){
-            throw new MobileServiceException(e);
-        }
+    public User getUserById(String id) {
+        return userDAO.findById(User.class, Integer.valueOf(id));
     }
 
 //    @Transactional

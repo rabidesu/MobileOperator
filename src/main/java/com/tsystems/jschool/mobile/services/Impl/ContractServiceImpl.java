@@ -5,20 +5,14 @@ import com.tsystems.jschool.mobile.dao.API.*;
 //import com.tsystems.jschool.mobile.repositories.ContractRepo;
 import com.tsystems.jschool.mobile.entities.*;
 import com.tsystems.jschool.mobile.enumerates.RoleName;
-import com.tsystems.jschool.mobile.exceptions.CompatibilityOptionException;
-import com.tsystems.jschool.mobile.exceptions.MobileDAOException;
 import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
 import com.tsystems.jschool.mobile.services.API.ContractService;
-import com.tsystems.jschool.mobile.services.CompatibilityOptionChecker;
 import org.apache.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service("contractService")
@@ -93,35 +87,15 @@ public class ContractServiceImpl implements ContractService {
         contractDAO.merge(contract);
     }
 
-    @Transactional
-    public List<Contract> getAllContracts() throws MobileServiceException {
 
-        try {
-            List<Contract> contracts = contractDAO.findAll(Contract.class);
-            return contracts;
-        } catch (MobileDAOException e) {
-            throw new MobileServiceException(e);
-        }
+    @Transactional
+    public List<Contract> findContractByNumber(String number) {
+        return contractDAO.findContractByNumber("%" + number + "%");
     }
 
     @Transactional
-    public List<Contract> findContractByNumber(String number) throws MobileServiceException {
-        try {
-            List<Contract> contracts = contractDAO.findContractByNumber("%" + number + "%");
-            return contracts;
-        } catch (MobileDAOException e) {
-            throw new MobileServiceException(e);
-        }
-    }
-
-    @Transactional
-    public Contract getContractById(String id) throws MobileServiceException {
-        try {
-            Contract contract = contractDAO.findById(Contract.class, Integer.valueOf(id));
-            return contract;
-        } catch (MobileDAOException e) {
-            throw new MobileServiceException(e);
-        }
+    public Contract getContractById(String id) {
+        return contractDAO.findById(Contract.class, Integer.valueOf(id));
     }
 
     @Transactional
@@ -169,23 +143,6 @@ public class ContractServiceImpl implements ContractService {
     public void unblockContractByClient(String contractId) {
         Contract contract = contractDAO.findById(Contract.class, Integer.valueOf(contractId));
         contract.setBlockedByClient(false);
-    }
-
-    private void checkAndSetContractOptions(String[] options, Contract contract)
-            throws CompatibilityOptionException, MobileDAOException {
-
-        List<Option> contractOptions = new ArrayList<>();
-
-        if (options != null) {
-            for (String optionId : options) {
-                contractOptions.add(optionDAO.findById(Option.class, Integer.valueOf(optionId)));
-            }
-
-            CompatibilityOptionChecker.checkOptionCompatibility(contractOptions);
-            CompatibilityOptionChecker.checkAllRequiredOptionAvailable(contractOptions);
-
-            contract.setOptions(contractOptions);
-        }
     }
 
 }

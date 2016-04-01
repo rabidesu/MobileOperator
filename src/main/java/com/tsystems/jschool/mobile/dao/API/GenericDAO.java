@@ -9,16 +9,16 @@ import java.util.List;
 
 public interface GenericDAO<T>{
 
-    void save(T entity) throws MobileDAOException;
+    void save(T entity);
 
-    void merge(T entity) throws MobileDAOException;
+    void merge(T entity);
 
-    void delete(T entity) throws MobileDAOException;
+    void delete(T entity);
 
-    List<T> findMany(Query query) throws MobileDAOException;
+    List<T> findMany(Query query);
 
-    List<T> findAll(Class clazz) throws MobileDAOException;
+    List<T> findAll(Class clazz);
 
-    T findById(Class clazz, int id) throws MobileDAOException;
+    T findById(Class clazz, int id);
 
 }
