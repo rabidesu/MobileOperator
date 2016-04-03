@@ -271,19 +271,13 @@
                 success: function (data) {
                     $('#user_id').val(data);
                     $('#form-contract-for-user').submit();
-//                    $('#user\\.email').val(data.email).attr("disabled", true);
-//                    $('#user\\.name').val(data.name).attr("disabled", true);
-//                    $('#user\\.surname').val(data.surname).attr("disabled", true);
-//                    $('#user\\.birthday').val(data.birthday).attr("disabled", true);
-//                    $('#user\\.passport').val(data.passport).attr("disabled", true);
-//                    $('#user\\.address').val(data.address).attr("disabled", true);
-//                    $('#user\\.password').attr("disabled", true);
                 }
             });
         }
 
         function resultDismiss() {
             $('#result-user-exist').hide();
+            var email = $('#user\\.email').empty();
         }
 
     });

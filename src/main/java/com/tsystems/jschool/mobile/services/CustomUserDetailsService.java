@@ -1,6 +1,8 @@
 package com.tsystems.jschool.mobile.services;
 
 
+import com.tsystems.jschool.mobile.entities.Role;
+import com.tsystems.jschool.mobile.enumerates.RoleName;
 import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
 import com.tsystems.jschool.mobile.services.API.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,22 +46,22 @@ public class CustomUserDetailsService implements UserDetailsService {
                 accountNonExpired,
                 credentialsNonExpired,
                 accountNonLocked,
-                getAuthorities(domainUser.getRole().getId())
+                getAuthorities(domainUser.getRole())
         );
     }
 
-    public Collection<? extends GrantedAuthority> getAuthorities(Integer role) {
+    public Collection<? extends GrantedAuthority> getAuthorities(Role role) {
         List<GrantedAuthority> authList = getGrantedAuthorities(getRoles(role));
         return authList;
     }
 
-    public List<String> getRoles(Integer role) {
+    public List<String> getRoles(Role role) {
 
-        List<String> roles = new ArrayList<String>();
+        List<String> roles = new ArrayList<>();
 
-        if (role.intValue() == 1) {
+        if (role.getRoleName() == RoleName.CLIENT) {
             roles.add("ROLE_CLIENT");
-        } else if (role.intValue() == 2) {
+        } else if (role.getRoleName() == RoleName.ADMIN) {
             roles.add("ROLE_ADMIN");
         }
         return roles;

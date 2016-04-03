@@ -7,13 +7,17 @@ import com.tsystems.jschool.mobile.entities.*;
 import com.tsystems.jschool.mobile.enumerates.RoleName;
 import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
 import com.tsystems.jschool.mobile.services.API.ContractService;
+import com.tsystems.jschool.mobile.webservices.entities.WebContract;
 import org.apache.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("contractService")
 public class ContractServiceImpl implements ContractService {
@@ -143,6 +147,26 @@ public class ContractServiceImpl implements ContractService {
     public void unblockContractByClient(String contractId) {
         Contract contract = contractDAO.findById(Contract.class, Integer.valueOf(contractId));
         contract.setBlockedByClient(false);
+    }
+
+    @Transactional
+    public List<WebContract> getAllContractsWithTariff(String tariffId){
+//        List<WebContract> contracts = new ArrayList<>();
+//        for (Contract contract : contractDAO.getAllContractsWithTariff(Integer.valueOf(tariffId))){
+//            List<String> options = new ArrayList<>();
+//            for (Option option : contract.getOptions()){
+//                options.add(option.getName());
+//            }
+//            contracts.add(new WebContract(contract.getNumber(), contract.getUser().getName(),
+//                    contract.getUser().getSurname(), contract.getUser().getEmail(), contract.getTariff().getName(),
+//                    options));
+//        }
+//        return contracts;
+
+        return contractDAO.getAllContractsWithTariff(Integer.valueOf(tariffId)).stream()
+                .map(e -> new WebContract(e.getNumber(), e.getUser().getName(), e.getUser().getSurname(),
+                        e.getUser().getEmail(), e.getTariff().getName(),
+                        e.getOptions().stream().map(Option::getName).collect(Collectors.toList()))).collect(Collectors.toList());
     }
 
 }

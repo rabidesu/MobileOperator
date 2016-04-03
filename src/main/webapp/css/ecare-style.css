@@ -1,4 +1,8 @@
 
+.activator {
+    cursor: pointer;
+}
+
 .fa-btn {
     cursor: pointer;
     color: #00C853;

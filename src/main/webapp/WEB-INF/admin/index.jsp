@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,7 +11,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Панель управления</title>
+    <title><spring:message code="lbl.dashboard"/> </title>
 
     <link href="/css/ecare-style.css" rel="stylesheet">
     <!-- Bootstrap Core CSS -->
@@ -42,7 +43,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">
-                        Быстрые действия
+                       <spring:message code="lbl.dashboard"/>
                     </h1>
                 </div>
             </div>

@@ -39,8 +39,11 @@ public class OptionServiceImpl implements OptionService {
             for (Tariff tariff : tariffDAO.findAll(Tariff.class)){
                 tariff.getOptions().remove(option);
             }
-
-            //todo remove required
+            for (Option anotherOption : optionDAO.getAnotherOptions(Integer.valueOf(id))){
+                if (anotherOption.getOptionsRequired().contains(option)){
+                    anotherOption.getOptionsRequired().remove(option);
+                }
+            }
             optionDAO.merge(option);
         }
     }

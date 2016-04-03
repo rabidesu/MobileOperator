@@ -1,5 +1,6 @@
 package com.tsystems.jschool.mobile.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -60,6 +61,7 @@ public class Tariff implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "tariff_option", joinColumns = {@JoinColumn(name = "tariff_id")},
             inverseJoinColumns = {@JoinColumn(name = "option_id")})
+    @JsonManagedReference
     private List<Option> options;
 
     public int getId() {

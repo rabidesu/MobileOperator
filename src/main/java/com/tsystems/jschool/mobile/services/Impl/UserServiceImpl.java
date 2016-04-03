@@ -2,6 +2,7 @@ package com.tsystems.jschool.mobile.services.Impl;
 
 
 import com.tsystems.jschool.mobile.dao.API.UserDAO;
+import com.tsystems.jschool.mobile.entities.Contract;
 import com.tsystems.jschool.mobile.entities.User;
 import com.tsystems.jschool.mobile.enumerates.RoleName;
 import com.tsystems.jschool.mobile.exceptions.LoginUserException;
@@ -12,8 +13,7 @@ import com.tsystems.jschool.mobile.services.API.UserService;
 import org.apache.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,59 +44,56 @@ public class UserServiceImpl implements UserService {
         return  !userDAO.getUserByEmail(email).isEmpty();
     }
 
+    public boolean checkIfUserHasContract(User loggedUser, String contractId){
+        for (Contract contract : loggedUser.getContracts()) {
+            if (contract.getId() == Integer.valueOf(contractId)) return true;
+        }
+        throw new MobileServiceException("Invalid request parameters: You can't get this contract!");
+    }
 
-//    @Transactional
-//    public List<User> getUserByField(String searchText, String searchField) throws MobileServiceException {
-//        List<User> users = null;
-//        try {
-//
-//            switch (searchText){
-//                case "phone": users = userDAO.getUserByPhoneNumber("%" + searchText + "%"); break;
-//                case "surname": users = userDAO.getUserBySurname("%" + searchText + "%"); break;
-//                case "email": users = userDAO.getUserByEmail("%" + searchText + "%"); break;
-//                case "user_id": {
-//                    users = new ArrayList<>();
-//                    try {
-//                        users.add(userDAO.findById(User.class, Integer.valueOf(searchText)));
-//                    } catch (NumberFormatException e) {
-//                        String message = "Can not find user. Invalid id format:" + searchText;
-//                        logger.error(message);
-//                        throw e;
-//                    }
-//                }
-//            }
-//            return users;
-//        } catch (MobileDAOException | NumberFormatException e){
-//            throw new MobileServiceException(e);
-//        }
-//    }
 
     @Transactional
     public User getUserById(String id) {
         return userDAO.findById(User.class, Integer.valueOf(id));
     }
 
-//    @Transactional
-//    public Page<User> getUserList(Integer pageNumber) {
-//        PageRequest request = new PageRequest(pageNumber - 1,1);
-//        return userRepo.findAll(request);
-//    }
-//
-//    @Transactional
-//    public Page<User> getUserListByContract(Integer pageNumber, String text) {
-//        PageRequest request = new PageRequest(pageNumber - 1,1);
-//        return userRepo.findByContract("%" + text + "%", request);
-//    }
-//
-//    @Transactional
-//    public Page<User> getUserListBySurname(Integer pageNumber, String text) {
-//        PageRequest request = new PageRequest(pageNumber - 1,1);
-//        return userRepo.findBySurname("%" + text + "%", request);
-//    }
-//
-//    @Transactional
-//    public Page<User> getUserListByEmail(Integer pageNumber, String text) {
-//        PageRequest request = new PageRequest(pageNumber - 1,1);
-//        return userRepo.findByEmail("%" + text + "%", request);
-//    }
+    @Transactional
+    public int getCountUsers(){
+        return (int) userDAO.getCountUsers();
+    };
+
+    @Transactional
+    public int getCountUserByNumber(String number){
+        return (int) userDAO.getCountUserByNumber(number);
+    };
+
+    @Transactional
+    public int getCountUserByEmail(String email){
+        return (int) userDAO.getCountUserByEmail(email);
+    };
+
+    @Transactional
+    public int getCountUserBySurname(String surname){
+        return (int) userDAO.getCountUserBySurname(surname);
+    };
+
+    @Transactional
+    public List<User> getUserList(int pageNumber, int pageSize) {
+        return userDAO.getPageUsers(pageNumber - 1, pageSize);
+    }
+
+    @Transactional
+    public List<User> getUserListByContract(int pageNumber, int pageSize, String text) {
+        return userDAO.getPageUsersByPhoneNumber(pageNumber - 1, pageSize, "%" + text + "%");
+    }
+
+    @Transactional
+    public List<User> getUserListBySurname(int pageNumber, int pageSize, String text) {
+        return userDAO.getPageUsersBySurname(pageNumber - 1, pageSize, "%" + text + "%");
+    }
+
+    @Transactional
+    public List<User> getUserListByEmail(int pageNumber, int pageSize, String text) {
+        return userDAO.getPageUsersByEmail(pageNumber - 1, pageSize, "%" + text + "%");
+    }
 }

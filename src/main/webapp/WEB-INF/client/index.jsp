@@ -28,7 +28,7 @@
 <jsp:include page="/WEB-INF/jspf/clientNavigation.jsp" />
 
     <div class="container">
-        <h2 class="header center orange-text">Личные данные</h2>
+        <h3 class="header center">Личные данные</h3>
 
 
 

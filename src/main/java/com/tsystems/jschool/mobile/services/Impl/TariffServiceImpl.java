@@ -8,13 +8,16 @@ import com.tsystems.jschool.mobile.entities.Contract;
 import com.tsystems.jschool.mobile.entities.Option;
 import com.tsystems.jschool.mobile.entities.Tariff;
 import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
+import com.tsystems.jschool.mobile.webservices.entities.WebTariff;
 import org.apache.log4j.Logger;
 import com.tsystems.jschool.mobile.services.API.TariffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("tariffService")
 public class TariffServiceImpl implements TariffService {
@@ -90,6 +93,12 @@ public class TariffServiceImpl implements TariffService {
             tariff.setAvailable(false);
             tariffDAO.merge(tariff);
         }
+    }
+
+    @Transactional
+    public List<WebTariff> getAllWebTariffs() {
+        return tariffDAO.findAll(Tariff.class).stream()
+                .map(e -> new WebTariff(e.getId(), e.getName())).collect(Collectors.toList());
     }
 
 }

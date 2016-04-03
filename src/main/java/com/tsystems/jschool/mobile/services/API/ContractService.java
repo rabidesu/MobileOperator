@@ -2,8 +2,8 @@ package com.tsystems.jschool.mobile.services.API;
 
 import com.tsystems.jschool.mobile.entities.Contract;
 import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.tsystems.jschool.mobile.webservices.entities.WebContract;
+
 
 import java.util.List;
 
@@ -13,11 +13,11 @@ import java.util.List;
 
 public interface ContractService {
 
-    public void addContract(Contract contract);
+    void addContract(Contract contract);
 
     List<Contract> getContractsPage(int pageNumber, int pageSize);
 
-    public List<Contract> getContractsPageByNumber(int pageNumber, int pageSize, String number);
+    List<Contract> getContractsPageByNumber(int pageNumber, int pageSize, String number);
 
     int getCountContracts();
 
@@ -42,5 +42,7 @@ public interface ContractService {
     void blockContractByClient(String contractId);
 
     void unblockContractByClient(String contractId);
+
+    List<WebContract> getAllContractsWithTariff(String tariffId);
 
 }

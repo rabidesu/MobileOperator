@@ -1,33 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+<beans xmlns:mvc="http://www.springframework.org/schema/mvc"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns="http://www.springframework.org/schema/beans"
              xmlns:context="http://www.springframework.org/schema/context"
-             xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            xmlns:aop="http://www.springframework.org/schema/aop"
+             xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
         http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
      
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd"
 >
 
-    <beans:bean class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" id="validator" />
+    <bean class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" id="validator" />
 
-    <annotation-driven validator="validator" />
+    <mvc:annotation-driven validator="validator" />
 
-    <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <beans:property name="prefix" value="/WEB-INF/"/>
-        <beans:property name="suffix" value=".jsp"/>
-    </beans:bean>
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
 
-    <beans:bean class="org.springframework.context.support.ResourceBundleMessageSource"
-          id="messageSource">
-        <beans:property name="basename" value="messages" />
-    </beans:bean>
 
     <context:component-scan base-package="com.tsystems.jschool.mobile.controllers" />
     <context:component-scan base-package="com.tsystems.jschool.mobile.validators" />
+    <context:component-scan base-package="com.tsystems.jschool.mobile.webservices"/>
+
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <property name="defaultLocale" value="ru"/>
+    </bean>
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="classpath:messages"/>
+        <property name="defaultEncoding" value="UTF-8" />
+    </bean>
+
+
+
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+
+    <mvc:interceptors>
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+            <property name="paramName" value="lang"/>
+        </bean>
+    </mvc:interceptors>
 
 
 
 
-</beans:beans>
+</beans>

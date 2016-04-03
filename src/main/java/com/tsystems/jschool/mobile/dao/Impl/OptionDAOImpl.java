@@ -40,6 +40,7 @@ public class OptionDAOImpl extends GenericDAOImpl<Option> implements OptionDAO {
         query.executeUpdate();
     }
 
+
     public List<Option> getOptionsByName(String name)throws MobileDAOException {
         Query query = entityManager.createNamedQuery(Option.GET_BY_NAME);
         query.setParameter(1, name);

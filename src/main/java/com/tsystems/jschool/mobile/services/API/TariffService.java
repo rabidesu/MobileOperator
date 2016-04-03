@@ -2,6 +2,7 @@ package com.tsystems.jschool.mobile.services.API;
 
 import com.tsystems.jschool.mobile.entities.Tariff;
 import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
+import com.tsystems.jschool.mobile.webservices.entities.WebTariff;
 
 import java.util.List;
 
@@ -26,5 +27,6 @@ public interface TariffService {
 
     List<Tariff> getAvailableTariffsForContract(String contract_id);
 
+    List<WebTariff> getAllWebTariffs();
 
 }

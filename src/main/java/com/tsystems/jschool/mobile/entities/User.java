@@ -1,5 +1,6 @@
 package com.tsystems.jschool.mobile.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -13,8 +14,13 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 @NamedQueries({
+        @NamedQuery(name = User.GET_COUNT_BY_PHONE_NUMBER, query = "SELECT COUNT(x.id) FROM User x LEFT JOIN x.contracts c WHERE c.number LIKE ?1"),
+        @NamedQuery(name = User.GET_COUNT_BY_EMAIL, query = "SELECT COUNT(x.id) FROM User x WHERE x.email LIKE ?1"),
+        @NamedQuery(name = User.GET_COUNT_BY_SURNAME, query = "SELECT COUNT(x.id) FROM User x WHERE x.surname LIKE ?1"),
+        @NamedQuery(name = User.GET_COUNT, query = "SELECT COUNT(x.id) FROM User x"),
+        @NamedQuery(name = User.GET_ALL, query = "SELECT x FROM User x"),
         @NamedQuery(name = User.GET_BY_EMAIL_PASSWD, query = "SELECT x FROM User x WHERE x.email = ?1 AND x.password = ?2"),
-@NamedQuery(name = User.GET_BY_PHONE_NUMBER, query = "SELECT x FROM User x LEFT JOIN x.contracts c WHERE c.number LIKE ?1"),
+        @NamedQuery(name = User.GET_BY_PHONE_NUMBER, query = "SELECT x FROM User x LEFT JOIN x.contracts c WHERE c.number LIKE ?1"),
         @NamedQuery(name = User.GET_BY_EMAIL, query = "SELECT x FROM User x WHERE x.email LIKE ?1"),
         @NamedQuery(name = User.GET_BY_SURNAME, query = "SELECT x FROM User x WHERE x.surname LIKE ?1")
 })
@@ -26,6 +32,11 @@ public class User implements Serializable {
     public static final String GET_BY_PHONE_NUMBER= "userGetByPhoneNumber";
     public static final String GET_BY_EMAIL= "userGetByEmail";
     public static final String GET_BY_SURNAME= "userGetBySurname";
+    public static final String GET_ALL = "userGetAll";
+    public static final String GET_COUNT_BY_SURNAME = "userGetCountBySurname";
+    public static final String GET_COUNT_BY_EMAIL = "userGetCountByEmail";
+    public static final String GET_COUNT_BY_PHONE_NUMBER = "userGetCountByNumber";
+    public static final String GET_COUNT = "userGetCount";
 
     @Id
     @GeneratedValue
@@ -53,6 +64,7 @@ public class User implements Serializable {
     private String address;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Contract> contracts;
 
     @NotEmpty
@@ -65,6 +77,7 @@ public class User implements Serializable {
 
     @ManyToOne
     @JoinColumn (name = "role_id")
+    @JsonManagedReference
     private Role role;
 
     public int getId() {

@@ -1,8 +1,6 @@
 package com.tsystems.jschool.mobile.dao.API;
 
 import com.tsystems.jschool.mobile.exceptions.MobileDAOException;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;

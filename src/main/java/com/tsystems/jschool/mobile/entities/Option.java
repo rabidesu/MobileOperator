@@ -1,13 +1,19 @@
 package com.tsystems.jschool.mobile.entities;
 
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Type;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.*;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -21,7 +27,7 @@ import java.util.List;
 @Entity
 @Table(name = "t_option")
 @NamedQueries({
-        @NamedQuery(name = Option.GET_ANOTHER_OPTIONS, query = "SELECT x FROM Option x WHERE x.id != ?1 and x.available = true"),
+        @NamedQuery(name = Option.GET_ANOTHER_OPTIONS, query = "SELECT x FROM Option x WHERE x.id <> ?1 and x.available = true"),
         @NamedQuery(name = Option.REMOVE_BY_ID, query = "DELETE FROM Option x WHERE x.id = ?1"),
         @NamedQuery(name = Option.GET_BY_NAME, query = "SELECT x FROM Option x WHERE x.name LIKE ?1"),
         @NamedQuery(name = Option.GET_AVAILABLE_OPTIONS, query = "SELECT x FROM Option x WHERE x.available = true")
@@ -59,12 +65,14 @@ public class Option implements Serializable {
     @JoinTable(name = "option_required",
             joinColumns = @JoinColumn(name = "option_current_id"),
             inverseJoinColumns = @JoinColumn(name = "option_required_id"))
+    @JsonIgnore
     private List<Option> optionsRequired = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "option_incompatible",
             joinColumns = @JoinColumn(name = "option_current_id"),
             inverseJoinColumns = @JoinColumn(name = "option_incompatible_id"))
+    @JsonIgnore
     private List<Option> optionsIncompatible = new ArrayList<>();
 
     public int getId() {

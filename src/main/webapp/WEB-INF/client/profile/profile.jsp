@@ -1,12 +1,12 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-    <title>Личный кабинет</title>
+    <title><spring:message code="lbl.user.account"/></title>
 
     <!-- CSS  -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -29,7 +29,7 @@
 <jsp:include page="/WEB-INF/jspf/clientNavigation.jsp" />
 
 <div class="container">
-    <h2 class="header center orange-text">Личные данные</h2>
+    <h3 class="header center"><spring:message code="lbl.user.information"/></h3>
 
     <div class="row">
 
@@ -39,14 +39,14 @@
                     <form class="col s12">
                         <div class="row">
                             <div class="input-field col s6">
-                                <label for="loggedUser.name">First Name</label>
-                                <form:input path="loggedUser.name"/>
+                                <label for="loggedUser.name"><spring:message code="lbl.name"/></label>
+                                <form:input path="loggedUser.name" disabled="true" cssClass="text-black"/>
                                 <form:errors path="loggedUser.name"/>
                                 <%--<input placeholder="Placeholder" id="first_name" type="text" class="validate">--%>
                             </div>
                             <div class="input-field col s6">
-                                <label for="loggedUser.surname">Last Name</label>
-                                <form:input  path="loggedUser.surname"/>
+                                <label for="loggedUser.surname"><spring:message code="lbl.surname"/></label>
+                                <form:input  path="loggedUser.surname" disabled="true" cssClass="text-black"/>
                                 <form:errors path="loggedUser.surname"/>
                                 <%--<input id="last_name" type="text" class="validate">--%>
                                 <%--<label for="last_name">Last Name</label>--%>
@@ -54,14 +54,14 @@
                         </div>
                         <div class="row">
                             <div class="input-field col s6">
-                                <label for="loggedUser.email">Email</label>
+                                <label for="loggedUser.email"><spring:message code="lbl.email"/></label>
                                 <form:input  path="loggedUser.email" disabled="true"/>
                                 <form:errors path="loggedUser.email"/>
                                 <%--<input id="email" type="email" class="validate">--%>
                                 <%--<label for="email">Email</label>--%>
                             </div>
                             <div class="input-field col s6">
-                                <label for="loggedUser.birthday">Birthday</label>
+                                <label for="loggedUser.birthday"><spring:message code="lbl.birthday"/></label>
                                 <form:input  path="loggedUser.birthday" disabled="true"/>
                                 <form:errors path="loggedUser.birthday"/>
                                 <%--<input id="birthday" type="date">--%>
@@ -69,7 +69,7 @@
                         </div>
                         <div class="row">
                             <div class="input-field col s12">
-                                <label for="loggedUser.passport">Passport</label>
+                                <label for="loggedUser.passport"><spring:message code="lbl.passport"/></label>
                                 <form:input  path="loggedUser.passport" disabled="true"/>
                                 <form:errors path="loggedUser.passport"/>
                                 <%--<input id="passport" type="text">--%>
@@ -78,8 +78,8 @@
                         </div>
                         <div class="row">
                             <div class="input-field col s12">
-                                <label for="loggedUser.address">Address</label>
-                                <form:input  path="loggedUser.address"/>
+                                <label for="loggedUser.address"><spring:message code="lbl.address"/></label>
+                                <form:input  path="loggedUser.address" disabled="true"/>
                                 <form:errors path="loggedUser.address"/>
                                 <%--<input id="address" type="text">--%>
                                 <%--<label for="address">Address</label>--%>
@@ -89,9 +89,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row center">
-        <a href="http://materializecss.com/getting-started.html" id="download-button" class="btn-large waves-effect waves-light orange">Изменить</a>
     </div>
 
     <br><br>

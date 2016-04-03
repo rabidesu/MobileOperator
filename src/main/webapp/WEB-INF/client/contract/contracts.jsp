@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
@@ -6,7 +7,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-    <title>Личный кабинет</title>
+    <title><spring:message code="lbl.user.account"/></title>
 
     <!-- CSS  -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -18,7 +19,7 @@
 <jsp:include page="/WEB-INF/jspf/clientNavigation.jsp" />
 
 <div class="container">
-    <h2 class="header center orange-text">Контракты</h2>
+    <h3 class="header center"><spring:message code="lbl.contracts"/></h3>
     <div class="row">
         <c:forEach items="${user.contracts}" var="contract">
         <div class="col s12 m4">
@@ -29,11 +30,11 @@
                     <p class="card-title grey-text text-darken-4"><b>Цена: </b><c:out value="${contract.tariff.price}"/>&#8381</p>
                 </div>
                 <div class="card-action center">
-                    <a href="">Изменить</a>
-                    <span class="activator orange-text"> MORE</span>
+                    <button type="submit" form="form-edit-contract" class="btn-flat orange-text"><spring:message code="lbl.change"/></button>
+                    <span class="activator orange-text"><spring:message code="lbl.options"/></span>
                 </div>
                 <div class="card-reveal">
-                    <span class="card-title grey-text text-darken-4">Опции<i class="material-icons right">close</i></span>
+                    <span class="card-title grey-text text-darken-4"><spring:message code="lbl.options"/><i class="material-icons right">close</i></span>
                     <ul class="collection">
                         <c:forEach items="${contract.options}" var="option">
                             <li class="collection-item"><c:out value="${option.name}"/></li>
@@ -41,6 +42,9 @@
                     </ul>
                 </div>
             </div>
+            <form method="post" action="/pages/editContractByClient" id="form-edit-contract">
+                <input type="hidden" name="contract_id" value="${contract.id}">
+                </form>
         </div>
             </c:forEach>
         </div>

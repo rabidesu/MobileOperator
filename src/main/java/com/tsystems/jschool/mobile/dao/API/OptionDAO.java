@@ -16,4 +16,5 @@ public interface OptionDAO extends GenericDAO<Option> {
 
     List<Option> getAvailableOptions();
 
+
 }

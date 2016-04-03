@@ -1,8 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:url var="firstUrl" value="/pages/users/page/1" />
-<c:url var="lastUrl" value="/pages/users/page/${listUsers.totalPages}" />
-<c:url var="prevUrl" value="/pages/users/page/${currentIndex - 1}" />
-<c:url var="nextUrl" value="/pages/users/page/${currentIndex + 1}" />
+<c:url var="firstUrl" value="/pages/users/page/1/${searchText}/${searchField}" />
+<c:url var="lastUrl" value="/pages/users/page/${totalPage}/${searchText}/${searchField}" />
+<c:url var="prevUrl" value="/pages/users/page/${currentIndex - 1}/${searchText}/${searchField}" />
+<c:url var="nextUrl" value="/pages/users/page/${currentIndex + 1}/${searchText}/${searchField}" />
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -81,7 +81,7 @@
 
             <!-- Main -->
             <div>
-                <c:if test="${listUsers.totalPages != 0}">
+                <c:if test="${totalPage != 0}">
                     <ul class="pagination">
                         <c:choose>
                             <c:when test="${currentIndex == 1}">
@@ -94,7 +94,7 @@
                             </c:otherwise>
                         </c:choose>
                         <c:forEach var="i" begin="${beginIndex}" end="${endIndex}">
-                            <c:url var="pageUrl" value="/pages/users/page/${i}" />
+                            <c:url var="pageUrl" value="/pages/users/page/${i}/${searchText}/${searchField}" />
                             <c:choose>
                                 <c:when test="${i == currentIndex}">
                                     <li class="active"><a href="${pageUrl}"><c:out value="${i}" /></a></li>
@@ -105,7 +105,7 @@
                             </c:choose>
                         </c:forEach>
                         <c:choose>
-                            <c:when test="${currentIndex == listUsers.totalPages}">
+                            <c:when test="${currentIndex == totalPage}">
                                 <li class="disabled"><a href="#">&gt;</a></li>
                                 <li class="disabled"><a href="#">&gt;&gt;</a></li>
                             </c:when>
@@ -119,7 +119,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-12">
-                    <c:if test="${not empty requestScope.listUsers.content}">
+                    <c:if test="${not empty requestScope.listUsers}">
                         <table class="table table-bordered table-hover table-striped">
                             <thead>
                             <tr>
@@ -131,7 +131,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach items="${listUsers.content}" var="user">
+                            <c:forEach items="${listUsers}" var="user">
                                 <tr class="click-row" data-value="${user.id}">
                                     <td><c:out value="${user.name}"/></td>
                                     <td><c:out value="${user.surname}"/></td>
@@ -148,7 +148,7 @@
                             </tbody>
                         </table>
                     </c:if>
-                    <c:if test="${empty requestScope.listUsers.content}">
+                    <c:if test="${empty requestScope.listUsers}">
                         <div class="col-lg-9">
                             <div class="panel panel-warning">
                                 <div class="panel-heading">Ошибка!</div>

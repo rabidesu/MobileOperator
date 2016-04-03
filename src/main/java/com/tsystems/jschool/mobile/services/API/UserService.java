@@ -4,7 +4,7 @@ import com.tsystems.jschool.mobile.entities.User;
 import com.tsystems.jschool.mobile.enumerates.RoleName;
 import com.tsystems.jschool.mobile.exceptions.LoginUserException;
 import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
-import org.springframework.data.domain.Page;
+
 
 import java.util.List;
 
@@ -13,23 +13,30 @@ import java.util.List;
  */
 public interface UserService {
 
-//    Page<User> getUserList(Integer pageNumber);
-//
-//    Page<User> getUserListByContract(Integer pageNumber, String text);
-//
-//    Page<User> getUserListBySurname(Integer pageNumber, String text);
-//
-//    Page<User> getUserListByEmail(Integer pageNumber, String text);
+    List<User> getUserList(int pageNumber, int pageSize);
 
+    List<User> getUserListByContract(int pageNumber, int pageSize, String text);
+
+    List<User> getUserListBySurname(int pageNumber, int pageSize, String text);
+
+    List<User> getUserListByEmail(int pageNumber, int pageSize, String text);
+
+    int getCountUsers();
+
+    int getCountUserByNumber(String number);
+
+    int getCountUserByEmail(String email);
+
+    int getCountUserBySurname(String surname);
 
     List<User> getAllUsers();
-//
-//    List<User> getUserByField(String searchText, String searchField) throws MobileServiceException;
 
     User getUserById(String id);
 
     User getUserByEmail(String email);
 
     boolean existsUserWithEmail(String email);
+
+    boolean checkIfUserHasContract(User loggedUser, String contractId);
 
 }

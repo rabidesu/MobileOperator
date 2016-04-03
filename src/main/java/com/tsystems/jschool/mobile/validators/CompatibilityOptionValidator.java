@@ -56,7 +56,6 @@ public class CompatibilityOptionValidator implements Validator{
     private boolean isRequiredAndIncompatibleIntersection(Option option){
         for (Option reqOption : option.getOptionsRequired()){
             if (option.getOptionsIncompatible().contains(reqOption)) {
-                System.out.println("true");
                 return true;
             }
         }

@@ -1,42 +1,119 @@
 <?xml version='1.0' encoding='ISO-8859-1' ?>
-<!DOCTYPE log4j:configuration SYSTEM "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration>
 
-
-    <appender name="LOG-INFO-FILE-APPENDER" class="org.apache.log4j.FileAppender">
-        <param name="file" value="D:/IdeaProjects/logs/info.log"/>
+    <appender name="MAIN-LOG" class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="../standalone/log/mobile_main.log"/>
+        <param name="maxFileSize" value="500KB" />
+        <param name="maxBackupIndex" value="5" />
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%-5p [%t]: %m%n"/>
+            <param name="ConversionPattern" value="%d{ISO8601} [%5p] %m at %l%n"/>
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
-            <param name="LevelMin" value="INFO"/>
-            <param name="LevelMax" value="INFO"/>
+            <param name="LevelMin" value="WARN"/>
+            <param name="LevelMax" value="WARN"/>
         </filter>
     </appender>
 
-    <appender name="LOG-ERR-FILE-APPENDER" class="org.apache.log4j.FileAppender">
-        <param name="file" value="D:/IdeaProjects/logs/err.log"/>
+    <appender name="LOG-ERROR" class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="../standalone/log/mobile_error.log"/>
+        <param name="maxFileSize" value="500KB" />
+        <param name="maxBackupIndex" value="5" />
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%%-5p [%t]: %m%n"/>
+            <param name="ConversionPattern" value="%d{ISO8601} [%5p] %m at %l%n"/>
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="LevelMin" value="ERROR"/>
-            <param name="LevelMax" value="ERROR"/>
+            <param name="LevelMax" value="FATAL"/>
         </filter>
     </appender>
-    <logger name="org.hibernate">
-        <level value="info"/>
-    </logger>
 
-    <category name="com.tsystems.jschool.mobile">
-        <appender-ref ref="LOG-INFO-FILE-APPENDER"/>
-        <appender-ref ref="LOG-ERR-FILE-APPENDER"/>
-    </category>
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%-5p: %c - %m%n" />
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="DEBUG"/>
+            <param name="LevelMax" value="DEBUG"/>
+        </filter>
+    </appender>
 
     <root>
-        <priority value="All"/>
-        <appender-ref ref="LOG-INFO-FILE-APPENDER"/>
-        <appender-ref ref="LOG-ERR-FILE-APPENDER"/>
+        <priority value="WARN"/>
+        <appender-ref ref="MAIN-LOG"/>
+        <appender-ref ref="LOG-ERROR"/>
+        <appender-ref ref="console"/>
     </root>
 
+
 </log4j:configuration>
+<!--<?xml version='1.0' encoding='ISO-8859-1' ?>-->
+<!--<!DOCTYPE log4j:configuration SYSTEM "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">-->
+<!--<log4j:configuration>-->
+
+
+    <!--<appender name="LOG-WARN-FILE-APPENDER" class="org.apache.log4j.FileAppender">-->
+        <!--<param name="file" value="D:/IdeaProjects/logs/warn.log"/>-->
+        <!--<layout class="org.apache.log4j.PatternLayout">-->
+            <!--<param name="ConversionPattern" value="%-5p [%t]: %m%n"/>-->
+        <!--</layout>-->
+        <!--<filter class="org.apache.log4j.varia.LevelRangeFilter">-->
+            <!--<param name="LevelMin" value="WARN"/>-->
+            <!--<param name="LevelMax" value="WARN"/>-->
+        <!--</filter>-->
+    <!--</appender>-->
+
+    <!--<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">-->
+        <!--<param name="target" value="System.out"/>-->
+        <!--<layout class="org.apache.log4j.PatternLayout">-->
+            <!--<param name="ConversionPattern" value="%-5p [%t]: %m%n"/>-->
+        <!--</layout>-->
+        <!--<filter class="org.apache.log4j.varia.LevelRangeFilter">-->
+            <!--<param name="LevelMin" value="DEBUG"/>-->
+            <!--<param name="LevelMax" value="DEBUG"/>-->
+        <!--</filter>-->
+    <!--</appender>-->
+
+    <!--<appender name="LOG-ERR-FILE-APPENDER" class="org.apache.log4j.FileAppender">-->
+        <!--<param name="file" value="D:/IdeaProjects/logs/err.log"/>-->
+        <!--<layout class="org.apache.log4j.PatternLayout">-->
+            <!--<param name="ConversionPattern" value="%%-5p [%t]: %m%n"/>-->
+        <!--</layout>-->
+        <!--<filter class="org.apache.log4j.varia.LevelRangeFilter">-->
+            <!--<param name="LevelMin" value="ERROR"/>-->
+            <!--<param name="LevelMax" value="ERROR"/>-->
+        <!--</filter>-->
+    <!--</appender>-->
+
+    <!--<category name="com.tsystems.jschool.mobile">-->
+        <!--<appender-ref ref="LOG-WARN-FILE-APPENDER"/>-->
+        <!--<appender-ref ref="LOG-ERR-FILE-APPENDER"/>-->
+        <!--<appender-ref ref="CONSOLE"/>-->
+    <!--</category>-->
+
+    <!--<logger name="org.springframework.core">-->
+        <!--<level value="info" />-->
+    <!--</logger>-->
+
+    <!--<logger name="org.springframework.beans">-->
+        <!--<level value="info" />-->
+    <!--</logger>-->
+
+    <!--<logger name="org.springframework.context">-->
+        <!--<level value="info" />-->
+    <!--</logger>-->
+
+    <!--<logger name="org.springframework.web">-->
+        <!--<level value="info" />-->
+    <!--</logger>-->
+
+
+    <!--<root>-->
+        <!--<priority value="WARN"/>-->
+        <!--<appender-ref ref="MAIN-LOG"/>-->
+        <!--<appender-ref ref="LOG-ERROR"/>-->
+        <!--<appender-ref ref="console"/>-->
+    <!--</root>-->
+
+<!--</log4j:configuration>-->

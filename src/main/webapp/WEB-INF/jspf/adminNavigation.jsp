@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -13,6 +14,20 @@
     </div>
     <!-- Top Menu Items -->
     <ul class="nav navbar-right top-nav">
+        <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <c:if test="${pageContext.response.locale == 'en'}"><img src="/images/united_states_flag.png"></c:if>
+            <c:if test="${pageContext.response.locale== 'ru'}"><img src="/images/russia_flag.png"></c:if>
+        </a>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="?lang=en"><img src="/images/united_states_flag.png"></a>
+            </li>
+            <li>
+                <a href="?lang=ru"><img src="/images/russia_flag.png"></a>
+            </li>
+        </ul>
+        </li>
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <c:out value="${loggedUser.name} ${loggedUser.surname}"/>  <b class="caret"></b></a>
             <ul class="dropdown-menu">
@@ -37,7 +52,7 @@
                 </ul>
             </li>
             <li>
-                <a href="javascript:;" data-toggle="collapse" data-target="#contracts">Управление контрактами <i class="fa fa-fw fa-caret-down"></i></a>
+                <a id="contract-dropdown" href="javascript:;" data-toggle="collapse" data-target="#contracts">Управление контрактами <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="contracts" class="collapse">
                     <li>
                         <a href="/pages/newContract">Новый контракт</a>

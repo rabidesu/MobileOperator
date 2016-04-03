@@ -1,5 +1,8 @@
 package com.tsystems.jschool.mobile.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -37,15 +40,18 @@ public class Contract implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
     private User user;
 
     @OneToOne
     @JoinColumn(name = "tariff_id", nullable = false)
+    @JsonManagedReference
     private Tariff tariff;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "contract_option", joinColumns = {@JoinColumn(name = "contract_id")},
             inverseJoinColumns = {@JoinColumn(name = "option_id")})
+    @JsonManagedReference
     private List<Option> options;
 
     @Column(name = "is_blocked_by_client")
@@ -56,6 +62,10 @@ public class Contract implements Serializable {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNumber() {

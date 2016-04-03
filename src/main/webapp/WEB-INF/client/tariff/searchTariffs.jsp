@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
@@ -6,7 +7,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-    <title>Личный кабинет</title>
+    <title><spring:message code="lbl.user.account"/></title>
 
     <!-- CSS  -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -18,24 +19,20 @@
 <jsp:include page="/WEB-INF/jspf/clientNavigation.jsp" />
 
 <div class="container">
-    <h2 class="header center orange-text">Тарифы</h2>
+    <h3 class="header center"><spring:message code="lbl.tariffs"/></h3>
     <div class="row">
         <c:forEach items="${tariffs}" var="tariff">
             <div class="col s12 m6">
                 <div class="card">
                     <div class="card-content center">
                         <h5 class="card-title light-blue-text"><c:out value="${tariff.name}"/></h5>
-                        <p class="card-title grey-text text-darken-4"><b>Цена: </b><c:out value="${tariff.price}"/>&#8381</p>
-                        <p class="card-content">Опция «Звони во все страны» — это международные звонки по цене от 4,50 ₽ за минуту!
-                            Стоимость звонка зависит от страны.
-                            Звонки на номера «МегаФона» России дома и в поездках по России.
-                            Звонки на номера других операторов Домашнего региона дома и в поездках по России.
-                        </p>
-                        <a class="orange-text">Перейти</a>
-                        <span class="activator orange-text">Опции</span>
+                        <p class="card-title grey-text text-darken-4"><b><spring:message code="lbl.price"/>: </b><c:out value="${tariff.price}"/>&#8381</p>
+                        <p class="card-content">${tariff.description}</p>
+                        <button type="submit" form="form-change-tariff-${tariff.id}" class="btn-flat orange-text">Перейти</button>
+                        <span class="activator orange-text"><spring:message code="lbl.options"/></span>
                     </div>
                     <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4">Доступные опции<i class="material-icons right">close</i></span>
+                        <span class="card-title grey-text text-darken-4"><spring:message code="lbl.possible.options"/><i class="material-icons right">close</i></span>
                         <ul class="collection">
                             <c:forEach items="${tariff.options}" var="option">
                                 <li class="collection-item"><c:out value="${option.name}"/></li>
@@ -45,6 +42,9 @@
 
                 </div>
             </div>
+            <form action="/pages/addTariffToContract" method="post" id="form-change-tariff-${tariff.id}">
+                <input type="hidden" value="${tariff.id}" name="tariff_id">
+            </form>
         </c:forEach>
     </div>
     <br><br>
