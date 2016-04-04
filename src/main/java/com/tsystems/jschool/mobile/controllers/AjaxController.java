@@ -81,6 +81,12 @@ public class AjaxController {
         return contractService.getContractById(contractId).getOptions();
     }
 
+    @RequestMapping(value = "/existsTariffWithOption")
+    public @ResponseBody
+    boolean existsTariffWithOption(@RequestParam String contractId) {
+        return tariffService.existsTariffWithOption(contractId);
+    }
+
 
 
 }

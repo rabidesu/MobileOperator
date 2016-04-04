@@ -62,7 +62,7 @@ public class ContractServiceImpl implements ContractService {
         String salt = BCrypt.gensalt();
         String hashPassword = BCrypt.hashpw(user.getPassword(), salt);
         user.setPassword(hashPassword);
-        user.setRole(roleDAO.getRoleByName(RoleName.CLIENT));
+        user.setRole(roleDAO.getRoleByName(RoleName.ROLE_CLIENT));
         userDAO.save(user);
         if (!contract.getTariff().isAvailable()) {
             throw new MobileServiceException("Выбран недопустимый тариф");
@@ -116,11 +116,13 @@ public class ContractServiceImpl implements ContractService {
 
         List<Option> newOptions = contract.getOptions();
         for (Option option : newOptions){
-            if ((!option.isAvailable() || !newTariff.getOptions().contains(option)) && !changedContract.getOptions().contains(option)){
+            if ((!option.isAvailable() || !newTariff.getOptions().contains(option))
+                    && !changedContract.getOptions().contains(option)){
                 throw new MobileServiceException("Выбрана недопустимая опция");
             }
         }
         changedContract.setOptions(newOptions);
+        contractDAO.merge(changedContract);
     }
 
     @Transactional
@@ -140,29 +142,23 @@ public class ContractServiceImpl implements ContractService {
     @Transactional
     public void blockContractByClient(String contractId) {
         Contract contract = contractDAO.findById(Contract.class, Integer.valueOf(contractId));
+        if (contract.isBlockedByAdmin()){
+            throw new MobileServiceException("You can't change contract was blocked by administrator");
+        }
         contract.setBlockedByClient(true);
     }
 
     @Transactional
     public void unblockContractByClient(String contractId) {
         Contract contract = contractDAO.findById(Contract.class, Integer.valueOf(contractId));
+        if (contract.isBlockedByAdmin()){
+            throw new MobileServiceException("You can't change contract was blocked by administrator");
+        }
         contract.setBlockedByClient(false);
     }
 
     @Transactional
     public List<WebContract> getAllContractsWithTariff(String tariffId){
-//        List<WebContract> contracts = new ArrayList<>();
-//        for (Contract contract : contractDAO.getAllContractsWithTariff(Integer.valueOf(tariffId))){
-//            List<String> options = new ArrayList<>();
-//            for (Option option : contract.getOptions()){
-//                options.add(option.getName());
-//            }
-//            contracts.add(new WebContract(contract.getNumber(), contract.getUser().getName(),
-//                    contract.getUser().getSurname(), contract.getUser().getEmail(), contract.getTariff().getName(),
-//                    options));
-//        }
-//        return contracts;
-
         return contractDAO.getAllContractsWithTariff(Integer.valueOf(tariffId)).stream()
                 .map(e -> new WebContract(e.getNumber(), e.getUser().getName(), e.getUser().getSurname(),
                         e.getUser().getEmail(), e.getTariff().getName(),

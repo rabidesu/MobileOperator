@@ -1,5 +1,5 @@
 package com.tsystems.jschool.mobile.enumerates;
 
 public enum RoleName {
-    ADMIN, CLIENT
+    ROLE_ADMIN, ROLE_CLIENT
 }

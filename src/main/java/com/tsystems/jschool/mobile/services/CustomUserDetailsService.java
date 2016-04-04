@@ -59,9 +59,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         List<String> roles = new ArrayList<>();
 
-        if (role.getRoleName() == RoleName.CLIENT) {
+        if (role.getRoleName() == RoleName.ROLE_CLIENT) {
             roles.add("ROLE_CLIENT");
-        } else if (role.getRoleName() == RoleName.ADMIN) {
+        } else if (role.getRoleName() == RoleName.ROLE_ADMIN) {
             roles.add("ROLE_ADMIN");
         }
         return roles;

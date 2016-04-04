@@ -16,6 +16,7 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
+
     @RequestMapping(value = "/admin/index")
     public String adminDashboard(Model model){
         org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

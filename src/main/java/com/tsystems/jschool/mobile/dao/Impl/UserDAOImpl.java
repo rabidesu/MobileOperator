@@ -37,6 +37,7 @@ public class UserDAOImpl extends GenericDAOImpl<User> implements UserDAO {
 
     public long getCountUserByEmail(String email) {
         Query query = entityManager.createNamedQuery(User.GET_COUNT_BY_EMAIL);
+        logger.warn(email);
         query.setParameter(1, email);
         return (long) query.getSingleResult();
     }

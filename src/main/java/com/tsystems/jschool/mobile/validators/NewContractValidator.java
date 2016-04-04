@@ -30,8 +30,6 @@ public class NewContractValidator implements Validator {
     private OptionService optionService;
 
 
-
-
     private String phoneRegexp = "^\\+7\\s{1}\\(\\d{3}\\)\\s{1}\\d{3}-\\d{2}-\\d{2}$";
 
     @Override
@@ -79,24 +77,18 @@ public class NewContractValidator implements Validator {
         } else if (!contractService.findContractByNumber(contract.getNumber()).isEmpty()) {
             errors.rejectValue("number", "Exists.contract.number");
         }
-        if (contract.getUser().getRole() != null && contract.getUser().getRole().getRoleName() == RoleName.ADMIN){
+        if (contract.getUser().getRole() != null && contract.getUser().getRole().getRoleName() == RoleName.ROLE_ADMIN){
             errors.rejectValue("options", "NotSuch.contract.user.role");
         }
         if (contract.getTariff() == null){
             errors.rejectValue("tariff", "NotEmpty.contract.tariff");
         }
-        if (isIncompatibleOptions(contract.getOptions())){
+        if (optionService.isIncompatibleOptions(contract.getOptions())){
+            errors.rejectValue("options", "Error.contract.options.incompatible");
+        }
+        if (optionService.NotAllRequiredOptionAvailable(contract.getOptions())){
             errors.rejectValue("options", "Error.contract.options.incompatible");
         }
 
-    }
-
-    private boolean isIncompatibleOptions(List<Option> options){
-        for (Option option : options){
-            for (Option incOption : option.getOptionsIncompatible()){
-                if (options.contains(incOption)) return true;
-            }
-        }
-        return false;
     }
 }

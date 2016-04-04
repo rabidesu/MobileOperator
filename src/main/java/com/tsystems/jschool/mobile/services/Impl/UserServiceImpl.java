@@ -4,20 +4,13 @@ package com.tsystems.jschool.mobile.services.Impl;
 import com.tsystems.jschool.mobile.dao.API.UserDAO;
 import com.tsystems.jschool.mobile.entities.Contract;
 import com.tsystems.jschool.mobile.entities.User;
-import com.tsystems.jschool.mobile.enumerates.RoleName;
-import com.tsystems.jschool.mobile.exceptions.LoginUserException;
-import com.tsystems.jschool.mobile.exceptions.MobileDAOException;
 import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
-//import com.tsystems.jschool.mobile.repositories.UserRepo;
 import com.tsystems.jschool.mobile.services.API.UserService;
 import org.apache.log4j.Logger;
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service("userService")
@@ -44,9 +37,9 @@ public class UserServiceImpl implements UserService {
         return  !userDAO.getUserByEmail(email).isEmpty();
     }
 
-    public boolean checkIfUserHasContract(User loggedUser, String contractId){
+    public void checkIfUserHasContract(User loggedUser, String contractId){
         for (Contract contract : loggedUser.getContracts()) {
-            if (contract.getId() == Integer.valueOf(contractId)) return true;
+            if (contract.getId() == Integer.valueOf(contractId)) return;
         }
         throw new MobileServiceException("Invalid request parameters: You can't get this contract!");
     }
@@ -64,17 +57,17 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public int getCountUserByNumber(String number){
-        return (int) userDAO.getCountUserByNumber(number);
+        return (int) userDAO.getCountUserByNumber("%" + number + "%");
     };
 
     @Transactional
     public int getCountUserByEmail(String email){
-        return (int) userDAO.getCountUserByEmail(email);
+        return (int) userDAO.getCountUserByEmail("%" + email + "%");
     };
 
     @Transactional
     public int getCountUserBySurname(String surname){
-        return (int) userDAO.getCountUserBySurname(surname);
+        return (int) userDAO.getCountUserBySurname("%" + surname + "%");
     };
 
     @Transactional

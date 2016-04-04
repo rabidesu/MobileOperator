@@ -26,6 +26,13 @@ public class OptionController {
 
     @Autowired
     private OptionService optionService;
+
+    @Autowired
+    private ContractService contractService;
+
+    @Autowired
+    private TariffService tariffService;
+
     @Autowired
     private CompatibilityOptionValidator optionValidator;
 
@@ -88,6 +95,8 @@ public class OptionController {
         model.addAttribute("option", option);
         model.addAttribute("anotherOptions", optionService.getAllAnotherOptions(optionId));
         model.addAttribute("option_name", option.getName());
+        model.addAttribute("used", contractService.isExistContractWithOption(optionId));
+        model.addAttribute("inTariff", tariffService.existsTariffWithOption(optionId));
 
         return "/admin/option/editOption";
     }
@@ -97,6 +106,8 @@ public class OptionController {
         optionValidator.validate(option, errors);
         if (errors.hasErrors()){
             model.addAttribute("anotherOptions", optionService.getAllAnotherOptions(String.valueOf(option.getId())));
+            model.addAttribute("used", contractService.isExistContractWithOption(optionId));
+            model.addAttribute("inTariff", tariffService.existsTariffWithOption(optionId));
             return "/admin/option/editOption";
         }
 

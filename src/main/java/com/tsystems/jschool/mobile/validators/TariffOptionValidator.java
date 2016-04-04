@@ -28,41 +28,13 @@ public class TariffOptionValidator implements Validator{
         if (tariff.getOptions() == null){
             tariff.setOptions(new ArrayList<>());
         }
+
         List<Option> options = tariff.getOptions();
 
-
-
-//        List<Option> allRequiredOption = optionService.getAllRequiredOption(option);
-//        List<Option> allIncompatibleOption = optionService.getAllIncompatibleOption(option, allRequiredOption);
-//
-        if (NotAllRequiredOptionAvailable(options)){
+        if (optionService.NotAllRequiredOptionAvailable(options)){
             errors.rejectValue("options", "Error.tariff.option.not.available");
         }
 
-//        if (isOptionDependOnIncompatibleParent(option, allIncompatibleOption)){
-//            errors.rejectValue("optionsIncompatible", "Error.option.compatibility.depend.parent.inc");
-//        }
-//        if (isOptionIncompatibleWithParentRequired(option, allRequiredOption)){
-//            errors.rejectValue("optionsIncompatible", "Error.option.compatibility.inc.parent.required");
-//        }
-//        if (isInterdependentOptions(option)){
-//            errors.rejectValue("optionsIncompatible", "Error.option.compatibility.interdependent");
-//        }
-
-
-
-
     }
-
-
-    private boolean NotAllRequiredOptionAvailable(List<Option> options){
-        for (Option option : options){
-            for (Option reqOption : optionService.getAllRequiredOption(option)){
-                if (!options.contains(reqOption)) return true;
-            }
-        }
-        return false;
-    }
-
 
 }

@@ -32,65 +32,17 @@ public class CompatibilityOptionValidator implements Validator{
             option.setOptionsIncompatible(new ArrayList<>());
         }
 
-        List<Option> allRequiredOption = optionService.getAllRequiredOption(option);
-        List<Option> allIncompatibleOption = optionService.getAllIncompatibleOption(option, allRequiredOption);
-
-        if (isRequiredAndIncompatibleIntersection(option)){
+        if (optionService.isRequiredAndIncompatibleIntersection(option)){
             errors.rejectValue("optionsIncompatible", "Error.option.compatibility");
         }
-        if (isOptionDependOnIncompatibleParent(option, allIncompatibleOption)){
+        if (optionService.isOptionDependOnIncompatibleParent(option)){
             errors.rejectValue("optionsIncompatible", "Error.option.compatibility.depend.parent.inc");
         }
-        if (isOptionIncompatibleWithParentRequired(option, allRequiredOption)){
+        if (optionService.isOptionIncompatibleWithParentRequired(option)){
             errors.rejectValue("optionsIncompatible", "Error.option.compatibility.inc.parent.required");
         }
-        if (isInterdependentOptions(option)){
+        if (optionService.isInterdependentOptions(option)){
             errors.rejectValue("optionsIncompatible", "Error.option.compatibility.interdependent");
         }
-
-
-
-
-    }
-
-    private boolean isRequiredAndIncompatibleIntersection(Option option){
-        for (Option reqOption : option.getOptionsRequired()){
-            if (option.getOptionsIncompatible().contains(reqOption)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    /*
-    * Опция зависима от опции, которая несовместима с другими требуемыми опциями
-     */
-    private boolean isOptionDependOnIncompatibleParent(Option option, List<Option> allIncompatibleOptions){
-        for (Option reqOption : option.getOptionsRequired()){
-            if (allIncompatibleOptions.contains(reqOption)) return true;
-        }
-
-        return false;
-    }
-
-    /*
-    * Опция несовместима с опцией, которая является требуемой для одной из родительских опций
-     */
-    private boolean isOptionIncompatibleWithParentRequired(Option option, List<Option> allRequiredOptions){
-        for (Option incOption : option.getOptionsIncompatible()){
-            if (allRequiredOptions.contains(incOption)) return true;
-        }
-
-        return false;
-    }
-
-    private boolean isInterdependentOptions(Option option){
-        for (Option reqOption : option.getOptionsRequired()){
-            List<Option> allRequiredOptions = optionService.getAllRequiredOption(reqOption);
-            if (allRequiredOptions.contains(option)) return true;
-        }
-
-        return false;
     }
 }

@@ -9,6 +9,7 @@ import com.tsystems.jschool.mobile.validators.ChangeContractValidator;
 import com.tsystems.jschool.mobile.validators.CompatibilityOptionValidator;
 import com.tsystems.jschool.mobile.validators.NewContractValidator;
 import com.tsystems.jschool.mobile.validators.TariffOptionValidator;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,9 @@ import java.util.Optional;
 @Controller
 @SessionAttributes({"loggedUser"})
 public class UserController {
+
+    private final static Logger logger = Logger.getRootLogger();
+
 
     @Autowired
     private UserService userService;
@@ -43,6 +47,7 @@ public class UserController {
         } else if (searchText.isPresent()){
             pageUsers = getListBySearchField(pageNumber, pageSize, searchField.get(), searchText.get());
             totalCount = getCountBySearchField(searchField.get(), searchText.get());
+            logger.warn("TEXT PRESENT");
         } else {
             pageUsers = userService.getUserList(pageNumber, pageSize);
             totalCount = userService.getCountUsers();
@@ -59,8 +64,9 @@ public class UserController {
         model.addAttribute("endIndex", end);
         model.addAttribute("currentIndex", current);
         model.addAttribute("totalPage", totalPage);
-        model.addAttribute("searchText", text != null ? text : searchText.isPresent() ? searchText.get() : "");
-        model.addAttribute("searchField", field != null ? field : searchField.isPresent() ? searchField.get() : "");
+        logger.warn(text);
+        model.addAttribute("searchText", (text != null && !text.isEmpty()) ? text : searchText.isPresent() ? searchText.get() : "");
+        model.addAttribute("searchField", (text != null && !text.isEmpty()) ? field : searchText.isPresent() ? searchField.get() : "");
 
         return "/admin/client/searchClient";
     }
@@ -81,6 +87,7 @@ public class UserController {
     }
 
     private int getCountBySearchField(String field, String searchText) {
+        logger.warn("Field: " + field + " Text: " + searchText);
         switch (field){
             case "email": {
                 return userService.getCountUserByEmail(searchText);

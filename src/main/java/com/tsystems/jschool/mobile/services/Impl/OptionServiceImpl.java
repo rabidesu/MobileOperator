@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,8 +56,31 @@ public class OptionServiceImpl implements OptionService {
 
     @Transactional
     public void changeOption(String optionId, Option option){
-        if (!optionDAO.findById(Option.class, Integer.valueOf(optionId)).isAvailable()) {
+        Option oldOption = optionDAO.findById(Option.class, option.getId());
+        if (!oldOption.isAvailable()) {
             throw new MobileServiceException("Нельзя изменить недоступную опцию");
+        }
+        if (!contractDAO.findContractWithOption(Integer.valueOf(optionId)).isEmpty()){
+            if (option.getPrice() != oldOption.getPrice() && option.getPrice() != 0 ){
+                throw new MobileServiceException("Нельзя изменить стоимость используемой опции");
+            }
+            if (option.getName() != null && !oldOption.getName().equals(option.getName())){
+                throw new MobileServiceException("Нельзя изменить название используемой опции");
+            }
+            for (Option opt : option.getOptionsIncompatible()){
+                if (!oldOption.getOptionsIncompatible().contains(opt)){
+                    throw new MobileServiceException("Нельзя добавлять несовместимые " +
+                            "опции к используемой опции");
+                }
+            }
+            for (Option opt : option.getOptionsRequired()){
+                if (!oldOption.getOptionsRequired().contains(opt)){
+                    throw new MobileServiceException("Нельзя добавлять зависимые " +
+                            "опции к используемой опции");
+                }
+            }
+            option.setPrice(oldOption.getPrice());
+            option.setName(oldOption.getName());
         }
         for (Option incOption : option.getOptionsIncompatible()){
             if (!incOption.isAvailable()) {
@@ -71,7 +95,7 @@ public class OptionServiceImpl implements OptionService {
         if (option.getOptionsRequired().contains(option) || option.getOptionsIncompatible().contains(option)){
             throw new MobileServiceException("Опция не может быть связана сама с собой");
         }
-        Option oldOption = optionDAO.findById(Option.class, option.getId());
+
         List<Option> oldIncompatibleOptions = oldOption.getOptionsIncompatible();
 
         for (Option incOption : oldIncompatibleOptions){
@@ -87,6 +111,15 @@ public class OptionServiceImpl implements OptionService {
                 optionDAO.merge(incOption);
             }
         }
+
+        for (Option reqOption : option.getOptionsRequired()) {
+            for (Tariff tariff : tariffDAO.getTariffsWithOption(Integer.valueOf(optionId))){
+                if (!tariff.getOptions().contains(reqOption)){
+                    tariff.getOptions().add(reqOption);
+                }
+            }
+        }
+
         optionDAO.merge(option);
     }
 
@@ -143,6 +176,57 @@ public class OptionServiceImpl implements OptionService {
         return optionDAO.getOptionsByName("%" + name + "%");
     }
 
+    public boolean isRequiredAndIncompatibleIntersection(Option option){
+        for (Option reqOption : option.getOptionsRequired()){
+            if (option.getOptionsIncompatible().contains(reqOption)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isOptionDependOnIncompatibleParent(Option option){
+        for (Option reqOption : option.getOptionsRequired()){
+            if (getAllIncompatibleOption(reqOption).contains(reqOption)) return true;
+        }
+
+        return false;
+    }
+
+    public boolean isInterdependentOptions(Option option){
+        for (Option reqOption : option.getOptionsRequired()){
+            List<Option> allRequiredOptions = getAllRequiredOption(reqOption);
+            if (allRequiredOptions.contains(option)) return true;
+        }
+
+        return false;
+    }
+
+    public boolean isOptionIncompatibleWithParentRequired(Option option){
+        List<Option> allRequiredOptions = getAllRequiredOption(option);
+        for (Option incOption : option.getOptionsIncompatible()){
+            if (allRequiredOptions.contains(incOption)) return true;
+        }
+        return false;
+    }
+
+    public boolean NotAllRequiredOptionAvailable(List<Option> options) {
+        for (Option option : options) {
+            for (Option reqOption : getAllRequiredOption(option)) {
+                if (!options.contains(reqOption)) return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isIncompatibleOptions(List<Option> options){
+        for (Option option : options){
+            for (Option incOption : option.getOptionsIncompatible()){
+                if (options.contains(incOption)) return true;
+            }
+        }
+        return false;
+    }
 
     public List<Option> getAllRequiredOption(Option option){
         List<Option> allRequiredOptions = new ArrayList<>();
@@ -151,7 +235,6 @@ public class OptionServiceImpl implements OptionService {
     }
 
     private List<Option> getRequiredOption (Option option){
-        System.out.println("Option" + option);
         List<Option> allRequiredOptions = new ArrayList<>();
         for (Option requiredOption : option.getOptionsRequired()){
             allRequiredOptions.add(requiredOption);
@@ -162,15 +245,8 @@ public class OptionServiceImpl implements OptionService {
 
     public List<Option> getAllIncompatibleOption (Option option){
         List<Option> incompatibleOptions = new ArrayList<>();
+        incompatibleOptions.addAll(option.getOptionsIncompatible());
         List<Option> requiredOptions = getAllRequiredOption(option);
-        for (Option reqOption : requiredOptions){
-            incompatibleOptions.addAll(reqOption.getOptionsIncompatible());
-        }
-        return incompatibleOptions;
-    }
-
-    public List<Option> getAllIncompatibleOption (Option option, List<Option> requiredOptions){
-        List<Option> incompatibleOptions = new ArrayList<>();
         for (Option reqOption : requiredOptions){
             incompatibleOptions.addAll(reqOption.getOptionsIncompatible());
         }

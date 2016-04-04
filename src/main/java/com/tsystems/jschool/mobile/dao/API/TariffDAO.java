@@ -14,4 +14,7 @@ public interface TariffDAO extends GenericDAO<Tariff> {
 
     List<Tariff> getAvailableTariffs();
 
+    List<Tariff> getTariffsWithOption(int optionId);
+
+
 }

@@ -32,6 +32,13 @@ public class Role implements Serializable {
         return id;
     }
 
+    public Role(int id) {
+        this.id = id;
+    }
+
+    public Role() {
+    }
+
     public RoleName getRoleName() {
         return roleName;
     }

@@ -37,4 +37,10 @@ public class TariffDAOImpl extends GenericDAOImpl<Tariff> implements TariffDAO {
         query.setParameter(1, id);
         query.executeUpdate();
     }
+
+    public List<Tariff> getTariffsWithOption(int optionId) {
+        Query query = entityManager.createNamedQuery(Tariff.GET_WITH_OPTION);
+        query.setParameter(1, optionId);
+        return findMany(query);
+    }
 }

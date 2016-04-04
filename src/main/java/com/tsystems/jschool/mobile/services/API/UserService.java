@@ -37,6 +37,6 @@ public interface UserService {
 
     boolean existsUserWithEmail(String email);
 
-    boolean checkIfUserHasContract(User loggedUser, String contractId);
+    void checkIfUserHasContract(User loggedUser, String contractId);
 
 }

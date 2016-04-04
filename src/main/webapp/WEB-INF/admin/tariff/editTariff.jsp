@@ -66,7 +66,6 @@
                         <c:if test="${tariff.available}">
                         <button type="submit" form="form-change-tariff" class="btn btn-success">Изменить</button>
                         </c:if>
-                        <button type="submit" id="check_tariff" class="btn btn-success">Проверить</button>
                         <button type="submit" form="form-remove-tariff" class="btn btn-danger">Удалить</button>
                     </li>
                 </ul>
@@ -80,13 +79,13 @@
                         <div class="tab-pane fade in active" id="general">
                             <div class="form-group">
                                 <label for="name">Название</label>
-                                <form:input class="form-control" path="name" disabled="${!tariff.available}"/>
+                                <form:input class="form-control" path="name" readonly="${!tariff.available || used}"/>
                                 <form:errors path="name" cssClass="red"/>
                                 <%--<input type="text" class="form-control" id="name" name="name" value="${requestScope.tariff.name}">--%>
                             </div>
                             <div class="form-group">
                                 <label for="price">Цена</label>
-                                <form:input type="number" class="form-control" path="price" disabled="${!tariff.available}"/>
+                                <form:input type="number" class="form-control" path="price" readonly="${!tariff.available || used}"/>
                                 <form:errors path="price" cssClass="red"/>
                                 <%--<input type="number" class="form-control" id="price" name="price" >--%>
                             </div>
@@ -102,32 +101,26 @@
                         <div class="tab-pane fade" id="possible">
                             <div class="form-group">
                                 <label>Список доступных опций:</label>
-                                <c:if test="${not empty requestScope.options}">
+                                <c:if test="${not empty allOptions}">
+                                    <c:forEach items="${allOptions}" var="option">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="options"
+                                                <c:if test="${tariff.options.contains(option)}"> checked </c:if>
+                                                <c:if test="${tariff.options.contains(option) && !tariff.available}"> checked disabled </c:if>
+                                                <c:if test="${!tariff.options.contains(option) && !tariff.available}"> disabled </c:if>
+                                                <c:if test="${tariff.options.contains(option) && used}"> checked class="not-modified" </c:if>
+                                                       value="${option.id}">${option.name}
+                                            </label>
+                                        </div>
+                                    </c:forEach>
 
-                                <div class="option_chb">
-                                    <form:checkboxes path="options" items="${options}" itemValue="id" itemLabel="name" element="div"
-                                                     disabled="${!tariff.available}"/>
-                                    <%--<c:forEach var="option" items="${requestScope.options}">--%>
-                                        <%--<div class="checkbox">--%>
-                                            <%--<label><input type="checkbox" name="options"--%>
-                                                <%--<c:set var="req_options" value=" " scope="page"/>--%>
-
-                                            <%--<c:forEach var="req_option" items="${option.optionsRequired}">--%>
-                                                <%--<c:set var="req_options" value="${req_options} ${req_option.id}"/>--%>
-                                            <%--</c:forEach>--%>
-
-                                            <%--<c:forEach var="possible_option" items="${requestScope.tariff.options}">--%>
-                                                          <%--<c:if test="${option.id eq possible_option.id}">checked</c:if>--%>
-                                            <%--</c:forEach>--%>
-                                                          <%--data-req="${req_options}"--%>
-                                                          <%--class="depended_option" value="${option.id}">${option.name}--%>
-                                                <%--<input name="options" type="hidden"  disabled id="hidden_${option.id}" value="${option.id}"/>--%>
-                                            <%--</label>--%>
-                                        <%--</div>--%>
-                                    <%--</c:forEach>--%>
-                                    </div>
+                                <%--<div class="option_chb">--%>
+                                    <%--<form:checkboxes path="options" items="${options}" itemValue="id" itemLabel="name" element="div"--%>
+                                                     <%--disabled="${!tariff.available}"/>--%>
+                                    <%--</div>--%>
                                 </c:if>
-                                <c:if test="${empty requestScope.options}">
+                                <c:if test="${empty allOptions}">
                                     <div class="panel panel-warning">
                                         <div class="panel-heading">Информация</div>
                                         <div class="panel-body"><c:out value="Нет опций, доступных для выбора. Добавьте сначала новые опции." /></div>
@@ -152,7 +145,11 @@
                 <div class="row ">
                     <br><br>
                     <div class="col-lg-6 col-lg-offset-3">
-                        <p class="alert alert-info" id="check-tariff-result" hidden></p>
+                        <c:if test="${used}">
+                        <p class="alert alert-info" id="check-tariff-result">Данный тариф используется в одном или нескольних контрактах.
+                            При удалении он станет недоступным для подключения, но не будет удален.
+                            У используемого тарифа вы не можете изменить название и стоимость, а также удалить доступные опции</p>
+                        </c:if>
                     </div>
                 </div>
             </div>
@@ -170,95 +167,6 @@
 
 <!-- jQuery -->
 <script src="/js/jquery-2.2.0.min.js"></script>
-<%--<script src="/js/edit-tariff.js"></script>--%>
-<script>
-    $(document).ready(function f() {
-        $('#check_tariff').on('click', doAjax);
-
-    });
-    function doAjax() {
-
-        var tariffId = ${tariff.id};
-        $.ajax({
-            url: '/pages/checkTariffUsed',
-            type: 'GET',
-            dataType: 'json',
-            contentType: 'application/json',
-            mimeType: 'application/json',
-            data: ({
-                tariffId: tariffId
-            }),
-            success: function (data) {
-                var result;
-                if (data) {
-                    result = "Тариф подключен к одному или нескольким контрактам. При удалении он станет недоступным" +
-                            " для подключения, но не будет удален.";
-                } else {
-                    result = "Тариф не подключен ни к одному контракту и может быть удален";
-                }
-                $('#check-tariff-result').text(result).show();
-            }
-        });
-    }
-</script>
-
-<%--<script>--%>
-    <%--$(document).ready(function () {--%>
-    <%--$('.option_chb input:checkbox').each(function(){--%>
-        <%--var $cur_req_options = $(this).data("req");--%>
-        <%--var $cur_options_arr = $cur_req_options.split(' ');--%>
-        <%--if (this.checked){--%>
-            <%--$current_id = $(this).val();--%>
-            <%--$('.option_chb input:checkbox').each(function(){--%>
-                <%--if ($.inArray($(this).val(), $cur_options_arr) !== -1){--%>
-                    <%--$(this).prop("checked", true);--%>
-                    <%--$(this).prop("disabled", true);--%>
-                    <%--$(this).addClass("by_"+$current_id);--%>
-                    <%--$('#hidden_'+$(this).val()).prop("disabled", false);--%>
-                <%--}--%>
-            <%--})--%>
-        <%--} else {--%>
-            <%--$current_id = $(this).val();--%>
-            <%--$('.option_chb input:checkbox').each(function(){--%>
-                <%--if ($.inArray($(this).val(), $cur_options_arr) !== -1){--%>
-                    <%--$(this).removeClass("by_"+$current_id);--%>
-                    <%--$className = $(this).attr('class').split(' ');--%>
-                    <%--if ($className.length == 1) {--%>
-                        <%--$(this).prop("disabled", false);--%>
-                        <%--$('#hidden_'+$(this).val()).prop("disabled", true);--%>
-                    <%--}--%>
-                <%--}--%>
-            <%--})--%>
-        <%--}--%>
-    <%--}).change(function () {--%>
-        <%--var $req_options = $(this).data("req");--%>
-        <%--var $options_arr = $req_options.split(' ');--%>
-        <%--if (this.checked){--%>
-            <%--$current_id = $(this).val();--%>
-            <%--$('.option_chb input:checkbox').each(function(){--%>
-                <%--if ($.inArray($(this).val(), $options_arr) !== -1){--%>
-                    <%--$(this).prop("checked", true);--%>
-                    <%--$(this).prop("disabled", true);--%>
-                    <%--$(this).addClass("by_"+$current_id);--%>
-                    <%--$('#hidden_'+$(this).val()).prop("disabled", false);--%>
-                <%--}--%>
-            <%--})--%>
-        <%--} else {--%>
-            <%--$current_id = $(this).val();--%>
-            <%--$('.option_chb input:checkbox').each(function(){--%>
-                <%--if ($.inArray($(this).val(), $options_arr) !== -1){--%>
-                    <%--$(this).removeClass("by_"+$current_id);--%>
-                    <%--$className = $(this).attr('class').split(' ');--%>
-                    <%--if ($className.length == 1) {--%>
-                        <%--$(this).prop("disabled", false);--%>
-                        <%--$('#hidden_'+$(this).val()).prop("disabled", true);--%>
-                    <%--}--%>
-                <%--}--%>
-            <%--})--%>
-        <%--}--%>
-    <%--});--%>
-    <%--});--%>
-<%--</script>--%>
 
 <!-- Bootstrap Core JavaScript -->
 <script src="/js/bootstrap.min.js"></script>

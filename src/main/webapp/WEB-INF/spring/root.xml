@@ -24,6 +24,7 @@
     <context:component-scan base-package="com.tsystems.jschool.mobile.services"/>
     <context:component-scan base-package="com.tsystems.jschool.mobile.aspects"/>
     <context:component-scan base-package="com.tsystems.jschool.mobile.webservices"/>
+    <context:component-scan base-package="com.tsystems.jschool.mobile.webservices"/>
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     <!--<bean name="loggingAspect" class="com.tsystems.jschool.mobile.aspects.LoggingAspect"/>-->
 

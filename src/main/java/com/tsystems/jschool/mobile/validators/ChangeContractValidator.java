@@ -43,18 +43,21 @@ public class ChangeContractValidator implements Validator {
         if (contract.getTariff() == null){
             errors.rejectValue("tariff", "NotEmpty.contract.tariff");
         }
-        if (isIncompatibleOptions(contract.getOptions())){
+        if (optionService.isIncompatibleOptions(contract.getOptions())){
             errors.rejectValue("options", "Error.contract.options.incompatible");
         }
-
-    }
-
-    private boolean isIncompatibleOptions(List<Option> options){
-        for (Option option : options){
-            for (Option incOption : option.getOptionsIncompatible()){
-                if (options.contains(incOption)) return true;
-            }
+        if (optionService.NotAllRequiredOptionAvailable(contract.getOptions())){
+            errors.rejectValue("options", "Error.tariff.option.not.available");
         }
-        return false;
+
     }
+
+//    private boolean isIncompatibleOptions(List<Option> options){
+//        for (Option option : options){
+//            for (Option incOption : option.getOptionsIncompatible()){
+//                if (options.contains(incOption)) return true;
+//            }
+//        }
+//        return false;
+//    }
 }

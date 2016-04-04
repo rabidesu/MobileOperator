@@ -5,9 +5,7 @@ import com.tsystems.jschool.mobile.exceptions.MobileServiceException;
 
 import java.util.List;
 
-/**
- * Created by Alexandra on 25.02.2016.
- */
+
 public interface OptionService {
 
     List<Option> getAllOptions();
@@ -32,6 +30,16 @@ public interface OptionService {
 
     List<Option> getNotSelectedOption(String contractId);
 
-    List<Option> getAllIncompatibleOption (Option option, List<Option> requiredOptions);
+    boolean isInterdependentOptions(Option option);
+
+    boolean isOptionDependOnIncompatibleParent(Option option);
+
+    boolean isRequiredAndIncompatibleIntersection(Option option);
+
+    boolean isOptionIncompatibleWithParentRequired(Option option);
+
+    boolean NotAllRequiredOptionAvailable(List<Option> options);
+
+    boolean isIncompatibleOptions(List<Option> options);
 
 }

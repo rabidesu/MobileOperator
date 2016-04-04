@@ -7,9 +7,10 @@
   <display-name>Archetype Created Web Application</display-name>
 
 
- <!--<error-page>-->
-   <!--<location>/404.jsp</location>-->
- <!--</error-page>-->
+ <error-page>
+     <error-code>404</error-code>
+     <location>/404.jsp</location>
+ </error-page>
 
 
   <context-param>

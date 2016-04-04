@@ -52,10 +52,10 @@
 
             <!-- Main -->
             <div class="container">
-                <div class="row">
+                <div class="row col-lg-8">
                         <c:if test="${not empty requestScope.message}">
                             <div class="panel panel-success">
-                                <div class="panel-heading">Информация</div>
+                                <div class="panel-heading">Сообщение</div>
                                 <div class="panel-body"><c:out value="${requestScope.message}" /></div>
                             </div>
                         </c:if>

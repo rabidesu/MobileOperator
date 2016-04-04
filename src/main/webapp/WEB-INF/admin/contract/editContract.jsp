@@ -122,7 +122,6 @@
                         <div class="tab-pane fade" id="phone">
                             <div class="form-group">
                                 <label>Номер телефона</label>
-                                <label>Адрес</label>
                                 <p class="form-control"><c:out value="${contract.number}"/></p>
                                 <%--<label for="phone_number">Номер телефона</label>--%>
                                 <%--<input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="Введите номер" disabled value="${requestScope.contract.number}">--%>

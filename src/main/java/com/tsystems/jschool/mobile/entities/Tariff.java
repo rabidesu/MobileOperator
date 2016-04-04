@@ -18,6 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "tariff")
 @NamedQueries({
+        @NamedQuery(name = Tariff.GET_WITH_OPTION, query = "SELECT x FROM Tariff x LEFT JOIN x.options o WHERE o.id = ?1 AND x.available = true"),
         @NamedQuery(name = Tariff.GET_BY_NAME, query = "SELECT x FROM Tariff x WHERE x.name LIKE ?1"),
         @NamedQuery(name = Tariff.REMOVE_BY_ID, query = "DELETE FROM Tariff x WHERE x.id = ?1"),
         @NamedQuery(name = Tariff.GET_ALL_AVAILABLE, query = "SELECT x FROM Tariff x WHERE x.available = true")
@@ -27,6 +28,7 @@ public class Tariff implements Serializable {
     public static final String GET_BY_NAME = "tariffGetByName";
     public static final String REMOVE_BY_ID = "tariffRemoveById";
     public static final String GET_ALL_AVAILABLE = "getAllAvailableTariffs";
+    public static final String GET_WITH_OPTION = "getTariffsWithOption";
 
     public Tariff() {
     }
@@ -63,6 +65,10 @@ public class Tariff implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "option_id")})
     @JsonManagedReference
     private List<Option> options;
+
+    public Tariff(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;

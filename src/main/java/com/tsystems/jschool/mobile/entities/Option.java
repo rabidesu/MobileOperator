@@ -75,6 +75,13 @@ public class Option implements Serializable {
     @JsonIgnore
     private List<Option> optionsIncompatible = new ArrayList<>();
 
+    public Option() {
+    }
+
+    public Option(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

@@ -170,13 +170,12 @@ public class ContractController {
                                  BindingResult errors, Model model) {
         changeContractValidator.validate(contract, errors);
         if (errors.hasErrors()){
-            System.out.println(errors);
-            List<Tariff> tariffs = tariffService.getAllTariffs();
-            model.addAttribute("tariffs", tariffs);
+            model.addAttribute("contract", contractService.getContractById(contractId));
+            model.addAttribute("tariffs",  tariffService.getAvailableTariffsForContract(contractId));
+            model.addAttribute("notSelectedOptions", optionService.getNotSelectedOption(contractId));
             return "/admin/contract/editContract";
         }
 
-        //todo validation
         contractService.changeContract(contractId, contract);
         model.addAttribute("message", "Контракт успешно изменен!");
         return "/admin/info";

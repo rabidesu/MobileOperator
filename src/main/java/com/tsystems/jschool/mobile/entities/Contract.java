@@ -68,6 +68,13 @@ public class Contract implements Serializable {
         this.id = id;
     }
 
+    public Contract(int id) {
+        this.id = id;
+    }
+
+    public Contract() {
+    }
+
     public String getNumber() {
         return number;
     }

@@ -56,7 +56,6 @@
                                 <option value="phone">Телефон</option>
                                 <option value="surname">Фамилия</option>
                                 <option value="email">E-mail</option>
-                                <option value="user_id">ID</option>
                             </select>
                         </div>
                         <div class="col-lg-6">

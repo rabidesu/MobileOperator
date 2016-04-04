@@ -34,6 +34,8 @@ public class TariffController {
     @Autowired
     private OptionService optionService;
     @Autowired
+    private ContractService contractService;
+    @Autowired
     private TariffOptionValidator tariffValidator;
 
     @InitBinder
@@ -90,8 +92,9 @@ public class TariffController {
     @RequestMapping(value = "editTariff")
     public String editTariff(@RequestParam(value = "entity_id")String tariffId, Model model) {
         Tariff tariff = tariffService.getTariffById(tariffId);
-        model.addAttribute("options", optionService.getAvailableOptions());
+        model.addAttribute("allOptions", optionService.getAvailableOptions());
         model.addAttribute("tariff", tariff);
+        model.addAttribute("used", contractService.isExistContractWithTariff(tariffId));
         return "/admin/tariff/editTariff";
     }
 
@@ -99,8 +102,8 @@ public class TariffController {
     public String changeTariff(@RequestParam(value = "id")String tariffId, @Valid Tariff tariff, BindingResult errors, Model model) {
         tariffValidator.validate(tariff, errors);
         if (errors.hasErrors()){
-            model.addAttribute("options", optionService.getAvailableOptions());
-            System.out.println(errors);
+            model.addAttribute("allOptions", optionService.getAvailableOptions());
+            model.addAttribute("used", contractService.isExistContractWithTariff(tariffId));
             return "/admin/tariff/editTariff";
         }
         tariffService.changeTariff(tariffId, tariff);

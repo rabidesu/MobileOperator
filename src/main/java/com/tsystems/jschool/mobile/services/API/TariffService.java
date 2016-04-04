@@ -27,6 +27,12 @@ public interface TariffService {
 
     List<Tariff> getAvailableTariffsForContract(String contract_id);
 
+    List<Tariff> getTariffWithOption(String optionId);
+
+    boolean existsTariffWithOption(String optionId);
+
     List<WebTariff> getAllWebTariffs();
+
+
 
 }

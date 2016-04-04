@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +23,6 @@ import java.util.stream.Collectors;
 @Service("tariffService")
 public class TariffServiceImpl implements TariffService {
 
-    private final static Logger logger = Logger.getLogger(TariffServiceImpl.class);
 
     @Autowired
     private TariffDAO tariffDAO;
@@ -43,8 +43,26 @@ public class TariffServiceImpl implements TariffService {
 
     @Transactional
     public void changeTariff(String tariffId, Tariff tariff){
-        if (!tariffDAO.findById(Tariff.class, Integer.valueOf(tariffId)).isAvailable()) {
+
+        Tariff oldTariff = tariffDAO.findById(Tariff.class, Integer.valueOf(tariffId));
+        if (!oldTariff.isAvailable()) {
             throw new MobileServiceException("Нельзя изменить недоступный тариф");
+        }
+
+        if (!contractDAO.findContractWithTariff(Integer.valueOf(tariffId)).isEmpty()){
+            if (tariff.getPrice() != oldTariff.getPrice() && tariff.getPrice() != 0 ){
+                throw new MobileServiceException("Нельзя изменить стоимость используемого тарифа");
+            }
+            if (tariff.getName() != null && !oldTariff.getName().equals(tariff.getName())){
+                throw new MobileServiceException("Нельзя изменить название используемого тарифа");
+            }
+            for (Option opt : oldTariff.getOptions()){
+                if (!tariff.getOptions().contains(opt)){
+                    throw new MobileServiceException("Нельзя удалять опции из используемого тарифа");
+                }
+            }
+            tariff.setName(oldTariff.getName());
+            tariff.setPrice(oldTariff.getPrice());
         }
         for (Option option : tariff.getOptions()){
             if (!option.isAvailable()){
@@ -93,6 +111,14 @@ public class TariffServiceImpl implements TariffService {
             tariff.setAvailable(false);
             tariffDAO.merge(tariff);
         }
+    }
+
+    public List<Tariff> getTariffWithOption(String optionId){
+        return tariffDAO.getTariffsWithOption(Integer.valueOf(optionId));
+    }
+
+    public boolean existsTariffWithOption(String optionId){
+        return (!tariffDAO.getTariffsWithOption(Integer.valueOf(optionId)).isEmpty());
     }
 
     @Transactional
